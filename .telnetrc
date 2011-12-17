@@ -1,0 +1,4 @@
+DEFAULT
+	set verbose_encrypt
+	set autoencrypt
+	set autodecrypt
