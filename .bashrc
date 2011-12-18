@@ -7,8 +7,6 @@
 ####
 
 # don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
@@ -29,9 +27,7 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-####
 # Aliases
-####
 # ls
 alias ls='ls -G'
 alias ll='ls -lh'
@@ -46,15 +42,15 @@ alias egrep='egrep --color=auto'
 # vless is less with vim's syntax coloring
 alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# enable programmable completion features 
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 	# Normal, sane systems
 	. /etc/bash_completion
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
+elif which brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
+	. $(brew --prefix)/etc/bash_completion
 fi
 
 ####
@@ -74,7 +70,30 @@ fi
 ####
 # Set a base PATH, depending on host
 HOSTNAME=$(hostname)
-if [ "$HOSTNAME" == "Macbeth" ]; then
+SYSTYPE=$(uname -s)
+if [ "$SYSTYPE" == "Linux" ]; then
+	DISTNAME=$(lsb_release -i | sed s/'.*:[ \t\r\n]*'//g)
+elif [ "$SYSTYPE" == "Darwin" ]; then
+	case "$(sw_vers -productVersion | sed s/'\.[0-9]+$'//)" in
+		"10.0")
+			DISTNAME="Cheetah";;
+		"10.1")
+			DISTNAME="Puma";;
+		"10.2")
+			DISTNAME="Jaguar";;
+		"10.3")
+			DISTNAME="Panther";;
+		"10.4")
+			DISTNAME="Tiger";;
+		"10.5")
+			DISTNAME="Leopard";;
+		"10.6")
+			DISTNAME="Snow Leopard";;
+		"10.7")
+			DISTNAME="Lion";;
+	esac
+fi
+if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
@@ -110,8 +129,12 @@ elif [ "$HOSTNAME" == "smp" ]; then
 	PATH=$HOME/local/smp/bin:$HOME/local/smp/sbin:$PATH
 	LD_LIBRARY_PATH=$HOME/local/smp/lib:$LD_LIBRARY_PATH
 	MANPATH=$HOME/local/smp/share/man:$MANPATH
+elif [ "$SYSTYPE" == "Darwin" ]; then
+	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
 fi
 unset HOSTNAME
+unset SYSTYPE
+unset DISTNAME
 
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
