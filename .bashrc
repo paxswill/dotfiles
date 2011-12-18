@@ -42,9 +42,7 @@ alias egrep='egrep --color=auto'
 # vless is less with vim's syntax coloring
 alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# enable programmable completion features 
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 	# Normal, sane systems
 	. /etc/bash_completion
