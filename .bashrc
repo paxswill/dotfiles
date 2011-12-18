@@ -70,7 +70,30 @@ fi
 ####
 # Set a base PATH, depending on host
 HOSTNAME=$(hostname)
-if [ "$HOSTNAME" == "Macbeth" ]; then
+SYSTYPE=$(uname -s)
+if [ "$SYSTYPE" == "Linux" ]; then
+	DISTNAME=$(lsb_release -i | sed s/'.*:[ \t\r\n]*'//g)
+elif [ "$SYSTYPE" == "Darwin" ]; then
+	case "$(sw_vers -productVersion | sed s/'\.[0-9]+$'//)" in
+		"10.0")
+			DISTNAME="Cheetah";;
+		"10.1")
+			DISTNAME="Puma";;
+		"10.2")
+			DISTNAME="Jaguar";;
+		"10.3")
+			DISTNAME="Panther";;
+		"10.4")
+			DISTNAME="Tiger";;
+		"10.5")
+			DISTNAME="Leopard";;
+		"10.6")
+			DISTNAME="Snow Leopard";;
+		"10.7")
+			DISTNAME="Lion";;
+	esac
+fi
+if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
@@ -106,8 +129,12 @@ elif [ "$HOSTNAME" == "smp" ]; then
 	PATH=$HOME/local/smp/bin:$HOME/local/smp/sbin:$PATH
 	LD_LIBRARY_PATH=$HOME/local/smp/lib:$LD_LIBRARY_PATH
 	MANPATH=$HOME/local/smp/share/man:$MANPATH
+elif [ "$SYSTYPE" == "Darwin" ]; then
+	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
 fi
 unset HOSTNAME
+unset SYSTYPE
+unset DISTNAME
 
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
