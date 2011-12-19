@@ -39,28 +39,6 @@ alias egrep='egrep --color=auto'
 # vless is less with vim's syntax coloring
 alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
-# enable programmable completion features 
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-	# Normal, sane systems
-	. /etc/bash_completion
-elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
-	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
-	. $HOME/local/common/share/bash-completion/bash_completion
-elif which brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
-	. $(brew --prefix)/etc/bash_completion
-fi
-
-
-# Set PS1 (prompt)
-# If we have git PS1 magic
-if type __git_ps1 >/dev/null 2>&1; then
-	# [user@host:dir(git branch)] $
-	PS1='[\u@\h:\W$(__git_ps1 " (%s)")]\$ '
-else
-	# [user@host:dir] $
-	PS1='[\u@\h:\W]\$ '
-fi
-
 # Set up path
 # Set a base PATH, depending on host
 HOSTNAME=$(hostname)
@@ -146,6 +124,27 @@ fi
 # Fancy Kerberos
 if [ -d /usr/krb5/bin ]; then
 	PATH=/usr/krb5/bin:/usr/krb5/sbin:$PATH
+fi
+
+# enable programmable completion features 
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+	# Normal, sane systems
+	. /etc/bash_completion
+elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
+	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
+	. $HOME/local/common/share/bash-completion/bash_completion
+elif which brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
+	. $(brew --prefix)/etc/bash_completion
+fi
+
+# Set PS1 (prompt)
+# If we have git PS1 magic
+if type __git_ps1 >/dev/null 2>&1; then
+	# [user@host:dir(git branch)] $
+	PS1='[\u@\h:\W$(__git_ps1 " (%s)")]\$ '
+else
+	# [user@host:dir] $
+	PS1='[\u@\h:\W]\$ '
 fi
 
 # Export the configuration
