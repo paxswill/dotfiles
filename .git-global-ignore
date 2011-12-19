@@ -1,0 +1,54 @@
+# OS X
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Other Version Control
+.svn
+/.hg/*
+*/.hg/*
+.hgignore
+/CVS/*
+*/CVS/*
+.cvsignore
+*/.cvsignore
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# Xcode
+build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+
+# Vim
+*.sw[a-z]
+*.un~
+Session.vim
+TAGS
+tags
