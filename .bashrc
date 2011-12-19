@@ -145,6 +145,10 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 		# Special Gitx install
 		alias gitx="$HOME/Applications/GitX.app/Contents/Resources/gitx"
 	fi
+	# Add the OpenCL offline compiler if it exists
+	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
+		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
+	fi
 	# Man page to preview
 	pman () {
 		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
