@@ -131,6 +131,24 @@ elif [ "$HOSTNAME" == "smp" ]; then
 	MANPATH=$HOME/local/smp/share/man:$MANPATH
 elif [ "$SYSTYPE" == "Darwin" ]; then
 	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
+	# MacPorts
+	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
+		PATH=$PATH:/opt/local/bin:/opt/local/sbin
+	fi
+	if [ -d /opt/local/share/man ]; then
+		MANPATH=$MANPATH:/opt/local/share/man
+	fi
+	if [ "$HOSTNAME" == "mint.cmf.nrl.navy.mil" ]; then
+		# Special Homebrew install
+		PATH=$HOME/local/bin:$PATH
+		PATH=$HOME/local/scripts:$PATH
+		# Special Gitx install
+		alias gitx="$HOME/Applications/GitX.app/Contents/Resources/gitx"
+	fi
+	# Man page to preview
+	pman () {
+		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
+	}
 fi
 unset HOSTNAME
 unset SYSTYPE
@@ -142,6 +160,11 @@ unset DISTNAME
 # Android
 if [ -d /opt/android-sdk ]; then
 	PATH=$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools
+fi
+
+# Fancy Kerberos
+if [ -d /usr/krb5/bin ]; then
+	PATH=/usr/krb5/bin:/usr/krb5/sbin:$PATH
 fi
 
 # Export the configuration
