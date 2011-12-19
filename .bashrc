@@ -2,10 +2,7 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-####
 # Bash Configuration
-####
-
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
@@ -53,9 +50,8 @@ elif which brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	. $(brew --prefix)/etc/bash_completion
 fi
 
-####
+
 # Set PS1 (prompt)
-####
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
 	# [user@host:dir(git branch)] $
@@ -65,9 +61,7 @@ else
 	PS1='[\u@\h:\W]\$ '
 fi
 
-####
 # Set up path
-####
 # Set a base PATH, depending on host
 HOSTNAME=$(hostname)
 SYSTYPE=$(uname -s)
