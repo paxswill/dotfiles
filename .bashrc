@@ -141,7 +141,7 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ "$HOSTNAME" == "mint.cmf.nrl.navy.mil" ]; then
 		# Special Homebrew install
 		PATH=$HOME/local/bin:$PATH
-		PATH=$HOME/local/scripts
+		PATH=$HOME/local/scripts:$PATH
 		# Special Gitx install
 		alias gitx="$HOME/Applications/GitX.app/Contents/Resources/gitx"
 	fi
@@ -164,7 +164,7 @@ fi
 
 # Fancy Kerberos
 if [ -d /usr/krb5/bin ]; then
-	PATH=/usr/krb5/bin:/usr/krb5/sbin
+	PATH=/usr/krb5/bin:/usr/krb5/sbin:$PATH
 fi
 
 # Export the configuration
