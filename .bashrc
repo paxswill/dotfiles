@@ -131,6 +131,13 @@ elif [ "$HOSTNAME" == "smp" ]; then
 	MANPATH=$HOME/local/smp/share/man:$MANPATH
 elif [ "$SYSTYPE" == "Darwin" ]; then
 	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
+	# MacPorts
+	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
+		PATH=$PATH:/opt/local/bin:/opt/local/sbin
+	fi
+	if [ -d /opt/local/share/man ]; then
+		MANPATH=$MANPATH:/opt/local/share/man
+	fi
 fi
 unset HOSTNAME
 unset SYSTYPE
