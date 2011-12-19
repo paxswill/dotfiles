@@ -144,6 +144,11 @@ if [ -d /opt/android-sdk ]; then
 	PATH=$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools
 fi
 
+# Fancy Kerberos
+if [ -d /usr/krb5/bin ]; then
+	PATH=/usr/krb5/bin:/usr/krb5/sbin
+fi
+
 # Export the configuration
 export PATH
 export JAVA_HOME
