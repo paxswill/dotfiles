@@ -74,24 +74,7 @@ SYSTYPE=$(uname -s)
 if [ "$SYSTYPE" == "Linux" ]; then
 	DISTNAME=$(lsb_release -i | sed s/'.*:[ \t\r\n]*'//g)
 elif [ "$SYSTYPE" == "Darwin" ]; then
-	case "$(sw_vers -productVersion | sed s/'\.[0-9]+$'//)" in
-		"10.0")
-			DISTNAME="Cheetah";;
-		"10.1")
-			DISTNAME="Puma";;
-		"10.2")
-			DISTNAME="Jaguar";;
-		"10.3")
-			DISTNAME="Panther";;
-		"10.4")
-			DISTNAME="Tiger";;
-		"10.5")
-			DISTNAME="Leopard";;
-		"10.6")
-			DISTNAME="Snow Leopard";;
-		"10.7")
-			DISTNAME="Lion";;
-	esac
+	DISTNAME=$(sw_vers -productVersion)
 fi
 if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
