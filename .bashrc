@@ -138,6 +138,13 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		MANPATH=$MANPATH:/opt/local/share/man
 	fi
+	if [ "$HOSTNAME" == "mint.cmf.nrl.navy.mil" ]; then
+		# Special Homebrew install
+		PATH=$HOME/local/bin:$PATH
+		PATH=$HOME/local/scripts
+		# Special Gitx install
+		alias gitx="$HOME/Applications/GitX.app/Contents/Resources/gitx"
+	fi
 	# Man page to preview
 	pman () {
 		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
