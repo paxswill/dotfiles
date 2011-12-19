@@ -138,6 +138,10 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		MANPATH=$MANPATH:/opt/local/share/man
 	fi
+	# Man page to preview
+	pman () {
+		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
+	}
 fi
 unset HOSTNAME
 unset SYSTYPE
