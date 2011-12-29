@@ -104,10 +104,12 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
 	fi
-	# Man page to preview
-	pman () {
-		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
-	}
+	# Man page to Preview
+	if which ps2pdf > /dev/null; then
+		pman () {
+			man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
+		}
+	fi
 fi
 unset HOSTNAME
 unset SYSTYPE
