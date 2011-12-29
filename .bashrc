@@ -133,7 +133,11 @@ elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -o
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
 elif [ "$SYSTYPE" == "Darwin" ] && which brew > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
+elif [ -f /opt/local/etc/bash_completion ]; then
+	# Macports
+	. /opt/local/etc/bash_completion
 fi
 
 # Set PS1 (prompt)
