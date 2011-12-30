@@ -104,14 +104,13 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
 	fi
-	# Man page to preview
-	pman () {
-		man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
-	}
+	# Man page to Preview
+	if which ps2pdf > /dev/null; then
+		pman () {
+			man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
+		}
+	fi
 fi
-unset HOSTNAME
-unset SYSTYPE
-unset DISTNAME
 
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
@@ -133,8 +132,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
-elif which brew > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+elif [ "$SYSTYPE" == "Darwin" ] && which brew > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
+elif [ -f /opt/local/etc/bash_completion ]; then
+	# Macports
+	. /opt/local/etc/bash_completion
 fi
 
 # Set PS1 (prompt)
@@ -153,3 +156,8 @@ export JAVA_HOME
 export LD_LIBRARY_PATH
 export MANPATH
 export PKG_CONFIG_PATH
+
+# Clean up
+unset HOSTNAME
+unset SYSTYPE
+unset DISTNAME
