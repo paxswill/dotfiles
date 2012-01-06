@@ -116,17 +116,18 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	__prepend_to_pkgconfpath "${HOME}/local/${LOCALNAME}/lib/pkgconfig"
 	unset LOCALNAME
 elif [ "$SYSTYPE" == "Darwin" ]; then
-	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
+	# Add the undocumented airport command
+	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
 	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-		PATH=$PATH:/opt/local/bin:/opt/local/sbin
+		__append_to_path "/opt/local/bin:/opt/local/sbin"
 	fi
 	if [ -d /opt/local/share/man ]; then
-		MANPATH=$MANPATH:/opt/local/share/man
+		__append_to_manpath "/opt/local/share/man"
 	fi
 	# Add the OpenCL offline compiler if it exists
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
+		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Man page to Preview
 	if which ps2pdf > /dev/null; then
@@ -141,12 +142,12 @@ fi
 
 # Android
 if [ -d /opt/android-sdk ]; then
-	PATH=$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools
+	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
 fi
 
 # Fancy Kerberos
 if [ -d /usr/krb5/bin ]; then
-	PATH=/usr/krb5/bin:/usr/krb5/sbin:$PATH
+	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
 fi
 
 # enable programmable completion features 
