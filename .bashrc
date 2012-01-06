@@ -88,37 +88,33 @@ if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 	JAVA_HOME=/usr/lib/jvm/default_java
-elif [ "$HOSTNAME" == "procyon" ] || [ "$HOSTNAME" == "capella" ] || [ "$HOSTNAME" == "antares" ] || [ "$HOSTNAME" == "vega" ]; then
-	# fast.cs.odu.edu Solaris Machines
-	PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
-	PATH=$HOME/local/fast-sparc/bin:$HOME/local/fast-sparc/sbin:$PATH
-	JAVA_HOME=/usr/java
-	LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
-	LD_LIBRARY_PATH=$HOME/local/fast-sparc/lib:$LD_LIBRARY_PATH
-	MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
-	MANPATH=$HOME/local/fast-sparc/share/man:$MANPATH
-	PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
-elif [ "$HOSTNAME" == "atria" ] || [ "$HOSTNAME" == "sirius" ]; then
-	# fast.cs.odu.edu Ubuntu Machines
-	PATH=$HOME/local/fast-ubuntu/bin:$HOME/local/fast-ubuntu/sbin:$PATH
-	LD_LIBRARY_PATH=$HOME/local/fast-ubuntu/lib:$LD_LIBRARY_PATH
-	MANPATH=$HOME/local/fast-ubuntu/share/man:$MANPATH
-elif [ "$HOSTNAME" == "nvidia.cs.odu.edu" ]; then
-	# ODU CS Nvida S1070 machine
-	PATH=$HOME/local/nv-s1070/bin:$HOME/local/nv-s1070/sbin:$PATH:/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin
-	LD_LIBRARY_PATH=$HOME/local/nv-s1070/lib:$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
-	MANPATH=$HOME/local/nv-s1070/share/man:$MANPATH
-	PKG_CONFIG_PATH=$HOME/local/nv-s1070/lib/pkgconfig:$PKG_CONFIG_PATH
-elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
-	# ODU CS C870 machines
-	PATH=$HOME/local/nv-c870/bin:$HOME/local/nv-c870/sbin:$PATH:/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin
-	LD_LIBRARY_PATH=$HOME/local/nv-c870/lib:$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
-	MANPATH=$HOME/local/nv-c870/share/man:$MANPATH
-	PKG_CONFIG_PATH=$HOME/local/nv-c870/lib/pkgconfig:$PKG_CONFIG_PATH
-elif [ "$HOSTNAME" == "smp" ]; then
-	PATH=$HOME/local/smp/bin:$HOME/local/smp/sbin:$PATH
-	LD_LIBRARY_PATH=$HOME/local/smp/lib:$LD_LIBRARY_PATH
-	MANPATH=$HOME/local/smp/share/man:$MANPATH
+elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
+	if [ "$HOSTNAME" == "procyon.cs.odu.edu" ] || [ "$HOSTNAME" == "capella.cs.odu.edu" ] || [ "$HOSTNAME" == "antares.cs.odu.edu" ] || [ "$HOSTNAME" == "vega.cs.odu.edu" ]; then
+		LOCALNAME="fast-sparc"
+		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
+		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
+		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
+		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
+		JAVA_HOME=/usr/java
+	elif [ "$HOSTNAME" == "atria.cs.odu.edu" ] || [ "$HOSTNAME" == "sirius.cs.odu.edu" ]; then
+		LOCALNAME="fast-ubuntu"
+	elif [ "$HOSTNAME" == "nvidia.cs.odu.edu" ]; then
+		LOCALNAME="nv-s1070"
+	elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
+		LOCALNAME="nv-c870"
+	elif [ "$HOSTNAME" == "smp" ]; then
+		LOCALNAME="smp"
+	fi
+	# CUDA paths
+	if [ -d /usr/local/cuda ]; then
+		__append_to_path "/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin"
+		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
+	fi
+	__prepend_to_path "${HOME}/local/${LOCALNAME}/bin:${HOME}/local/${LOCALNAME}/sbin"
+	__prepend_to_manpath "${HOME}/local/${LOCALNAME}/share/man"
+	__prepend_to_libpath "${HOME}/local/${LOCALNAME}/lib:${HOME}/local/${LOCALNAME}/lib64"
+	__prepend_to_pkgconfpath "${HOME}/local/${LOCALNAME}/lib/pkgconfig"
+	unset LOCALNAME
 elif [ "$SYSTYPE" == "Darwin" ]; then
 	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
 	# MacPorts
