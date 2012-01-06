@@ -3,7 +3,7 @@
 # for examples
 
 # Path utility functions
-__prepend_to_path(){
+__prepend_to_path() {
 	export PATH="${1}${PATH:+:}${PATH}"
 }
 
@@ -11,7 +11,7 @@ __append_to_path() {
 	export PATH="${PATH}${PATH:+:}${1}"
 }
 
-__prepend_to_manpath(){
+__prepend_to_manpath() {
 	export MANPATH="${1}${MANPATH:+:}${MANPATH}"
 }
 
