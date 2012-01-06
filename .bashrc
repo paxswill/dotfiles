@@ -43,11 +43,6 @@ alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 # Set a base PATH, depending on host
 HOSTNAME=$(hostname)
 SYSTYPE=$(uname -s)
-if [ "$SYSTYPE" == "Linux" ]; then
-	DISTNAME=$(lsb_release -i | sed s/'.*:[ \t\r\n]*'//g)
-elif [ "$SYSTYPE" == "Darwin" ]; then
-	DISTNAME=$(sw_vers -productVersion)
-fi
 if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
@@ -160,4 +155,3 @@ export PKG_CONFIG_PATH
 # Clean up
 unset HOSTNAME
 unset SYSTYPE
-unset DISTNAME
