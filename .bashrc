@@ -2,6 +2,23 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Path utility functions
+__prepend_to_path(){
+	export PATH="${1}${PATH:+:}${PATH}"
+}
+
+__append_to_path() {
+	export PATH="${PATH}${PATH:+:}${1}"
+}
+
+__prepend_to_manpath(){
+	export MANPATH="${1}${MANPATH:+:}${MANPATH}"
+}
+
+__append_to_manpath() {
+	export MANPATH="${MANPATH}${MANPATH:+:}${1}"
+}
+
 # Bash Configuration
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -149,3 +166,7 @@ export PKG_CONFIG_PATH
 # Clean up
 unset HOSTNAME
 unset SYSTYPE
+unset __prepend_to_path
+unset __append_to_manpath
+unset __prepend_to_manpath
+unset __append_to_manpath
