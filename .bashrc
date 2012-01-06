@@ -3,7 +3,7 @@
 # for examples
 
 # Path utility functions
-__prepend_to_path(){
+__prepend_to_path() {
 	export PATH="${1}${PATH:+:}${PATH}"
 }
 
@@ -11,12 +11,28 @@ __append_to_path() {
 	export PATH="${PATH}${PATH:+:}${1}"
 }
 
-__prepend_to_manpath(){
+__prepend_to_manpath() {
 	export MANPATH="${1}${MANPATH:+:}${MANPATH}"
 }
 
 __append_to_manpath() {
 	export MANPATH="${MANPATH}${MANPATH:+:}${1}"
+}
+
+__prepend_to_libpath() {
+	export LD_LIBRARY_PATH="${1}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+}
+
+__append_to_libpath() {
+	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${1}"
+}
+
+__prepend_to_pkgconfpath() {
+	export PKG_CONFIG_PATH="${1}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+}
+
+__append_to_pkgconfpath() {
+	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${1}"
 }
 
 # Bash Configuration
@@ -58,57 +74,60 @@ alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
 # Set up paths
 # Set a base PATH, depending on host
-HOSTNAME=$(hostname -f)
 SYSTYPE=$(uname -s)
+# Some systems do not offer an option for the FQDN from hostname
+if [ "$SYSTYPE" == "SunOS" ] && type getent ; then
+	HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
+else
+	HOSTNAME=$(hostname -f)
+fi
+DOMAINTAIL=$(echo $HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
 if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 	JAVA_HOME=/usr/lib/jvm/default_java
-elif [ "$HOSTNAME" == "procyon" ] || [ "$HOSTNAME" == "capella" ] || [ "$HOSTNAME" == "antares" ] || [ "$HOSTNAME" == "vega" ]; then
-	# fast.cs.odu.edu Solaris Machines
-	PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
-	PATH=$HOME/local/fast-sparc/bin:$HOME/local/fast-sparc/sbin:$PATH
-	JAVA_HOME=/usr/java
-	LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
-	LD_LIBRARY_PATH=$HOME/local/fast-sparc/lib:$LD_LIBRARY_PATH
-	MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
-	MANPATH=$HOME/local/fast-sparc/share/man:$MANPATH
-	PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
-elif [ "$HOSTNAME" == "atria" ] || [ "$HOSTNAME" == "sirius" ]; then
-	# fast.cs.odu.edu Ubuntu Machines
-	PATH=$HOME/local/fast-ubuntu/bin:$HOME/local/fast-ubuntu/sbin:$PATH
-	LD_LIBRARY_PATH=$HOME/local/fast-ubuntu/lib:$LD_LIBRARY_PATH
-	MANPATH=$HOME/local/fast-ubuntu/share/man:$MANPATH
-elif [ "$HOSTNAME" == "nvidia.cs.odu.edu" ]; then
-	# ODU CS Nvida S1070 machine
-	PATH=$HOME/local/nv-s1070/bin:$HOME/local/nv-s1070/sbin:$PATH:/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin
-	LD_LIBRARY_PATH=$HOME/local/nv-s1070/lib:$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
-	MANPATH=$HOME/local/nv-s1070/share/man:$MANPATH
-	PKG_CONFIG_PATH=$HOME/local/nv-s1070/lib/pkgconfig:$PKG_CONFIG_PATH
-elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
-	# ODU CS C870 machines
-	PATH=$HOME/local/nv-c870/bin:$HOME/local/nv-c870/sbin:$PATH:/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin
-	LD_LIBRARY_PATH=$HOME/local/nv-c870/lib:$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
-	MANPATH=$HOME/local/nv-c870/share/man:$MANPATH
-	PKG_CONFIG_PATH=$HOME/local/nv-c870/lib/pkgconfig:$PKG_CONFIG_PATH
-elif [ "$HOSTNAME" == "smp" ]; then
-	PATH=$HOME/local/smp/bin:$HOME/local/smp/sbin:$PATH
-	LD_LIBRARY_PATH=$HOME/local/smp/lib:$LD_LIBRARY_PATH
-	MANPATH=$HOME/local/smp/share/man:$MANPATH
+elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
+	if [ "$HOSTNAME" == "procyon.cs.odu.edu" ] || [ "$HOSTNAME" == "capella.cs.odu.edu" ] || [ "$HOSTNAME" == "antares.cs.odu.edu" ] || [ "$HOSTNAME" == "vega.cs.odu.edu" ]; then
+		LOCALNAME="fast-sparc"
+		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
+		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
+		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
+		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
+		JAVA_HOME=/usr/java
+	elif [ "$HOSTNAME" == "atria.cs.odu.edu" ] || [ "$HOSTNAME" == "sirius.cs.odu.edu" ]; then
+		LOCALNAME="fast-ubuntu"
+	elif [ "$HOSTNAME" == "nvidia.cs.odu.edu" ]; then
+		LOCALNAME="nv-s1070"
+	elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
+		LOCALNAME="nv-c870"
+	elif [ "$HOSTNAME" == "smp" ]; then
+		LOCALNAME="smp"
+	fi
+	# CUDA paths
+	if [ -d /usr/local/cuda ]; then
+		__append_to_path "/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin"
+		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
+	fi
+	__prepend_to_path "${HOME}/local/${LOCALNAME}/bin:${HOME}/local/${LOCALNAME}/sbin"
+	__prepend_to_manpath "${HOME}/local/${LOCALNAME}/share/man"
+	__prepend_to_libpath "${HOME}/local/${LOCALNAME}/lib:${HOME}/local/${LOCALNAME}/lib64"
+	__prepend_to_pkgconfpath "${HOME}/local/${LOCALNAME}/lib/pkgconfig"
+	unset LOCALNAME
 elif [ "$SYSTYPE" == "Darwin" ]; then
-	PATH=$PATH:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources
+	# Add the undocumented airport command
+	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
 	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-		PATH=$PATH:/opt/local/bin:/opt/local/sbin
+		__append_to_path "/opt/local/bin:/opt/local/sbin"
 	fi
 	if [ -d /opt/local/share/man ]; then
-		MANPATH=$MANPATH:/opt/local/share/man
+		__append_to_manpath "/opt/local/share/man"
 	fi
 	# Add the OpenCL offline compiler if it exists
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
+		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Man page to Preview
 	if which ps2pdf > /dev/null; then
@@ -123,12 +142,12 @@ fi
 
 # Android
 if [ -d /opt/android-sdk ]; then
-	PATH=$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools
+	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
 fi
 
 # Fancy Kerberos
 if [ -d /usr/krb5/bin ]; then
-	PATH=/usr/krb5/bin:/usr/krb5/sbin:$PATH
+	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
 fi
 
 # enable programmable completion features 
@@ -166,7 +185,12 @@ export PKG_CONFIG_PATH
 # Clean up
 unset HOSTNAME
 unset SYSTYPE
+unset DOMAINTAIL
 unset __prepend_to_path
 unset __append_to_manpath
 unset __prepend_to_manpath
 unset __append_to_manpath
+unset __prepend_to_libpath
+unset __append_to_libpath
+unset __prepend_to_pkgconfpath
+unset __append_to_pkgconfpath
