@@ -39,10 +39,11 @@ alias egrep='egrep --color=auto'
 # vless is less with vim's syntax coloring
 alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
-# Set up path
+# Set up paths
 # Set a base PATH, depending on host
-HOSTNAME=$(hostname)
+HOSTNAME=$(hostname -f)
 SYSTYPE=$(uname -s)
+# Host specific configuration
 if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
