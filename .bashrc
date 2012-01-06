@@ -19,6 +19,22 @@ __append_to_manpath() {
 	export MANPATH="${MANPATH}${MANPATH:+:}${1}"
 }
 
+__prepend_to_libpath() {
+	export LD_LIBRARY_PATH="${1}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+}
+
+__append_to_libpath() {
+	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${1}"
+}
+
+__prepend_to_pkgconfpath() {
+	export PKG_CONFIG_PATH="${1}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+}
+
+__append_to_pkgconfpath() {
+	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${1}"
+}
+
 # Bash Configuration
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -170,3 +186,7 @@ unset __prepend_to_path
 unset __append_to_manpath
 unset __prepend_to_manpath
 unset __append_to_manpath
+unset __prepend_to_libpath
+unset __append_to_libpath
+unset __prepend_to_pkgconfpath
+unset __append_to_pkgconfpath
