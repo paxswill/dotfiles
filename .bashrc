@@ -89,13 +89,6 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		MANPATH=$MANPATH:/opt/local/share/man
 	fi
-	if [ "$HOSTNAME" == "mint.cmf.nrl.navy.mil" ]; then
-		# Special Homebrew install
-		PATH=$HOME/local/bin:$PATH
-		PATH=$HOME/local/scripts:$PATH
-		# Special Gitx install
-		alias gitx="$HOME/Applications/GitX.app/Contents/Resources/gitx"
-	fi
 	# Add the OpenCL offline compiler if it exists
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		PATH=$PATH:/System/Library/Frameworks/OpenCL.framework/Libraries
