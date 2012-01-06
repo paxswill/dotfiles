@@ -74,8 +74,14 @@ alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
 # Set up paths
 # Set a base PATH, depending on host
-HOSTNAME=$(hostname -f)
 SYSTYPE=$(uname -s)
+# Some systems do not offer an option for the FQDN from hostname
+if [ "$SYSTYPE" == "SunOS" ] && type getent ; then
+	HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
+else
+	HOSTNAME=$(hostname -f)
+fi
+DOMAINTAIL=$(echo $HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
 if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
@@ -182,6 +188,7 @@ export PKG_CONFIG_PATH
 # Clean up
 unset HOSTNAME
 unset SYSTYPE
+unset DOMAINTAIL
 unset __prepend_to_path
 unset __append_to_manpath
 unset __prepend_to_manpath
