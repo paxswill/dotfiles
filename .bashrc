@@ -75,11 +75,15 @@ alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 # Set up paths
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
-# Some systems do not offer an option for the FQDN from hostname
-if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
-	HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
-else
-	HOSTNAME=$(hostname -f)
+# A FQDN is required
+HOSTNAME=$(hostname)
+# Sometimes a flag is needed
+if echo $HOSTNAME | grep -q '\.'; then
+	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
+		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
+	elif hostname -f >/dev/null 2>&1; then
+		HOSTNAME=$(hostname -f)
+	fi
 fi
 DOMAINTAIL=$(echo $HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
