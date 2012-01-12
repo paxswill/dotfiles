@@ -1,0 +1,15 @@
+[rerere]
+	enabled = 1
+[merge]
+	tool = opendiff
+[user]
+	name = Will Ross
+	email = paxswill@gmail.com
+[core]
+	excludesfile = ~/.git-global-ignore
+[color]
+	ui = auto
+[diff]
+	renames = copies
+[fetch]
+	recurseSubmodules = on-demand
