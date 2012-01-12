@@ -146,8 +146,10 @@ if [ -d /opt/android-sdk ]; then
 fi
 
 # Fancy Kerberos
-if [ -d /usr/krb5/bin ]; then
+if [ -d /usr/krb5 ]; then
 	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
+elif [ -d /usr/local/krb5 ]; then
+	__prepend_to_path "/usr/local/krb5/bin:/usr/local/krb5/sbin"
 fi
 
 # enable programmable completion features 
