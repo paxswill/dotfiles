@@ -59,15 +59,19 @@ shopt -s checkwinsize
 
 # Aliases
 # ls
-alias ls='ls -G'
+if ls -G >/dev/null 2>&1; then
+	alias ls='ls -G'
+fi
 alias ll='ls -lh'
 alias la='ls -A'
 alias lla='ls -lAh'
 
 # grep
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+for GREPCMD in grep egrep fgrep; do
+	if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
+		alias ${GREPCMD}="${GREPCMD} --color=auto"
+	fi
+done
 
 # vless is less with vim's syntax coloring
 alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
@@ -78,7 +82,7 @@ SYSTYPE=$(uname -s)
 # A FQDN is required
 HOSTNAME=$(hostname)
 # Sometimes a flag is needed
-if echo $HOSTNAME | grep -q '\.'; then
+if echo $HOSTNAME | grep '\.' >/dev/null; then
 	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
 		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
 	elif hostname -f >/dev/null 2>&1; then
