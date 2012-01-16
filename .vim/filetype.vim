@@ -2,7 +2,8 @@ if exists("did_load_filetypes")
 	finish
 endif
 augroup filetypedetect
-	au! BufRead,BufNewFile *.cl setfiletype opencl 
-	au! BufRead,BufNewFile *.c setfiletype opencl
-	au! BufRead,BufNewFile *.h setfiletype opencl
+	" OpenCL
+	au! BufRead,BufNewFile *.h,*.c,*.cl setfiletype opencl 
+	" Octopress Markdown
+	au! BufRead,BufNewFile *.markdown,*.textile setfiletype octopress
 augroup END
