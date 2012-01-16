@@ -10,3 +10,6 @@
 [submodule ".vim/bundle/octopress"]
 	path = .vim/bundle/octopress
 	url = git://github.com/tangledhelix/vim-octopress.git
+[submodule ".vim/bundle/vim-opencl"]
+	path = .vim/bundle/vim-opencl
+	url = git://github.com/paxswill/vim-opencl.git
