@@ -175,6 +175,13 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 	. /opt/local/etc/bash_completion
 fi
 
+# Set Vim as $EDITOR if it's available
+if [ which vim >/dev/null ]; then
+	export EDITOR=vim
+elif [ which vi > /dev/null ]; then
+	export EDITOR=vi
+fi
+
 # Set PS1 (prompt)
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
