@@ -82,7 +82,7 @@ SYSTYPE=$(uname -s)
 # A FQDN is required
 HOSTNAME=$(hostname)
 # Sometimes a flag is needed
-if echo $HOSTNAME | grep '\.' >/dev/null; then
+if ! echo $HOSTNAME | grep '\.' >/dev/null; then
 	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
 		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
 	elif hostname -f >/dev/null 2>&1; then
@@ -173,6 +173,13 @@ elif [ "$SYSTYPE" == "Darwin" ] && which brew > /dev/null && [ -f $(brew --prefi
 elif [ -f /opt/local/etc/bash_completion ]; then
 	# Macports
 	. /opt/local/etc/bash_completion
+fi
+
+# Set Vim as $EDITOR if it's available
+if [ which vim >/dev/null ]; then
+	export EDITOR=vim
+elif [ which vi > /dev/null ]; then
+	export EDITOR=vi
 fi
 
 # Set PS1 (prompt)
