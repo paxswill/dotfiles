@@ -11,3 +11,5 @@
 	ui = auto
 [diff]
 	renames = copies
+[github]
+	user = paxswill
