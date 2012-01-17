@@ -11,5 +11,3 @@
 	ui = auto
 [diff]
 	renames = copies
-[fetch]
-	recurseSubmodules = on-demand
