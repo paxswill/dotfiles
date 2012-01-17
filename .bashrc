@@ -176,9 +176,9 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Set Vim as $EDITOR if it's available
-if [ which vim >/dev/null ]; then
+if which vim >/dev/null; then
 	export EDITOR=vim
-elif [ which vi > /dev/null ]; then
+elif which vi > /dev/null; then
 	export EDITOR=vi
 fi
 
