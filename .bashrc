@@ -179,6 +179,7 @@ fi
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
 	# [user@host:dir(git branch)] $
+	GIT_PS1_SHOWUPSTREAM="auto"
 	PS1='[\u@\h:\W$(__git_ps1 " (%s)")]\$ '
 else
 	# [user@host:dir] $
