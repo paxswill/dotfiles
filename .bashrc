@@ -119,7 +119,6 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
 	fi
 	__prepend_to_path "${HOME}/local/${LOCALNAME}/bin:${HOME}/local/${LOCALNAME}/sbin"
-	__prepend_to_manpath "${HOME}/local/${LOCALNAME}/share/man"
 	__prepend_to_libpath "${HOME}/local/${LOCALNAME}/lib:${HOME}/local/${LOCALNAME}/lib64"
 	__prepend_to_pkgconfpath "${HOME}/local/${LOCALNAME}/lib/pkgconfig"
 	unset LOCALNAME
@@ -141,9 +140,6 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 		fi
 		if [ -d "${BREW_PREFIX}/bin" ]; then
 			__prepend_to_path "${BREW_PREFIX}/bin"
-		fi
-		if [ -d "${BREW_PREFIX}/share/man" ]; then
-			__prepend_to_manpath "${BREW_PREFIX}/share/man"
 		fi
 		if [ -d /usr/local/share/python ]; then
 			__prepend_to_path "/usr/local/share/python"
