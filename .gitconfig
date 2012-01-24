@@ -6,7 +6,7 @@
 	name = Will Ross
 	email = paxswill@gmail.com
 [core]
-	excludesfile = ~/.git-global-ignore
+	excludesfile = ~/.cvsignore
 [color]
 	ui = auto
 [diff]
