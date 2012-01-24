@@ -30,6 +30,12 @@ local.properties
 .settings/
 .loadpath
 
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
 # Xcode
 build/*
 *.pbxuser

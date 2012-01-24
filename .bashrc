@@ -133,6 +133,23 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		__append_to_manpath "/opt/local/share/man"
 	fi
+	# Move homebrew to the front of the path if we have it
+	if type brew >/dev/null 2>&1; then
+		BREW_PREFIX=$(brew --prefix)
+		if [ -d "${BREW_PREFIX}/sbin" ]; then
+			__prepend_to_path "${BREW_PREFIX}/sbin"
+		fi
+		if [ -d "${BREW_PREFIX}/bin" ]; then
+			__prepend_to_path "${BREW_PREFIX}/bin"
+		fi
+		if [ -d "${BREW_PREFIX}/share/man" ]; then
+			__prepend_to_manpath "${BREW_PREFIX}/share/man"
+		fi
+		if [ -d /usr/local/share/python ]; then
+			__prepend_to_path "/usr/local/share/python"
+		fi
+		unset BREW_PREFIX
+	fi
 	# Add the OpenCL offline compiler if it exists
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
