@@ -141,8 +141,8 @@ elif [ "$SYSTYPE" == "Darwin" ]; then
 		if [ -d "${BREW_PREFIX}/bin" ]; then
 			__prepend_to_path "${BREW_PREFIX}/bin"
 		fi
-		if [ -d /usr/local/share/python ]; then
-			__prepend_to_path "/usr/local/share/python"
+		if [ -d /usr/local/share/python3 ]; then
+			__prepend_to_path "/usr/local/share/python3"
 		fi
 		unset BREW_PREFIX
 	fi
