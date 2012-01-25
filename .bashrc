@@ -57,28 +57,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# Aliases
-# ls
-# BSD ls uses -G for color, GNU ls uses --color=auto
-if strings "$(which ls)" | grep 'GNU' > /dev/null; then
-    alias ls='ls --color=auto'
-elif ls -G >/dev/null 2>&1; then
-	alias ls='ls -G'
-fi
-alias ll='ls -lh'
-alias la='ls -A'
-alias lla='ls -lAh'
-
-# grep
-for GREPCMD in grep egrep fgrep; do
-	if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
-		alias ${GREPCMD}="${GREPCMD} --color=auto"
-	fi
-done
-
-# vless is less with vim's syntax coloring
-alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
-
 # Set up paths
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
@@ -197,6 +175,28 @@ if which vim >/dev/null; then
 elif which vi > /dev/null; then
 	export EDITOR=vi
 fi
+
+# Aliases
+# ls
+# BSD ls uses -G for color, GNU ls uses --color=auto
+if strings "$(which ls)" | grep 'GNU' > /dev/null; then
+    alias ls='ls --color=auto'
+elif ls -G >/dev/null 2>&1; then
+	alias ls='ls -G'
+fi
+alias ll='ls -lh'
+alias la='ls -A'
+alias lla='ls -lAh'
+
+# grep
+for GREPCMD in grep egrep fgrep; do
+	if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
+		alias ${GREPCMD}="${GREPCMD} --color=auto"
+	fi
+done
+
+# vless is less with vim's syntax coloring
+alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
 
 # Set PS1 (prompt)
 # If we have git PS1 magic
