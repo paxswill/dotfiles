@@ -59,7 +59,10 @@ shopt -s checkwinsize
 
 # Aliases
 # ls
-if ls -G >/dev/null 2>&1; then
+# BSD ls uses -G for color, GNU ls uses --color=auto
+if strings "$(which ls)" | grep 'GNU' > /dev/null; then
+    alias ls='ls --color=auto'
+elif ls -G >/dev/null 2>&1; then
 	alias ls='ls -G'
 fi
 alias ll='ls -lh'
