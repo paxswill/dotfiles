@@ -97,15 +97,16 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	elif [ "$HOSTNAME" == "smp" ]; then
 		LOCALNAME="smp"
 	fi
+    export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
+	unset LOCALNAME
 	# CUDA paths
 	if [ -d /usr/local/cuda ]; then
 		__append_to_path "/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin"
 		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
 	fi
-	__prepend_to_path "${HOME}/local/${LOCALNAME}/bin:${HOME}/local/${LOCALNAME}/sbin"
-	__prepend_to_libpath "${HOME}/local/${LOCALNAME}/lib:${HOME}/local/${LOCALNAME}/lib64"
-	__prepend_to_pkgconfpath "${HOME}/local/${LOCALNAME}/lib/pkgconfig"
-	unset LOCALNAME
+	__prepend_to_path "${LOCAL_PREFIX}/bin:${LOCAL_PREFIX}/sbin"
+	__prepend_to_libpath "${LOCAL_PREFIX}/lib:${LOCAL_PREFIX}/lib64"
+	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
 elif [ "$SYSTYPE" == "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
