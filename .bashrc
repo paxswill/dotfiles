@@ -57,6 +57,9 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# Ignore Vim temporary files for file completion
+FIGNORE=".swp:.swo"
+
 # Set up paths
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
