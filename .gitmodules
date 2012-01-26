@@ -13,6 +13,3 @@
 [submodule ".vim/bundle/vim-opencl"]
 	path = .vim/bundle/vim-opencl
 	url = git://github.com/paxswill/vim-opencl.git
-[submodule ".vim/bundle/pyflakes-vim"]
-	path = .vim/bundle/pyflakes-vim
-	url = git://github.com/kevinw/pyflakes-vim.git

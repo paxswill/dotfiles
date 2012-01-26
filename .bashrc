@@ -42,7 +42,7 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 # All shells share a history
-PROMPT_COMMAND='history -n && history -a'
+PROMPT_COMMAND='history -a'
 # Multi-line commands in the same history entry
 shopt -s cmdhist
 shopt -s lithist
@@ -56,6 +56,9 @@ shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Ignore Vim temporary files for file completion
+FIGNORE=".swp:.swo"
 
 # Set up paths
 # Set a base PATH, depending on host
