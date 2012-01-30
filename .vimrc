@@ -9,7 +9,6 @@ syntax enable
 filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 " Turn on Solarized
-"let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
 " Whitespace configuration
@@ -20,3 +19,12 @@ set ls=2
 if has('statusline')
 	let &stl="%f\ %([%R%M]%)%=%l-%c\ \ \ \ "
 endif
+" Highlight columns >= 80
+if exists('+colorcolumn')
+	set colorcolumn=80
+else
+	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+" Don't wrap lines, just display them past the edge fo the screen
+set nowrap
+set sidescroll=10
