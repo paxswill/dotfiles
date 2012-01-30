@@ -19,3 +19,9 @@ set ls=2
 if has('statusline')
 	let &stl="%f\ %([%R%M]%)%=%l-%c\ \ \ \ "
 endif
+" Highlight columns >= 80
+if exists('+colorcolumn')
+	set colorcolumn=80
+else
+	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
