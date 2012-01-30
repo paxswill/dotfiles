@@ -9,7 +9,6 @@ syntax enable
 filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 " Turn on Solarized
-"let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
 " Whitespace configuration
