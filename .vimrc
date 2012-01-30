@@ -25,3 +25,6 @@ if exists('+colorcolumn')
 else
 	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
+" Don't wrap lines, just display them past the edge fo the screen
+set nowrap
+set sidescroll=10
