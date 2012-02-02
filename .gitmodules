@@ -1,15 +1,15 @@
-[submodule "src/.vim/bundle/clang_complete"]
-	path = src/.vim/bundle/clang_complete
+[submodule "staging/.vim/bundle/clang_complete"]
+	path = staging/.vim/bundle/clang_complete
 	url = git://github.com/Rip-Rip/clang_complete.git
-[submodule "src/.vim/bundle/vim-octopress"]
-	path = src/.vim/bundle/vim-octopress
+[submodule "staging/.vim/bundle/vim-octopress"]
+	path = staging/.vim/bundle/vim-octopress
 	url = git://github.com/tangledhelix/vim-octopress.git
-[submodule "src/.vim/bundle/vim-fugitive"]
-	path = src/.vim/bundle/vim-fugitive
+[submodule "staging/.vim/bundle/vim-fugitive"]
+	path = staging/.vim/bundle/vim-fugitive
 	url = git://github.com/tpope/vim-fugitive.git
-[submodule "src/.vim/bundle/vim-colors-solarized"]
-	path = src/.vim/bundle/vim-colors-solarized
+[submodule "staging/.vim/bundle/vim-colors-solarized"]
+	path = staging/.vim/bundle/vim-colors-solarized
 	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule "src/.vim/bundle/vim-opencl"]
-	path = src/.vim/bundle/vim-opencl
+[submodule "staging/.vim/bundle/vim-opencl"]
+	path = staging/.vim/bundle/vim-opencl
 	url = git://github.com/paxswill/vim-opencl.git
