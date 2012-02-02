@@ -4,7 +4,10 @@
 	tool = opendiff
 [user]
 	name = Will Ross
-	email = paxswill@gmail.com
+ifdef(`NRL_CONFIG',
+`	email = wross@cmf.nrl.navy.mil',
+`	email = paxswill@gmail.com'
+)dnl
 [core]
 	excludesfile = ~/.cvsignore
 [color]
