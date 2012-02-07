@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Get the dotfiles directory if needed
+if ! [ -d ~/.dotfiles ]; then
+	git clone paxswill_git@git.paxswill.com:~/repos/dotfiles.git .dotfiles
+	BASE="$HOME/.dotfiles"
+fi
+
 # Set up macro definitions
 if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
 	M4_DEFS="${M4_DEFS}-DNRL "
@@ -14,7 +20,9 @@ if ! echo "$(ssh -o ExitOnForwardfailure=yes 2>&1)" | grep 'command-line: line 0
 	M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE"
 fi
 
-BASE=$(dirname $0)
+if [-z $BASE ]; then
+	BASE=$(dirname $0)
+fi
 # Clean up any old links
 if [ -f $BASE/links.txt ]; then
 	FILES=$(cat $BASE/links.txt)
@@ -24,6 +32,7 @@ if [ -f $BASE/links.txt ]; then
 		fi
 	done
 fi
+
 # Process files with M4
 cd $BASE/src
 FILES=$(find . -type f)
@@ -43,4 +52,3 @@ done
 
 # Save record of links for future upgrades
 echo $FILES > $BASE/links.txt
-
