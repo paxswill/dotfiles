@@ -17,7 +17,7 @@ if ! echo "$(ssh -o ControlMaster=auto 2>&1)" | grep 'command-line: line 0:'; th
 	fi
 fi
 if ! echo "$(ssh -o ExitOnForwardfailure=yes 2>&1)" | grep 'command-line: line 0:'; then
-	M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE"
+	M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
 fi
 
 if [-z $BASE ]; then
