@@ -146,7 +146,7 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		fi
 		unset BREW_PREFIX
 	fi
-	# Add the OpenCL offline compiler if it exists
+	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
@@ -169,12 +169,12 @@ if [ ! -s "$HOME/.rvm/scripts/rvm" ]; then
 	unset use_rvm
 fi
 
-# Android
+# Android SDK (non-OS X)
 if [ -d /opt/android-sdk ]; then
 	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
 fi
 
-# Fancy Kerberos
+# HPCMO Kerberos
 if [ -d /usr/krb5 ]; then
 	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
 elif [ -d /usr/local/krb5 ]; then
@@ -186,6 +186,7 @@ if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 	. $HOME/perl5/perlbrew/etc/bashrc
 fi
 
+# Enable programmable shell completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 	# Normal, sane systems
 	. /etc/bash_completion
