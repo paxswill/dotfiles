@@ -107,7 +107,22 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	__prepend_to_path "${LOCAL_PREFIX}/bin:${LOCAL_PREFIX}/sbin"
 	__prepend_to_libpath "${LOCAL_PREFIX}/lib:${LOCAL_PREFIX}/lib64"
 	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
-elif [ "$SYSTYPE" == "Darwin" ]; then
+elif ["$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
+	# PATH on CMF OS X machines is getitng munged
+	if [ "$SYSTYPE" == "Darwin" ]; then
+		unset PATH
+		eval "$(/usr/libexec/path_helper -s)"
+		# Personal Homebrew
+		__prepend_to_path "$HOME/local/bin:$HOME/local/sbin"
+		__append_to_path "$HOME/local/scripts"
+	fi
+	# AFS Resources
+	if [-d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
+		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
+	fi
+fi
+# OS X Specific setup
+if [ "$SYSTYPE" == "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
@@ -166,7 +181,11 @@ elif [ -d /usr/local/krb5 ]; then
 	__prepend_to_path "/usr/local/krb5/bin:/usr/local/krb5/sbin"
 fi
 
-# enable programmable completion features 
+# Perlbrew
+if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
+	. $HOME/perl5/perlbrew/etc/bashrc
+fi
+
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 	# Normal, sane systems
 	. /etc/bash_completion
