@@ -72,10 +72,17 @@ done
 
 # Link everything up
 cd $BASE/staging
-DIRS=$(find . -maxdepth 1 -mindepth 1 -type d)
-FILES=$(find . -maxdepth 1 -mindepth 1 -type f)
+DIRS=$(find . -type d -not -name . -prune)
+FILES=$(find . -not -name . -prune -type f)
 for D in $DIRS; do
-	FILES="$FILES $(find $D -maxdepth 1 -mindepth 1)"
+	goback=$PWD
+	cd "$D"
+	tmp_files=$(find . -not -name . -prune)
+	for f in $tmp_files; do
+		FILES="$FILES $D/$f"
+	done
+	cd $goback
+	unset tmp_files
 done
 cd $DEST
 for D in $DIRS; do
