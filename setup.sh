@@ -5,7 +5,10 @@ DEST="$PWD"
 
 # Get the dotfiles directory if needed
 if ! [ -d "$DEST/.dotfiles" ]; then
-	git clone -b Macros paxswill_git@git.paxswill.com:~/repos/dotfiles.git $DEST/.dotfiles
+	if ! git clone git@github.com:paxswill/dotfiles.git $DEST/.dotfiles; then
+		echo "Cloning public URL"
+		git clone git://github.com/paxswill/dotfiles.git $DEST/.dotfiles
+	fi
 	cd $DEST/.dotfiles
 	git submodule update -i
 	cd $DEST
