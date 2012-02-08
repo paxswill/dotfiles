@@ -48,6 +48,12 @@ if [ -f $BASE/links.txt ]; then
 		fi
 	done
 fi
+if [ -f $BASE/dirs.txt ]; then
+	DIRS=$(cat $BASE/dirs.txt)
+	for D in $DIRS; do
+		rmdir $DIRS >/dev/null 2>&1
+	done
+fi
 
 # Process files with M4
 cd $BASE/src
@@ -60,11 +66,19 @@ done
 
 # Link everything up
 cd $BASE/staging
-FILES=$(find . -maxdepth 1)
+DIRS=$(find . -maxdepth 1 -mindepth 1 -type d)
+FILES=$(find . -maxdepth 1 -mindepth 1 -type f)
+for D in $DIRS; do
+	FILES="$FILES $(find $D -maxdepth 1 -mindepth 1)"
+done
 cd $DEST
+for D in $DIRS; do
+	mkdir $D
+done
 for F in $FILES; do
 	ln -s $BASE/staging/$F $F
 done
 
-# Save record of links for future upgrades
-echo $FILES > $BASE/links.txt
+# Save record of links and directories for future upgrades
+echo "$FILES" > $BASE/links.txt
+echo "$DIRS" > $BASE/dirs.txt
