@@ -76,7 +76,7 @@ for D in $DIRS; do
 done
 cd $DEST
 for D in $DIRS; do
-	mkdir $D
+	mkdir $D >/dev/null 2>&1
 done
 for F in $FILES; do
 	ln -s $BASE/staging/$F $F
