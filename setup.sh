@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Save starting directory
+DEST="$PWD"
+
 # Get the dotfiles directory if needed
 if ! [ -d ~/.dotfiles ]; then
 	git clone paxswill_git@git.paxswill.com:~/repos/dotfiles.git .dotfiles
@@ -36,7 +39,7 @@ fi
 # Process files with M4
 cd $BASE/src
 FILES=$(find . -type f)
-cd -
+cd $DEST
 for F in $FILES; do
 	mkdir -p $BASE/staging/$(dirname $F)
 	m4 $M4_DEFS $BASE/src/$F > $BASE/staging/$F
@@ -45,7 +48,7 @@ done
 # Link everything up
 cd $BASE/staging
 FILES=$(find . -maxdepth 1)
-cd -
+cd $DEST
 for F in $FILES; do
 	ln -s $BASE/staging/$F $F
 done
