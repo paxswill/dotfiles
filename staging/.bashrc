@@ -68,7 +68,7 @@ HOSTNAME=$(hostname)
 # Sometimes a flag is needed
 if ! echo $HOSTNAME | grep '\.' >/dev/null; then
 	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
-		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2'})
+		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2}')
 	elif hostname -f >/dev/null 2>&1; then
 		HOSTNAME=$(hostname -f)
 	fi
