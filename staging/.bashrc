@@ -107,7 +107,7 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	__prepend_to_path "${LOCAL_PREFIX}/bin:${LOCAL_PREFIX}/sbin"
 	__prepend_to_libpath "${LOCAL_PREFIX}/lib:${LOCAL_PREFIX}/lib64"
 	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
-elif ["$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
+elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 	# PATH on CMF OS X machines is getitng munged
 	if [ "$SYSTYPE" == "Darwin" ]; then
 		unset PATH
