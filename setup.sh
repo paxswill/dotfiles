@@ -4,9 +4,12 @@
 DEST="$PWD"
 
 # Get the dotfiles directory if needed
-if ! [ -d ~/.dotfiles ]; then
-	git clone paxswill_git@git.paxswill.com:~/repos/dotfiles.git .dotfiles
-	BASE="$HOME/.dotfiles"
+if ! [ -d "$DEST/.dotfiles" ]; then
+	git clone -b Macros paxswill_git@git.paxswill.com:~/repos/dotfiles.git $DEST/.dotfiles
+	cd $DEST/.dotfiles
+	git submodule update -i
+	cd $DEST
+	BASE="$DEST/.dotfiles"
 fi
 
 # Set up macro definitions
