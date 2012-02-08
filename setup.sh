@@ -29,6 +29,9 @@ fi
 # Make sure BASE is set and that it isn't the DEST
 if [ -z $BASE ]; then
 	BASE=$(dirname $0)
+	cd $BASE
+	BASE=$PWD
+	cd $OLDPWD
 fi
 cd $BASE
 if [ "$PWD" == "$DEST" ]; then
