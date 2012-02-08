@@ -23,10 +23,20 @@ if ! echo "$(ssh -o ExitOnForwardfailure=yes >/dev/null 2>&1)" | grep 'command-l
 	M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
 fi
 
-if [-z $BASE ]; then
+# Make sure BASE is set and that it isn't the DEST
+if [ -z $BASE ]; then
 	BASE=$(dirname $0)
 fi
-# Clean up any old links
+cd $BASE
+if [ "$PWD" == "$DEST" ]; then
+	echo "Cannot install into the base directory"
+	exit 1
+else
+	cd "$DEST"
+fi
+
+# Clean up any old and directories
+cd $DEST
 if [ -f $BASE/links.txt ]; then
 	FILES=$(cat $BASE/links.txt)
 	for F in $FILES; do
