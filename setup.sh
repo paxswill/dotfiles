@@ -13,13 +13,13 @@ fi
 if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
 	M4_DEFS="${M4_DEFS}-DNRL "
 fi
-if ! echo "$(ssh -o ControlMaster=auto 2>&1)" | grep 'command-line: line 0:'; then
+if ! echo "$(ssh -o ControlMaster=auto >/dev/null 2>&1)" | grep 'command-line: line 0:'; then
 	M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_MASTER "
-	if ! echo "$(ssh -o ControlPersist=15m 2>&1)" | grep 'command-line: line 0:'; then
+	if ! echo "$(ssh -o ControlPersist=15m >/dev/null 2>&1)" | grep 'command-line: line 0:'; then
 		M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_PERSIST "
 	fi
 fi
-if ! echo "$(ssh -o ExitOnForwardfailure=yes 2>&1)" | grep 'command-line: line 0:'; then
+if ! echo "$(ssh -o ExitOnForwardfailure=yes >/dev/null 2>&1)" | grep 'command-line: line 0:'; then
 	M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
 fi
 
