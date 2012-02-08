@@ -72,12 +72,12 @@ done
 
 # Link everything up
 cd $BASE/staging
-DIRS=$(find . -type d -not -name . -prune)
-FILES=$(find . -not -name . -prune -type f)
+DIRS=$(find . -type d ! -name . -prune)
+FILES=$(find . ! -name . -prune -type f)
 for D in $DIRS; do
 	goback=$PWD
 	cd "$D"
-	tmp_files=$(find . -not -name . -prune)
+	tmp_files=$(find . ! -name . -prune)
 	for f in $tmp_files; do
 		FILES="$FILES $D/$f"
 	done
