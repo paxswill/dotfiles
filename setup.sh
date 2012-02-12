@@ -106,5 +106,5 @@ setup_dotfiles(){
 if [ $SHLVL -eq 2 ]; then
 	# We're running as a script within a shell
 	# This is the case if this is during bootstrap, or during a manual setup
-	setup_dotfiles($1)
+	setup_dotfiles $1
 fi
