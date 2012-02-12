@@ -58,3 +58,6 @@ profile
 Session.vim
 TAGS
 tags
+
+# Python
+*.py[co]
