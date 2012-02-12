@@ -44,7 +44,7 @@ setup_dotfiles(){
 	cd $BASE
 	if [ "$PWD" == "$DEST" ]; then
 		echo "Cannot install into the base directory"
-		exit 1
+		return 1
 	else
 		cd "$DEST"
 	fi
