@@ -94,7 +94,7 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 		LOCALNAME="nv-s1070"
 	elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
 		LOCALNAME="nv-c870"
-	elif [ "$HOSTNAME" == "smp" ]; then
+	elif [ "$HOSTNAME" == "smp.cs.odu.edu" ]; then
 		LOCALNAME="smp"
 	fi
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
