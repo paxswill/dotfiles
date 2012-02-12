@@ -102,6 +102,16 @@ setup_dotfiles(){
 	echo "$DIRS" > $BASE/dirs.txt
 }
 
+# Uupdate the dotfiles repo and relink it
+update_dotfiles(){
+	cd $HOME/.dotfiles
+	if [ "git status --porcelain" != "" ]; then
+		echo "The dotfile repo is dirty. Aborting"
+		return 1
+	fi
+	git pull origin
+	setup_dotfiles $1
+}
 
 if [ $SHLVL -eq 2 ]; then
 	# We're running as a script within a shell
