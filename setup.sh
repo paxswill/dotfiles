@@ -32,10 +32,14 @@ setup_dotfiles(){
 
 	# Make sure BASE is set and that it isn't the DEST
 	if [ -z $BASE ]; then
-		BASE=$(dirname $0)
-		cd $BASE
-		BASE=$PWD
-		cd $OLDPWD
+		if [ -d $HOME/.dotfiles ]; then
+			BASE="$HOME/.dotfiles"
+		else
+			BASE=$(dirname $0)
+			cd $BASE
+			BASE=$PWD
+			cd $OLDPWD
+		fi
 	fi
 	cd $BASE
 	if [ "$PWD" == "$DEST" ]; then
