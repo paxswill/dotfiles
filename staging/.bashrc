@@ -243,6 +243,11 @@ else
 	PS1='[\u@\h:\W]\$ '
 fi
 
+# Pull in dotfiles management functions
+if [ -d $HOME/.dotfiles ]; then
+	source $HOME/.dotfiles/setup.sh
+fi
+
 # Export the configuration
 export PATH
 export JAVA_HOME
