@@ -105,7 +105,7 @@ setup_dotfiles(){
 # Uupdate the dotfiles repo and relink it
 update_dotfiles(){
 	cd $HOME/.dotfiles
-	if [ "git status --porcelain" != "" ]; then
+	if [ "$(git status --porcelain)" != "" ]; then
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
 	fi
