@@ -117,6 +117,10 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 		# Personal Homebrew
 		__prepend_to_path "$HOME/local/bin:$HOME/local/sbin"
 		__append_to_path "$HOME/local/scripts"
+		# Staging/Linking up packages with Homebrew can fail when crossing file
+		# system boundaries. This forces the homebrew temporary folder to be
+		# on the same FS as the destination.
+		export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
 	fi
 	# AFS Resources
 	if [-d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
