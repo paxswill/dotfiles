@@ -104,12 +104,15 @@ setup_dotfiles(){
 
 # Uupdate the dotfiles repo and relink it
 update_dotfiles(){
+	start_dir=$PWD
 	cd $HOME/.dotfiles
 	if [ "$(git status --porcelain)" != "" ]; then
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
 	fi
 	git pull origin
+	cd $start_dit
+	unset start_dir
 	setup_dotfiles $1
 }
 
