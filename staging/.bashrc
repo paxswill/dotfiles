@@ -114,15 +114,10 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 	if [ "$SYSTYPE" == "Darwin" ]; then
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
-		# Personal Homebrew
-		if [ -d $HOME/local/bin ]; then
-			__prepend_to_path "$HOME/local/bin:$HOME/local/sbin"
-			__append_to_path "$HOME/local/scripts"
-			# Staging/Linking up packages with Homebrew can fail when crossing file
-			# system boundaries. This forces the homebrew temporary folder to be
-			# on the same FS as the destination.
-			export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
-		fi
+		# Staging/Linking up packages with Homebrew can fail when crossing file
+		# system boundaries. This forces the homebrew temporary folder to be
+		# on the same FS as the destination.
+		export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
 	fi
 	# AFS Resources
 	if [-d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
@@ -140,6 +135,10 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		__append_to_manpath "/opt/local/share/man"
 	fi
+	# Sometimes homebrew is in $HOME
+	if [ -x $HOME/local/bin/brew ]; then
+		alias brew="$HOME/local/bin/brew"
+	fi
 	# Move homebrew to the front of the path if we have it
 	if type brew >/dev/null 2>&1; then
 		BREW_PREFIX=$(brew --prefix)
@@ -154,6 +153,7 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		fi
 		unset BREW_PREFIX
 	fi
+	unalias brew
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
