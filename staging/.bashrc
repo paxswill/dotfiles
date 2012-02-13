@@ -152,8 +152,10 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 			__prepend_to_path "$BREW_PREFIX/share/python3"
 		fi
 		unset BREW_PREFIX
+		if [ "$(type brew)" == "alias" ]; then
+			unalias brew
+		fi
 	fi
-	unalias brew
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
