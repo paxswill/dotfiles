@@ -20,3 +20,9 @@ ifdef(`NRL_CONFIG',
 	renames = copies
 [github]
 	user = paxswill
+[alias]
+	st = status
+	ci = commit
+	br = branch
+	df = diff
+	dh = diff HEAD
