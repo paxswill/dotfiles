@@ -116,7 +116,7 @@ update_dotfiles(){
 	setup_dotfiles $1
 }
 
-if [ "$BASH_SOURCE[0]" != "$0" ]; then
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
 	# We're running as a script within a shell
 	# This is the case if this is during bootstrap, or during a manual setup
 	setup_dotfiles $1
