@@ -49,7 +49,7 @@ setup_dotfiles(){
 		cd "$DEST"
 	fi
 
-	# Clean up any old and directories
+	# Clean up any old files and directories
 	cd $DEST
 	if [ -f $BASE/links.txt ]; then
 		FILES=$(cat $BASE/links.txt)
@@ -68,7 +68,7 @@ setup_dotfiles(){
 
 	# Process files with M4
 	cd $BASE/src
-	FILES=$(find . -type f)
+	FILES=$(find . -type f ! -name '*.sw*')
 	cd $DEST
 	for F in $FILES; do
 		mkdir -p $BASE/staging/$(dirname $F)
@@ -78,11 +78,11 @@ setup_dotfiles(){
 	# Link everything up
 	cd $BASE/staging
 	DIRS=$(find . -type d ! -name . -prune)
-	FILES=$(find . ! -name . -prune -type f)
+	FILES=$(find . ! -name . -prune -type f ! -name '*.sw*')
 	for D in $DIRS; do
 		goback=$PWD
 		cd "$D"
-		tmp_files=$(find . ! -name . -prune)
+		tmp_files=$(find . ! -name . -prune ! -name '*.sw*')
 		for f in $tmp_files; do
 			FILES="$FILES $D/$f"
 		done
