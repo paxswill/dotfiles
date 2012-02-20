@@ -37,6 +37,9 @@ setup_dotfiles(){
 	if ! __check_ssh_option "ExitOnForwardFailure=yes"; then
 		M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
 	fi
+	if ! __check_ssh_option "HashKnownHosts"; then
+		M4_DEFS="${M4_DEFS}-DSSH_HAS_HASH_KNOWN_HOSTS "
+	fi
 
 	# Make sure BASE is set and that it isn't the DEST
 	if [ -z $BASE ]; then
