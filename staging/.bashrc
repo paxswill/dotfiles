@@ -168,11 +168,6 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	fi
 fi
 
-# RVM
-if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-	source "$HOME/.rvm/scripts/rvm"
-fi
-
 # Android SDK (non-OS X)
 if [ -d /opt/android-sdk ]; then
 	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
@@ -248,6 +243,11 @@ fi
 # Pull in dotfiles management functions
 if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/setup.sh
+fi
+
+# RVM
+if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+	source "$HOME/.rvm/scripts/rvm"
 fi
 
 # Export the configuration
