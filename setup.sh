@@ -1,5 +1,13 @@
 #!/bin/bash
 
+__check_ssh_option() {
+	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
+		return 0
+	else
+		return 1
+	fi
+}
+
 setup_dotfiles(){
 	# Save starting directory
 	DEST="$PWD"
@@ -20,13 +28,13 @@ setup_dotfiles(){
 	if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
 		M4_DEFS="${M4_DEFS}-DNRL "
 	fi
-	if ! echo "$(ssh -o ControlMaster=auto 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
+	if ! __check_ssh_option "ControlMaster=auto"; then
 		M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_MASTER "
-		if ! echo "$(ssh -o ControlPersist=15m 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
+		if ! __check_ssh_option "ControlPersist=15m"; then
 			M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_PERSIST "
 		fi
 	fi
-	if ! echo "$(ssh -o ExitOnForwardfailure=yes 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
+	if ! __check_ssh_option "ExitOnForwardFailure=yes"; then
 		M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
 	fi
 
