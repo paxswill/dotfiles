@@ -169,14 +169,8 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 fi
 
 # RVM
-# Starting RVM can take a looooong time on slower machines. It also messes with
-# the shell a lot (aliasing cd, etc.). If needed (ex: Octopress, ruby), call
-# this function to load it
-use_rvm() {
+if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	source "$HOME/.rvm/scripts/rvm"
-}
-if [ ! -s "$HOME/.rvm/scripts/rvm" ]; then
-	unset use_rvm
 fi
 
 # Android SDK (non-OS X)
