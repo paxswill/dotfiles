@@ -42,3 +42,6 @@ noremap  <Up>     <NOP>
 noremap  <Down>   <NOP>
 noremap  <Left>   <NOP>
 noremap  <Right>  <NOP>
+" Show unprintable characters like TextMate
+set listchars=tab:▸\ ,eol:¬,extends:»,precedes:«
+set list
