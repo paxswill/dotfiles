@@ -14,20 +14,23 @@ colorscheme solarized
 " Whitespace configuration
 set tabstop=4 shiftwidth=4
 set backspace=indent,eol,start
-" Status line configuration
-set ls=2
+" Always show the status line
+set laststatus=2
+" Make that status line pretty (line, col nums, file name)
 if has('statusline')
 	let &stl="%f\ %([%R%M]%)%=%l-%c\ \ \ \ "
 endif
-" Highlight columns >= 80
+" Highlight lines past 80 some way
 if exists('+colorcolumn')
+	" Highlights just the 80th column
 	set colorcolumn=80
 else
+	" Have all text past column 80 be marked as an error message (red)
 	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 " Don't wrap lines, just display them past the edge fo the screen
 set nowrap
-set sidescroll=10
+set sidescroll=20
 " Enable folding by default
 set foldenable
 " Disable the arrow keys
