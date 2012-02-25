@@ -1,4 +1,5 @@
 " Enable Pathogen
+runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 set nocompatible
 " Show incomplete commands

@@ -13,3 +13,6 @@
 [submodule "staging/.vim/bundle/vim-opencl"]
 	path = staging/.vim/bundle/vim-opencl
 	url = git://github.com/paxswill/vim-opencl.git
+[submodule "staging/.vim/bundle/vim-pathogen"]
+	path = staging/.vim/bundle/vim-pathogen
+	url = git://github.com/tpope/vim-pathogen.git
