@@ -53,3 +53,8 @@ set autoread
 if has("gui_running")
 	set showtabline=2
 endif
+" Ignore case while searching, unless the needle is mixed case
+set ignorecase
+set smartcase
+" Search while typing
+set incsearch
