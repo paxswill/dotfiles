@@ -30,3 +30,12 @@ set nowrap
 set sidescroll=10
 " Enable folding by default
 set foldenable
+" Disable the arrow keys
+inoremap <Up>		<NOP>
+inoremap <Down>		<NOP>
+inoremap <Left>		<NOP>
+inoremap <Right>	<NOP>
+noremap <Up>		<NOP>
+noremap <Down>		<NOP>
+noremap <Left>		<NOP>
+noremap <Right>		<NOP>
