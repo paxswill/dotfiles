@@ -7,6 +7,8 @@ set showcmd
 " Syntax highlighting and autocompletion
 syntax enable
 filetype plugin indent on
+" Set up some sort of completion
+set completeopt=menu,preview
 set ofu=syntaxcomplete#Complete
 " Turn on Solarized
 set background=dark
