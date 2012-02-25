@@ -28,3 +28,5 @@ endif
 " Don't wrap lines, just display them past the edge fo the screen
 set nowrap
 set sidescroll=10
+" Enable folding by default
+set foldenable
