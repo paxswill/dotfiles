@@ -49,3 +49,7 @@ set listchars=tab:▸\ ,eol:¬,extends:»,precedes:«
 set list
 " Automatically externally read changed files in
 set autoread
+" Always show tabs in the GUI
+if has("gui_running")
+	set showtabline=2
+endif
