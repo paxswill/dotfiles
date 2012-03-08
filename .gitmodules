@@ -16,3 +16,6 @@
 [submodule "staging/.vim/bundle/vim-pathogen"]
 	path = staging/.vim/bundle/vim-pathogen
 	url = git://github.com/tpope/vim-pathogen.git
+[submodule "staging/.vim/bundle/supertab"]
+	path = staging/.vim/bundle/supertab
+	url = git://github.com/ervandew/supertab.git

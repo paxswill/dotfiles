@@ -12,6 +12,9 @@ filetype plugin indent on	" Enable format based highlighting and indenting
 " Set up some sort of completion
 set completeopt=menu,preview
 set ofu=syntaxcomplete#Complete
+"Set up SuperTab
+" Detect the context for completion
+let g:SuperTabDefaultCompletionType = "context"
 
 """ Configure the colors (and fonts)
 set background=dark
