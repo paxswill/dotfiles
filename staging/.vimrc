@@ -12,6 +12,19 @@ filetype plugin indent on	" Enable format based highlighting and indenting
 " Set up some sort of completion
 set completeopt=menu,preview
 set ofu=syntaxcomplete#Complete
+" Set up clang_completion
+" Do not show the pop up automatically
+let g:clang_complete_auto = 0
+" Show quickfix for errors
+let g:clang_complete_copen = 1
+" Highlight errors and warnings
+let g:clang_hl_errors = 1
+" Complete Macros
+let g:clang_complete_macros = 1
+" Complete loops and stuff
+let g:clang_complete_patterns = 1
+" Use the clang shared library
+"let g:clang_use_library = 1
 "Set up SuperTab
 " Detect the context for completion
 let g:SuperTabDefaultCompletionType = "context"
