@@ -76,6 +76,12 @@ noremap  <Down>   <NOP>
 noremap  <Left>   <NOP>
 noremap  <Right>  <NOP>
 
+""" Simplify split navigation
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
 """ Search setup
 " Ignore case while searching, unless the needle is mixed case
 set ignorecase
