@@ -95,9 +95,20 @@ set listchars=tab:▸\ ,eol:¬,extends:»,precedes:«
 set list
 " Automatically externally read changed files in
 set autoread
+" Allow hidden buffers to not complain
+set hidden
+" ~ (tilde) acts as an operator
+set tildeop
 
 """ GUI Customizations
 if has("gui_running")
+	" Bunch of guioptions flags here
+	set guioptions-=r
+	set guioptions-=R
+	set guioptions-=l
+	set guioptions-=L
+	set guioptions-=b
+	set guioptions-=t
 	" Always show tabs in the GUI
 	set showtabline=2
 endif
