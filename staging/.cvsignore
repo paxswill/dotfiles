@@ -61,3 +61,6 @@ tags
 
 # Python
 *.py[co]
+
+# C/C++/Obj-C
+*.o
