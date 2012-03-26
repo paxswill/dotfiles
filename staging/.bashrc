@@ -110,7 +110,7 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
 elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
-	# PATH on CMF OS X machines is getitng munged
+	# PATH on CMF OS X machines is getting munged
 	if [ "$SYSTYPE" == "Darwin" ]; then
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
