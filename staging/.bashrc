@@ -61,6 +61,9 @@ shopt -s checkwinsize
 FIGNORE=".swp:.swo"
 
 # Set up paths
+if [ -d "$HOME/local/bin" ]; then
+	__append_to_path "$HOME/local/bin"
+fi
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
 # A FQDN is required
