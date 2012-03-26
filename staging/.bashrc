@@ -67,37 +67,37 @@ fi
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
 # A FQDN is required
-HOSTNAME=$(hostname)
+__HOSTNAME=$(hostname)
 # Sometimes a flag is needed
-if ! echo $HOSTNAME | grep '\.' >/dev/null; then
+if ! echo $__HOSTNAME | grep '\.' >/dev/null; then
 	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
-		HOSTNAME=$(getent hosts $(hostname) | awk '{print $2}')
+		__HOSTNAME=$(getent hosts $(hostname) | awk '{print $2}')
 	elif hostname -f >/dev/null 2>&1; then
-		HOSTNAME=$(hostname -f)
+		__HOSTNAME=$(hostname -f)
 	fi
 fi
-DOMAINTAIL=$(echo $HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
+DOMAINTAIL=$(echo $__HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
-if [ "$HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
+if [ "$__HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 	JAVA_HOME=/usr/lib/jvm/default_java
 elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
-	if [ "$HOSTNAME" == "procyon.cs.odu.edu" ] || [ "$HOSTNAME" == "capella.cs.odu.edu" ] || [ "$HOSTNAME" == "antares.cs.odu.edu" ] || [ "$HOSTNAME" == "vega.cs.odu.edu" ]; then
+	if [ "$__HOSTNAME" == "procyon.cs.odu.edu" ] || [ "$__HOSTNAME" == "capella.cs.odu.edu" ] || [ "$__HOSTNAME" == "antares.cs.odu.edu" ] || [ "$__HOSTNAME" == "vega.cs.odu.edu" ]; then
 		LOCALNAME="fast-sparc"
 		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
 		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
 		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
 		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
 		JAVA_HOME=/usr/java
-	elif [ "$HOSTNAME" == "atria.cs.odu.edu" ] || [ "$HOSTNAME" == "sirius.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" == "atria.cs.odu.edu" ] || [ "$__HOSTNAME" == "sirius.cs.odu.edu" ]; then
 		LOCALNAME="fast-ubuntu"
-	elif [ "$HOSTNAME" == "nvidia.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" == "nvidia.cs.odu.edu" ]; then
 		LOCALNAME="nv-s1070"
-	elif [ "$HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$HOSTNAME" == "stream.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$__HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$__HOSTNAME" == "stream.cs.odu.edu" ]; then
 		LOCALNAME="nv-c870"
-	elif [ "$HOSTNAME" == "smp.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" == "smp.cs.odu.edu" ]; then
 		LOCALNAME="smp"
 	fi
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
@@ -138,10 +138,6 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		__append_to_manpath "/opt/local/share/man"
 	fi
-	# Sometimes homebrew is in $HOME
-	if [ -x $HOME/local/bin/brew ]; then
-		alias brew="$HOME/local/bin/brew"
-	fi
 	# Move homebrew to the front of the path if we have it
 	if type brew >/dev/null 2>&1; then
 		BREW_PREFIX=$(brew --prefix)
@@ -155,9 +151,6 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 			__prepend_to_path "$BREW_PREFIX/share/python3"
 		fi
 		unset BREW_PREFIX
-		if [ "$(type brew)" == "alias" ]; then
-			unalias brew
-		fi
 	fi
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
@@ -261,7 +254,7 @@ export MANPATH
 export PKG_CONFIG_PATH
 
 # Clean up
-unset HOSTNAME
+unset __HOSTNAME
 unset SYSTYPE
 unset DOMAINTAIL
 unset __prepend_to_path
