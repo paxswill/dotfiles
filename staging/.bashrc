@@ -233,10 +233,19 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Set Vim as $EDITOR if it's available
+if which mvim >/dev/null; then
+	export EDITOR=mvim
+fi
 if which vim >/dev/null; then
-	export EDITOR=vim
+	if ! which mvim >/dev/null; then
+		export EDITOR=vim
+	fi
+	export GIT_EDITOR=vim
 elif which vi > /dev/null; then
-	export EDITOR=vi
+	if ! which mvim >/dev/null; then
+		export EDITOR=vi
+	fi
+	export GIT_EDITOR=vi
 fi
 
 # Aliases
