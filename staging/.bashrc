@@ -35,6 +35,38 @@ __append_to_pkgconfpath() {
 	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${1}"
 }
 
+# From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
+__vercmp () {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
 # Bash Configuration
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -158,8 +190,12 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	fi
 	# Man page to Preview
 	if which ps2pdf > /dev/null; then
+		__vercmp "$(sw_vers -productVersion)" "10.7"
+		if [[ $? == 2 ]]; then
+			pman_open_bg="-g"
+		fi
 		pman () {
-			man -t "${@}" | ps2pdf - - | open -g -f -a /Applications/Preview.app
+			man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
 		}
 	fi
 fi
@@ -265,3 +301,4 @@ unset __prepend_to_libpath
 unset __append_to_libpath
 unset __prepend_to_pkgconfpath
 unset __append_to_pkgconfpath
+#unset __vercmp
