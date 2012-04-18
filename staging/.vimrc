@@ -28,6 +28,7 @@ let g:clang_complete_patterns = 1
 "Set up SuperTab
 " Detect the context for completion
 let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-p>"
 
 """ Configure the colors (and fonts)
 set background=dark
