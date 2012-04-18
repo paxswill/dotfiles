@@ -203,6 +203,9 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 			man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
 		}
 	fi
+	# Increase the maximum number of open file descriptors
+	# This is primarily for the Android build process
+	ulimit -S -n 1024
 fi
 
 # Android SDK (non-OS X)
