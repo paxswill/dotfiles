@@ -87,7 +87,9 @@ shopt -s hostcomplete
 shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+if which lesspipe >/dev/null; then
+	export LESSOPEN="|lesspipe.sh %s"
+fi
 
 # Ignore Vim temporary files for file completion
 FIGNORE=".swp:.swo"
