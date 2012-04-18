@@ -170,8 +170,9 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	if [ -d /opt/local/share/man ]; then
 		__append_to_manpath "/opt/local/share/man"
 	fi
-	# Move homebrew to the front of the path if we have it
+	# Homebrew setup
 	if type brew >/dev/null 2>&1; then
+		# Move homebrew to the front of the path if we have it
 		BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
 			__prepend_to_path "${BREW_PREFIX}/sbin"
@@ -181,6 +182,10 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		fi
 		if [ -d $BREW_PREFIX/share/python3 ]; then
 			__prepend_to_path "$BREW_PREFIX/share/python3"
+		fi
+		# Use Python2 packages if they're there
+		if [ -d $BREW_PREFIX/lib/python2.7/site-packages ]; then
+			export PYTHONPATH="$BREW_PREFIX/lib/python2.7/site-packages"
 		fi
 		unset BREW_PREFIX
 	fi
