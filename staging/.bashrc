@@ -277,9 +277,6 @@ for GREPCMD in grep egrep fgrep; do
 	fi
 done
 
-# vless is less with vim's syntax coloring
-alias vless='vim -u /usr/share/vim/vim*/macros/less.vim'
-
 # Set PS1 (prompt)
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
