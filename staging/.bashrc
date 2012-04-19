@@ -298,6 +298,18 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	source "$HOME/.rvm/scripts/rvm"
 fi
 
+# Prettify man pages
+# Bold will be cyan
+export LESS_TERMCAP_mb=$'\E[0;36m'
+export LESS_TERMCAP_md=$'\E[0;36m'
+export LESS_TERMCAP_me=$'\E[0m'
+# Standaout uses a highlighted background and foreground
+export LESS_TERMCAP_so=$'\E[01;40m'
+export LESS_TERMCAP_se=$'\E[0m'
+# Instead of underlines, use the highlighted back and foreground
+export LESS_TERMCAP_us=$'\E[01;34;40m'
+export LESS_TERMCAP_ue=$'\E[0m'
+
 # Export the configuration
 export PATH
 export JAVA_HOME
