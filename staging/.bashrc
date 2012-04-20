@@ -298,6 +298,28 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 	source "$HOME/.rvm/scripts/rvm"
 fi
 
+# Pull in virtualenvwrapper
+if [ -s $(which virtualenvwrapper.sh) ]; then
+	# Use python3
+	if which python3 >/dev/null; then
+		export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+	fi
+	# Set up the working directories
+	if [ -d "$HOME/Development/Python" ]; then
+		export PROJECT_HOME="$HOME/Development/Python"
+	else
+		export PROJECT_HOME="$HOME/Development"
+		if ! [-d $PROJECT_HOME ]; then
+			mkdir $PROJECT_HOME
+		fi
+	fi
+	export WORKON_HOME="$HOME/.virtualenvs"
+	if ! [ -d $WORKON_HOME ]; then
+		mkdir $WORKON_HOME
+	fi
+	source $(which virtualenvwrapper.sh)
+fi
+
 # Prettify man pages
 # Bold will be cyan
 export LESS_TERMCAP_mb=$'\E[0;36m'
