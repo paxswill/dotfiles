@@ -157,7 +157,7 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 		export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
 	fi
 	# AFS Resources
-	if [-d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
+	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
 		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
 	fi
 fi
@@ -310,7 +310,7 @@ if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 		export PROJECT_HOME="$HOME/Development/Python"
 	else
 		export PROJECT_HOME="$HOME/Development"
-		if ! [-d $PROJECT_HOME ]; then
+		if ! [ -d $PROJECT_HOME ]; then
 			mkdir $PROJECT_HOME
 		fi
 	fi
