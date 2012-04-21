@@ -87,7 +87,7 @@ shopt -s hostcomplete
 shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
-if which lesspipe >/dev/null; then
+if which lesspipe >/dev/null 2>&1; then
 	export LESSOPEN="|lesspipe.sh %s"
 fi
 
@@ -196,7 +196,7 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Man page to Preview
-	if which ps2pdf > /dev/null; then
+	if which ps2pdf 2>&1 > /dev/null; then
 		__vercmp "$(sw_vers -productVersion)" "10.7"
 		if [[ $? == 2 ]]; then
 			pman_open_bg="-g"
@@ -234,7 +234,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
-elif [ "$SYSTYPE" == "Darwin" ] && which brew > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
 elif [ -f /opt/local/etc/bash_completion ]; then
@@ -243,16 +243,16 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Set Vim as $EDITOR if it's available
-if which mvim >/dev/null; then
+if which mvim >/dev/null 2>&1; then
 	export EDITOR=mvim
 fi
-if which vim >/dev/null; then
-	if ! which mvim >/dev/null; then
+if which vim >/dev/null 2>&1; then
+	if ! which mvim >/dev/null 2>&1; then
 		export EDITOR=vim
 	fi
 	export GIT_EDITOR=vim
-elif which vi > /dev/null; then
-	if ! which mvim >/dev/null; then
+elif which vi 2>&1 > /dev/null; then
+	if ! which mvim >/dev/null 2>&1; then
 		export EDITOR=vi
 	fi
 	export GIT_EDITOR=vi
@@ -299,9 +299,10 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 fi
 
 # Pull in virtualenvwrapper
-if [ -s $(which virtualenvwrapper.sh) ]; then
+wrapper_source=$(which virtualenvwrapper.sh >/dev/null 2>&1)
+if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 	# Use python3
-	if which python3 >/dev/null; then
+	if which python3 >/dev/null 2>&1; then
 		export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 	fi
 	# Set up the working directories
@@ -317,8 +318,9 @@ if [ -s $(which virtualenvwrapper.sh) ]; then
 	if ! [ -d $WORKON_HOME ]; then
 		mkdir $WORKON_HOME
 	fi
-	source $(which virtualenvwrapper.sh)
+	source $wrapper_source
 fi
+unset wrapper_source
 
 # Prettify man pages
 # Bold will be cyan
