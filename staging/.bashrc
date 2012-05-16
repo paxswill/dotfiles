@@ -319,6 +319,11 @@ for GREPCMD in grep egrep fgrep; do
 	fi
 done
 
+# Quick access to git grep
+if which git > /dev/null; then
+	alias ggrep="git grep"
+fi
+
 # Set PS1 (prompt)
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
