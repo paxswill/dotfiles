@@ -171,8 +171,8 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
 elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
-	# PATH on CMF OS X machines is getting munged
 	if [ "$SYSTYPE" == "Darwin" ]; then
+		# PATH on CMF OS X machines is getting munged
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
 		# Re-add ~/local/bin, unless there's /scratch/local/bin
@@ -186,7 +186,12 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
-		export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
+		if which brew > /dev/null; then
+			export HOMEBREW_TEMP="$(brew --prefix)/.tmp/homebrew"
+			if ! [ -d "${HOMEBREW_TEMP}" ]; then
+				mkdir -p "${HOMEBREW_TEMP}"
+			fi
+		fi
 	fi
 	# AFS Resources
 	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
