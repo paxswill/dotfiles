@@ -175,6 +175,14 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 	if [ "$SYSTYPE" == "Darwin" ]; then
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
+		# Re-add ~/local/bin, unless there's /scratch/local/bin
+		MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
+		if [ -d "/scratch/wross/local/bin" ]; then
+			__prepend_to_path "/scratch/wross/local/bin"
+		elif [ -d "${MY_BIN}" ]; then
+			__prepend_to_path "${MY_BIN}"
+		fi
+		unset MY_BIN
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
