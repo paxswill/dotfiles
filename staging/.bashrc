@@ -203,11 +203,13 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
-	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-		__append_to_path "/opt/local/bin:/opt/local/sbin"
-	fi
-	if [ -d /opt/local/share/man ]; then
-		__append_to_manpath "/opt/local/share/man"
+	if ! which brew > /dev/null; then
+		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
+				__append_to_path "/opt/local/bin:/opt/local/sbin"
+		fi
+		if [ -d /opt/local/share/man ]; then
+			__append_to_manpath "/opt/local/share/man"
+		fi
 	fi
 	# Homebrew setup
 	if type brew >/dev/null 2>&1; then
