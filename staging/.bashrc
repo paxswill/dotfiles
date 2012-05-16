@@ -4,35 +4,59 @@
 
 # Path utility functions
 __prepend_to_path() {
-	export PATH="${1}${PATH:+:}${PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PATH="${__real_path}${PATH:+:}${PATH}"
+	cd
 }
 
 __append_to_path() {
+	cd "${1}"
+	local __real_path="$(pwd -P)"
 	export PATH="${PATH}${PATH:+:}${1}"
+	cd
 }
 
 __prepend_to_manpath() {
-	export MANPATH="${1}${MANPATH:+:}${MANPATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export MANPATH="${__real_path}${MANPATH:+:}${MANPATH}"
+	cd
 }
 
 __append_to_manpath() {
-	export MANPATH="${MANPATH}${MANPATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export MANPATH="${MANPATH}${MANPATH:+:}${__real_path}"
+	cd
 }
 
 __prepend_to_libpath() {
-	export LD_LIBRARY_PATH="${1}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export LD_LIBRARY_PATH="${__real_path}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+	cd
 }
 
 __append_to_libpath() {
-	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${__real_path}"
+	cd
 }
 
 __prepend_to_pkgconfpath() {
-	export PKG_CONFIG_PATH="${1}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PKG_CONFIG_PATH="${__real_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+	cd
 }
 
 __append_to_pkgconfpath() {
-	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${__real_path}"
+	cd
 }
 
 # From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
@@ -212,14 +236,17 @@ fi
 
 # Android SDK (non-OS X)
 if [ -d /opt/android-sdk ]; then
-	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
+	__append_to_path "/opt/android-sdk/tools"
+	__prepend_to_path "/opt/android-sdk/platform-tools"
 fi
 
 # HPCMO Kerberos
 if [ -d /usr/krb5 ]; then
-	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
+	__prepend_to_path "/usr/krb5/bin"
+	__prepend_to_path "/usr/krb5/sbin"
 elif [ -d /usr/local/krb5 ]; then
-	__prepend_to_path "/usr/local/krb5/bin:/usr/local/krb5/sbin"
+	__prepend_to_path "/usr/local/krb5/bin"
+	__prepend_to_path "/usr/local/krb5/sbin"
 fi
 
 # Perlbrew
