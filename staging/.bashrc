@@ -193,6 +193,10 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 			fi
 		fi
 	fi
+	if [ -z $SCRATCH_VOLUME -a -d /scratch -a -w /scratch ]; then
+		export CCACHE_DIR=/scratch/ccache
+
+	fi
 	# AFS Resources
 	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
 		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
@@ -267,6 +271,19 @@ fi
 # Perlbrew
 if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 	. $HOME/perl5/perlbrew/etc/bashrc
+fi
+
+# Enable ccache in Android if we have it, and set it up
+if which ccache >/dev/null; then
+	if [ ! -d "$CCACHE_DIR" ]; then
+		mkdir "$CCACHE_DIR"
+	fi
+	if [ ! -w "$CCACHE_DIR"]; then
+		unset CCACHE_DIR
+	else
+		export USE_CCACHE=1
+		ccache -M 50G > /dev/null
+	fi
 fi
 
 # Enable programmable shell completion features
