@@ -193,7 +193,7 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 			fi
 		fi
 	fi
-	if [ -z $SCRATCH_VOLUME -a -d /scratch -a -w /scratch ]; then
+	if [ -z "$SCRATCH_VOLUME" -a -d /scratch -a -w /scratch ]; then
 		export CCACHE_DIR=/scratch/ccache
 
 	fi
@@ -282,7 +282,7 @@ if which ccache >/dev/null; then
 	if [ ! -d "$CCACHE_DIR" ]; then
 		mkdir "$CCACHE_DIR"
 	fi
-	if [ ! -w "$CCACHE_DIR"]; then
+	if [ ! -w "$CCACHE_DIR" ]; then
 		unset CCACHE_DIR
 	else
 		export USE_CCACHE=1
