@@ -271,6 +271,10 @@ fi
 # Perlbrew
 if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 	. $HOME/perl5/perlbrew/etc/bashrc
+	# On modern systems setting MANPATH screws things up
+	if [ "$(uname -s)" == "Darwin" ]; then
+		unset MANPATH
+	fi
 fi
 
 # Enable ccache in Android if we have it, and set it up
