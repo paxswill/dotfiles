@@ -322,6 +322,19 @@ if [ -s $(which virtualenvwrapper.sh) ]; then
 	source $(which virtualenvwrapper.sh)
 fi
 
+# Set up Amazon EC2 keys
+if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then
+	# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
+	# I'll need to add special handling if I use other platforms in the future.
+	if which brew >/dev/null; then
+		export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
+	else
+		echo "WARNING: ec2-cmd detected but no Homebrew."
+	fi
+	export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
+	export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
+fi
+
 # Prettify man pages
 # Bold will be cyan
 export LESS_TERMCAP_mb=$'\E[0;36m'
