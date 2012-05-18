@@ -8,10 +8,10 @@
 	tool = opendiff
 [user]
 	name = Will Ross
-ifdef(`NRL_CONFIG',
-`	email = wross@cmf.nrl.navy.mil',
-`	email = paxswill@gmail.com'
-)dnl
+ifdef(`NRL',
+`	email = wross@cmf.nrl.navy.mil',dnl
+`	email = paxswill@gmail.com'dnl
+)
 [core]
 	excludesfile = ~/.cvsignore
 [color]
@@ -26,3 +26,4 @@ ifdef(`NRL_CONFIG',
 	br = branch
 	df = diff
 	dh = diff HEAD
+	dc = diff --cached

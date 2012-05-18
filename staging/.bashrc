@@ -4,35 +4,59 @@
 
 # Path utility functions
 __prepend_to_path() {
-	export PATH="${1}${PATH:+:}${PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PATH="${__real_path}${PATH:+:}${PATH}"
+	cd
 }
 
 __append_to_path() {
+	cd "${1}"
+	local __real_path="$(pwd -P)"
 	export PATH="${PATH}${PATH:+:}${1}"
+	cd
 }
 
 __prepend_to_manpath() {
-	export MANPATH="${1}${MANPATH:+:}${MANPATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export MANPATH="${__real_path}${MANPATH:+:}${MANPATH}"
+	cd
 }
 
 __append_to_manpath() {
-	export MANPATH="${MANPATH}${MANPATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export MANPATH="${MANPATH}${MANPATH:+:}${__real_path}"
+	cd
 }
 
 __prepend_to_libpath() {
-	export LD_LIBRARY_PATH="${1}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export LD_LIBRARY_PATH="${__real_path}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+	cd
 }
 
 __append_to_libpath() {
-	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${__real_path}"
+	cd
 }
 
 __prepend_to_pkgconfpath() {
-	export PKG_CONFIG_PATH="${1}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PKG_CONFIG_PATH="${__real_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+	cd
 }
 
 __append_to_pkgconfpath() {
-	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${1}"
+	cd "${1}"
+	local __real_path="$(pwd -P)"
+	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${__real_path}"
+	cd
 }
 
 # From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
@@ -87,7 +111,7 @@ shopt -s hostcomplete
 shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
-if which lesspipe >/dev/null; then
+if which lesspipe >/dev/null 2>&1; then
 	export LESSOPEN="|lesspipe.sh %s"
 fi
 
@@ -147,17 +171,34 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
 elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
-	# PATH on CMF OS X machines is getting munged
 	if [ "$SYSTYPE" == "Darwin" ]; then
+		# PATH on CMF OS X machines is getting munged
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
+		# Re-add ~/local/bin, unless there's /scratch/local/bin
+		MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
+		if [ -d "/scratch/wross/local/bin" ]; then
+			__prepend_to_path "/scratch/wross/local/bin"
+		elif [ -d "${MY_BIN}" ]; then
+			__prepend_to_path "${MY_BIN}"
+		fi
+		unset MY_BIN
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
-		export HOMEBREW_TEMP="$HOME/.tmp/homebrew"
+		if which brew > /dev/null; then
+			export HOMEBREW_TEMP="$(brew --prefix)/.tmp/homebrew"
+			if ! [ -d "${HOMEBREW_TEMP}" ]; then
+				mkdir -p "${HOMEBREW_TEMP}"
+			fi
+		fi
+	fi
+	if [ -z "$SCRATCH_VOLUME" -a -d /scratch -a -w /scratch ]; then
+		export CCACHE_DIR=/scratch/ccache
+
 	fi
 	# AFS Resources
-	if [-d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
+	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
 		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
 	fi
 fi
@@ -166,11 +207,13 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
-	if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-		__append_to_path "/opt/local/bin:/opt/local/sbin"
-	fi
-	if [ -d /opt/local/share/man ]; then
-		__append_to_manpath "/opt/local/share/man"
+	if ! which brew > /dev/null; then
+		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
+				__append_to_path "/opt/local/bin:/opt/local/sbin"
+		fi
+		if [ -d /opt/local/share/man ]; then
+			__append_to_manpath "/opt/local/share/man"
+		fi
 	fi
 	# Homebrew setup
 	if type brew >/dev/null 2>&1; then
@@ -196,7 +239,7 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Man page to Preview
-	if which ps2pdf > /dev/null; then
+	if which ps2pdf 2>&1 > /dev/null; then
 		__vercmp "$(sw_vers -productVersion)" "10.7"
 		if [[ $? == 2 ]]; then
 			pman_open_bg="-g"
@@ -214,19 +257,39 @@ fi
 
 # Android SDK (non-OS X)
 if [ -d /opt/android-sdk ]; then
-	__append_to_path "/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
+	__append_to_path "/opt/android-sdk/tools"
+	__prepend_to_path "/opt/android-sdk/platform-tools"
 fi
 
 # HPCMO Kerberos
 if [ -d /usr/krb5 ]; then
-	__prepend_to_path "/usr/krb5/bin:/usr/krb5/sbin"
+	__prepend_to_path "/usr/krb5/bin"
+	__prepend_to_path "/usr/krb5/sbin"
 elif [ -d /usr/local/krb5 ]; then
-	__prepend_to_path "/usr/local/krb5/bin:/usr/local/krb5/sbin"
+	__prepend_to_path "/usr/local/krb5/bin"
+	__prepend_to_path "/usr/local/krb5/sbin"
 fi
 
 # Perlbrew
 if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 	. $HOME/perl5/perlbrew/etc/bashrc
+	# On modern systems setting MANPATH screws things up
+	if [ "$(uname -s)" == "Darwin" ]; then
+		unset MANPATH
+	fi
+fi
+
+# Enable ccache in Android if we have it, and set it up
+if which ccache >/dev/null; then
+	if [ ! -d "$CCACHE_DIR" ]; then
+		mkdir "$CCACHE_DIR"
+	fi
+	if [ ! -w "$CCACHE_DIR" ]; then
+		unset CCACHE_DIR
+	else
+		export USE_CCACHE=1
+		ccache -M 50G > /dev/null
+	fi
 fi
 
 # Enable programmable shell completion features
@@ -236,7 +299,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
-elif [ "$SYSTYPE" == "Darwin" ] && which brew > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
 elif [ -f /opt/local/etc/bash_completion ]; then
@@ -245,16 +308,16 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Set Vim as $EDITOR if it's available
-if which mvim >/dev/null; then
+if which mvim >/dev/null 2>&1; then
 	export EDITOR=mvim
 fi
-if which vim >/dev/null; then
-	if ! which mvim >/dev/null; then
+if which vim >/dev/null 2>&1; then
+	if ! which mvim >/dev/null 2>&1; then
 		export EDITOR=vim
 	fi
 	export GIT_EDITOR=vim
-elif which vi > /dev/null; then
-	if ! which mvim >/dev/null; then
+elif which vi 2>&1 > /dev/null; then
+	if ! which mvim >/dev/null 2>&1; then
 		export EDITOR=vi
 	fi
 	export GIT_EDITOR=vi
@@ -279,6 +342,11 @@ for GREPCMD in grep egrep fgrep; do
 	fi
 done
 
+# Quick access to git grep
+if which git > /dev/null; then
+	alias ggrep="git grep"
+fi
+
 # Set PS1 (prompt)
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
@@ -301,9 +369,10 @@ if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 fi
 
 # Pull in virtualenvwrapper
-if [ -s $(which virtualenvwrapper.sh) ]; then
+wrapper_source=$(which virtualenvwrapper.sh >/dev/null 2>&1)
+if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 	# Use python3
-	if which python3 >/dev/null; then
+	if which python3 >/dev/null 2>&1; then
 		export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 	fi
 	# Set up the working directories
@@ -311,7 +380,7 @@ if [ -s $(which virtualenvwrapper.sh) ]; then
 		export PROJECT_HOME="$HOME/Development/Python"
 	else
 		export PROJECT_HOME="$HOME/Development"
-		if ! [-d $PROJECT_HOME ]; then
+		if ! [ -d $PROJECT_HOME ]; then
 			mkdir $PROJECT_HOME
 		fi
 	fi
@@ -319,8 +388,9 @@ if [ -s $(which virtualenvwrapper.sh) ]; then
 	if ! [ -d $WORKON_HOME ]; then
 		mkdir $WORKON_HOME
 	fi
-	source $(which virtualenvwrapper.sh)
+	source $wrapper_source
 fi
+unset wrapper_source
 
 # Set up Amazon EC2 keys
 if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then

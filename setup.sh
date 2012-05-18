@@ -10,7 +10,7 @@ __check_ssh_option() {
 
 setup_dotfiles(){
 	# Save starting directory
-	DEST="$PWD"
+	local DEST="$PWD"
 
 	# Get the dotfiles directory if needed
 	if ! [ -d "$DEST/.dotfiles" ]; then
@@ -24,6 +24,7 @@ setup_dotfiles(){
 		BASE="$DEST/.dotfiles"
 	fi
 
+	local M4_DEFS=""
 	# Set up macro definitions
 	if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
 		M4_DEFS="${M4_DEFS}-DNRL "
@@ -111,6 +112,9 @@ setup_dotfiles(){
 	# Save record of links and directories for future upgrades
 	echo "$FILES" > $BASE/links.txt
 	echo "$DIRS" > $BASE/dirs.txt
+	unset FILES
+	unset DIRS
+	unset BASE
 }
 
 # Uupdate the dotfiles repo and relink it
