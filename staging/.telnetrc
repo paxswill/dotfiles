@@ -1,3 +1,4 @@
+# Try to encrypt everything
 DEFAULT
 	set verbose_encrypt
 	set autoencrypt
