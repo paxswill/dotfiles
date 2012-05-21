@@ -3,3 +3,6 @@ DEFAULT
 	set verbose_encrypt
 	set autoencrypt
 	set autodecrypt
+# Fonera Redboot access
+192.168.1.254
+	mode line
