@@ -64,3 +64,9 @@ tags
 
 # C/C++/Obj-C
 *.o
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
