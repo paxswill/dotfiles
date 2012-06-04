@@ -220,10 +220,7 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		# Move homebrew to the front of the path if we have it
 		BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
-			__prepend_to_path "${BREW_PREFIX}/sbin"
-		fi
-		if [ -d "${BREW_PREFIX}/bin" ]; then
-			__prepend_to_path "${BREW_PREFIX}/bin"
+			__append_to_path "${BREW_PREFIX}/sbin"
 		fi
 		if [ -d $BREW_PREFIX/share/python3 ]; then
 			__prepend_to_path "$BREW_PREFIX/share/python3"
