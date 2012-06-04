@@ -192,6 +192,10 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 				mkdir -p "${HOMEBREW_TEMP}"
 			fi
 		fi
+		if [ -d /scratch/wross ]; then
+			export VAGRANT_HOME=/scratch/wross/.vagrantd
+			mkdir -p $VAGRANT_HOME
+		fi
 	fi
 	if [ -z "$SCRATCH_VOLUME" -a -d /scratch -a -w /scratch ]; then
 		export CCACHE_DIR=/scratch/ccache
