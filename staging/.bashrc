@@ -225,6 +225,11 @@ if [ "$SYSTYPE" == "Darwin" ]; then
 		if [ -d $BREW_PREFIX/share/python3 ]; then
 			__prepend_to_path "$BREW_PREFIX/share/python3"
 		fi
+		if brew list | grep 'ruby' >/dev/null; then
+			if [ -d "$(brew --prefix ruby)/bin" ]; then
+				__prepend_to_path "$(brew --prefix ruby)/bin"
+			fi
+		fi
 		# Use Python2 packages if they're there
 		if [ -d $BREW_PREFIX/lib/python2.7/site-packages ]; then
 			export PYTHONPATH="$BREW_PREFIX/lib/python2.7/site-packages"
