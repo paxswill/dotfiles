@@ -2,7 +2,7 @@
 
 OLDIFS=$IFS
 IFS="\n\b"
-for COMPLETION_FILE in "$HOME/.bash_completion.d/*"; do
+for COMPLETION_FILE in $HOME/.bash_completion.d/*; do
 	source "$COMPLETION_FILE"
 done
 IFS=$OLDIFS
