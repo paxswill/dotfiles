@@ -21,9 +21,9 @@ ifdef(`NRL',
 [github]
 	user = paxswill
 [alias]
-	st = status
-	ci = commit
 	br = branch
+	ci = commit
+	dc = diff --cached
 	df = diff
 	dh = diff HEAD
-	dc = diff --cached
+	st = status
