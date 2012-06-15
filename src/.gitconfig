@@ -23,6 +23,7 @@ ifdef(`NRL',
 [alias]
 	br = branch
 	ci = commit
+	co = checkout
 	dc = diff --cached
 	df = diff
 	dh = diff HEAD
