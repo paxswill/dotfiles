@@ -27,4 +27,5 @@ ifdef(`NRL',
 	dc = diff --cached
 	df = diff
 	dh = diff HEAD
+	lg = log --graph --decorate --oneline
 	st = status
