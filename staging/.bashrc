@@ -112,6 +112,8 @@ shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
 if which lesspipe >/dev/null 2>&1; then
+	export LESSOPEN="|lesspipe %s"
+elif which lesspipe.sh >/dev/null 2>&1; then
 	export LESSOPEN="|lesspipe.sh %s"
 fi
 
