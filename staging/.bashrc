@@ -316,18 +316,20 @@ fi
 
 # Set Vim as $EDITOR if it's available
 if which mvim >/dev/null 2>&1; then
-	export EDITOR=mvim
+	 GUI_VIM=mvim
+elif which gvim >/dev/null 2>&1; then
+	 GUI_VIM=gvim
 fi
 if which vim >/dev/null 2>&1; then
-	if ! which mvim >/dev/null 2>&1; then
-		export EDITOR=vim
+	VI=vim
+elif which vi >/dev/null 2>&1; then
+	VI=vi
+fi
+if [ ! -z $GUI_VIM ]; then
+	export EDITOR=$GUI_VIM
+	if [ ! -z $VI ]; then
+		export GIT_EDITOR=$VI
 	fi
-	export GIT_EDITOR=vim
-elif which vi 2>&1 > /dev/null; then
-	if ! which mvim >/dev/null 2>&1; then
-		export EDITOR=vi
-	fi
-	export GIT_EDITOR=vi
 fi
 
 # Aliases
