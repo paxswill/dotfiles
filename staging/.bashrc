@@ -333,6 +333,8 @@ if [ ! -z $GUI_VIM ]; then
 	if [ ! -z $VI ]; then
 		export GIT_EDITOR=$VI
 	fi
+elif [ ! -z $VI ]; then
+	export EDITOR=$VI
 fi
 
 # Aliases
