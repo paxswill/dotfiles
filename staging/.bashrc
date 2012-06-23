@@ -134,7 +134,7 @@ SYSTYPE=$(uname -s)
 __HOSTNAME=$(hostname)
 # Sometimes a flag is needed
 if ! echo $__HOSTNAME | grep '\.' >/dev/null; then
-	if [ "$SYSTYPE" == "SunOS" ] && type getent >/dev/null 2>&1; then
+	if [ "$SYSTYPE" = "SunOS" ] && type getent >/dev/null 2>&1; then
 		__HOSTNAME=$(getent hosts $(hostname) | awk '{print $2}')
 	elif hostname -f >/dev/null 2>&1; then
 		__HOSTNAME=$(hostname -f)
@@ -142,26 +142,26 @@ if ! echo $__HOSTNAME | grep '\.' >/dev/null; then
 fi
 DOMAINTAIL=$(echo $__HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
-if [ "$__HOSTNAME" == "Macbeth" ] && [ "$SYSTYPE" == "Linux"  ]; then
+if [ "$__HOSTNAME" = "Macbeth" ] && [ "$SYSTYPE" = "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 	JAVA_HOME=/usr/lib/jvm/default_java
-elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
-	if [ "$__HOSTNAME" == "procyon.cs.odu.edu" ] || [ "$__HOSTNAME" == "capella.cs.odu.edu" ] || [ "$__HOSTNAME" == "antares.cs.odu.edu" ] || [ "$__HOSTNAME" == "vega.cs.odu.edu" ]; then
+elif [ "$DOMAINTAIL" = "cs.odu.edu" ]; then
+	if [ "$__HOSTNAME" = "procyon.cs.odu.edu" ] || [ "$__HOSTNAME" = "capella.cs.odu.edu" ] || [ "$__HOSTNAME" = "antares.cs.odu.edu" ] || [ "$__HOSTNAME" = "vega.cs.odu.edu" ]; then
 		LOCALNAME="fast-sparc"
 		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
 		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
 		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
 		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
 		JAVA_HOME=/usr/java
-	elif [ "$__HOSTNAME" == "atria.cs.odu.edu" ] || [ "$__HOSTNAME" == "sirius.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" = "atria.cs.odu.edu" ] || [ "$__HOSTNAME" = "sirius.cs.odu.edu" ]; then
 		LOCALNAME="fast-ubuntu"
-	elif [ "$__HOSTNAME" == "nvidia.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" = "nvidia.cs.odu.edu" ]; then
 		LOCALNAME="nv-s1070"
-	elif [ "$__HOSTNAME" == "cuda.cs.odu.edu" ] || [ "$__HOSTNAME" == "tesla.cs.odu.edu" ] || [ "$__HOSTNAME" == "stream.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" = "cuda.cs.odu.edu" ] || [ "$__HOSTNAME" = "tesla.cs.odu.edu" ] || [ "$__HOSTNAME" = "stream.cs.odu.edu" ]; then
 		LOCALNAME="nv-c870"
-	elif [ "$__HOSTNAME" == "smp.cs.odu.edu" ]; then
+	elif [ "$__HOSTNAME" = "smp.cs.odu.edu" ]; then
 		LOCALNAME="smp"
 	fi
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
@@ -176,8 +176,8 @@ elif [ "$DOMAINTAIL" == "cs.odu.edu" ]; then
 	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
-elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
-	if [ "$SYSTYPE" == "Darwin" ]; then
+elif [ "$DOMAINTAIL" = "cmf.nrl.navy.mil" ]; then
+	if [ "$SYSTYPE" = "Darwin" ]; then
 		# PATH on CMF OS X machines is getting munged
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
@@ -213,7 +213,7 @@ elif [ "$DOMAINTAIL" == "cmf.nrl.navy.mil" ]; then
 	fi
 fi
 # OS X Specific setup
-if [ "$SYSTYPE" == "Darwin" ]; then
+if [ "$SYSTYPE" = "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
@@ -284,7 +284,7 @@ fi
 if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 	. $HOME/perl5/perlbrew/etc/bashrc
 	# On modern systems setting MANPATH screws things up
-	if [ "$(uname -s)" == "Darwin" ]; then
+	if [ "$(uname -s)" = "Darwin" ]; then
 		unset MANPATH
 	fi
 fi
@@ -309,7 +309,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
-elif [ "$SYSTYPE" == "Darwin" ] && __cmd_exists brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
+elif [ "$SYSTYPE" = "Darwin" ] && __cmd_exists brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
 elif [ -f /opt/local/etc/bash_completion ]; then
