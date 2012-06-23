@@ -6,6 +6,7 @@
 	enabled = 1
 [merge]
 	tool = opendiff
+	defaultToUpstream = true
 [user]
 	name = Will Ross
 ifdef(`NRL',
@@ -27,5 +28,6 @@ ifdef(`NRL',
 	dc = diff --cached
 	df = diff
 	dh = diff HEAD
+	ff = merge --ff-only
 	lg = log --graph --decorate --oneline
 	st = status
