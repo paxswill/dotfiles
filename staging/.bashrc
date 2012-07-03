@@ -59,10 +59,6 @@ __append_to_pkgconfpath() {
 	cd
 }
 
-__cmd_exists() {
-	return which "$1" >/dev/null 2>&1
-}
-
 # From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
 __vercmp () {
     if [[ $1 == $2 ]]
@@ -115,9 +111,9 @@ shopt -s hostcomplete
 shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
-if __cmd_exists lesspipe; then
+if which lesspipe >/dev/null 2>&1; then
 	export LESSOPEN="|lesspipe %s"
-elif __cmd_exists lesspipe.sh; then
+elif which lesspipe.sh >/dev/null 2>&1; then
 	export LESSOPEN="|lesspipe.sh %s"
 fi
 
@@ -192,7 +188,7 @@ elif [ "$DOMAINTAIL" = "cmf.nrl.navy.mil" ]; then
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
-		if __cmd_exists brew; then
+		if which brew > /dev/null; then
 			export HOMEBREW_TEMP="$(brew --prefix)/.tmp/homebrew"
 			if ! [ -d "${HOMEBREW_TEMP}" ]; then
 				mkdir -p "${HOMEBREW_TEMP}"
@@ -217,15 +213,16 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 	# Add the undocumented airport command
 	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
-	if ! __cmd_exists brew; then
+	if ! which brew > /dev/null; then
 		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
 				__append_to_path "/opt/local/bin:/opt/local/sbin"
 		fi
 		if [ -d /opt/local/share/man ]; then
 			__append_to_manpath "/opt/local/share/man"
 		fi
+	fi
 	# Homebrew setup
-	else
+	if type brew >/dev/null 2>&1; then
 		# Move homebrew to the front of the path if we have it
 		BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
@@ -249,7 +246,7 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Man page to Preview
-	if __cmd_exists ps2pdf; then
+	if which ps2pdf 2>&1 > /dev/null; then
 		__vercmp "$(sw_vers -productVersion)" "10.7"
 		if [[ $? == 2 ]]; then
 			pman_open_bg="-g"
@@ -290,7 +287,7 @@ if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 fi
 
 # Enable ccache in Android if we have it, and set it up
-if __cmd_exists ccache; then
+if which ccache >/dev/null; then
 	if [ ! -d "$CCACHE_DIR" ]; then
 		mkdir "$CCACHE_DIR"
 	fi
@@ -309,7 +306,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
 	# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 	. $HOME/local/common/share/bash-completion/bash_completion
-elif [ "$SYSTYPE" = "Darwin" ] && __cmd_exists brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
+elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
 	# Homebrew
 	. $(brew --prefix)/etc/bash_completion
 elif [ -f /opt/local/etc/bash_completion ]; then
@@ -318,14 +315,14 @@ elif [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Set Vim as $EDITOR if it's available
-if __cmd_exists mvim; then
+if which mvim >/dev/null 2>&1; then
 	 GUI_VIM=mvim
-elif __cmd_exists gvim; then
+elif which gvim >/dev/null 2>&1; then
 	 GUI_VIM=gvim
 fi
-if __cmd_exists vim; then
+if which vim >/dev/null 2>&1; then
 	VI=vim
-elif __cmd_exists vi; then
+elif which vi >/dev/null 2>&1; then
 	VI=vi
 fi
 if [ ! -z $GUI_VIM ]; then
@@ -357,7 +354,7 @@ for GREPCMD in grep egrep fgrep; do
 done
 
 # Quick access to git grep
-if __cmd_exists git; then
+if which git > /dev/null; then
 	alias ggrep="git grep"
 fi
 
@@ -407,10 +404,10 @@ fi
 unset wrapper_source
 
 # Set up Amazon EC2 keys
-if [ -d "$HOME/.ec2" ] && __cmd_exists ec2-cmd; then
+if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then
 	# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
 	# I'll need to add special handling if I use other platforms in the future.
-	if __cmd_exists brew; then
+	if which brew >/dev/null; then
 		export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
 	else
 		echo "WARNING: ec2-cmd detected but no Homebrew."
@@ -450,5 +447,4 @@ unset __prepend_to_libpath
 unset __append_to_libpath
 unset __prepend_to_pkgconfpath
 unset __append_to_pkgconfpath
-unset __vercmp
-unset __cmd_exists
+#unset __vercmp
