@@ -235,7 +235,8 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 		fi
 		# Use brewed pythons if we have them
 		for temp_python in python pypy python3; do
-			if brew list $temp_python >/dev/null; then
+			if brew list $temp_python >/dev/null && \
+				[ -d "$BREW_PREFIX/share/$temp_python"]; then
 				__prepend_to_path "$BREW_PREFIX/share/$temp_python"
 			fi
 		done
