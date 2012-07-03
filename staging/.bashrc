@@ -239,6 +239,10 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 				__prepend_to_path "$BREW_PREFIX/share/$temp_python"
 			fi
 		done
+		# Add Node.js modules to PATH
+		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
+			__append_to_path "$(brew --prefix)/lib/node_modules"
+		fi
 		unset BREW_PREFIX
 	fi
 	# Add the OpenCL offline compiler if it's there
