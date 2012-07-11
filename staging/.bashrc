@@ -293,7 +293,7 @@ fi
 
 # Enable ccache in Android if we have it, and set it up
 if which ccache >/dev/null; then
-	if [ ! -d "$CCACHE_DIR" ]; then
+	if [ ! -z "$CCACHE_DIR" -a ! -d "$CCACHE_DIR" ]; then
 		mkdir "$CCACHE_DIR"
 	fi
 	if [ ! -w "$CCACHE_DIR" ]; then
