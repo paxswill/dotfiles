@@ -230,14 +230,14 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 		fi
 		if brew list ruby >/dev/null; then
 			if [ -d "$(brew --prefix ruby)/bin" ]; then
-				__prepend_to_path "$(brew --prefix ruby)/bin"
+				__append_to_path "$(brew --prefix ruby)/bin"
 			fi
 		fi
 		# Use brewed pythons if we have them
-		for temp_python in python pypy python3; do
+		for temp_python in python3 pypy python; do
 			if brew list $temp_python >/dev/null && \
 				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
-				__prepend_to_path "$BREW_PREFIX/share/$temp_python"
+				__append_to_path "$BREW_PREFIX/share/$temp_python"
 			fi
 		done
 		# Add Node.js modules to PATH
