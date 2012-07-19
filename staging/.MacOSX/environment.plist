@@ -4,7 +4,5 @@
 <dict>
 	<key>GL_ENABLE_DEBUG_ATTACH</key>
 	<string>YES</string>
-	<key>PATH</key>
-	<string>/usr/krb5/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/afs/cmf/users/wross/local/bin</string>
 </dict>
 </plist>
