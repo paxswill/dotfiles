@@ -92,7 +92,7 @@ set incsearch
 
 """ Misc
 " Show unprintable characters like TextMate
-set listchars=tab:‣\ ,eol:¬,extends:»,precedes:«
+set listchars=tab:▸\ ,eol:¬,extends:»,precedes:«
 set list
 " Automatically externally read changed files in
 set autoread
