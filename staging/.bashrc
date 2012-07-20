@@ -92,6 +92,8 @@ __vercmp () {
 }
 
 # Bash Configuration
+# Use UTF8.
+export LANG=en_US.UTF-8
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
