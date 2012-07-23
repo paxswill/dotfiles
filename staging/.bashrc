@@ -366,14 +366,38 @@ if which git > /dev/null; then
 fi
 
 # Set PS1 (prompt)
+# Determine which color to use for the hostname
+# BSD includes md5, GNU includes md5sum
+if which md5 >/dev/null 2>&1; then
+	hashed_host=$(hostname | md5)
+elif which md5sum >/dev/null 2>&1; then
+	hashed_host=$(hostname | md5sum | grep -o -e '^[0-9a-f]*')
+fi
+# BSD has jot for generating sequences, GNU has seq
+if which jot >/dev/null 2>&1; then
+	hashed_seq="$(jot ${#hashed_host} 0)"
+elif which seq >/dev/null 2>&1; then
+	hashed_seq="$(seq 0 $((${#hashed_host} - 1)))"
+fi
+if [ ! -z "$hashed_host" -a ! -z "$hashed_seq" ]; then
+	# Sum all the digits, then choose one of the ANSI colors (31-37) for the
+	# host part of $PS1
+	sum=0
+	for i in $hashed_seq; do
+		sum=$(($sum + 0x${hashed_host:$i:1}))
+	done
+	host_color="\[\033[$((31 + ($sum % 7)))m\]"
+else
+	host_color=""
+fi
 # If we have git PS1 magic
 if type __git_ps1 >/dev/null 2>&1; then
 	# [user@host:dir(git branch)] $
 	GIT_PS1_SHOWUPSTREAM="auto"
-	PS1='[\u@\h:\W$(__git_ps1 " (%s)")]\$ '
+	PS1="[\u@${host_color}\h\[\033[0m\]:\W$(__git_ps1 " (%s)")]\$ "
 else
 	# [user@host:dir] $
-	PS1='[\u@\h:\W]\$ '
+	PS1="[\u@${host_color}\h\[\033[0m\]:\W]\$ "
 fi
 
 # Pull in dotfiles management functions
