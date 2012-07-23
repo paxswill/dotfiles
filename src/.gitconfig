@@ -32,3 +32,4 @@ ifdef(`NRL',
 	ff = merge --ff-only
 	lg = log --graph --decorate --oneline
 	st = status
+	ap = add --patch
