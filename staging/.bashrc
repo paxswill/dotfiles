@@ -271,8 +271,9 @@ fi
 
 # Android SDK (non-OS X)
 if [ -d /opt/android-sdk ]; then
-	__append_to_path "/opt/android-sdk/tools"
-	__append_to_path "/opt/android-sdk/platform-tools"
+	export ANDROID_SDK_ROOT="/opt/android-sdk"
+	__append_to_path "${ANDROID_SDK_ROOT}/tools"
+	__append_to_path "${ANDROID_SDK_ROOT}/platform-tools"
 fi
 
 # HPCMO Kerberos
