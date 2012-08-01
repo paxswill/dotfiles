@@ -365,11 +365,6 @@ for GREPCMD in grep egrep fgrep; do
 	fi
 done
 
-# Quick access to git grep
-if which git > /dev/null; then
-	alias ggrep="git grep"
-fi
-
 # Set PS1 (prompt)
 # Determine which color to use for the hostname
 # BSD includes md5, GNU includes md5sum
