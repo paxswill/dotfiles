@@ -266,7 +266,9 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 	fi
 	# Increase the maximum number of open file descriptors
 	# This is primarily for the Android build process
-	ulimit -S -n 1024
+	if [ $(ulimit -n) -lt 1024 ]; then
+		ulimit -S -n 1024
+	fi
 	# Define JAVA_HOME on OS X
 	JAVA_HOME=$(/usr/libexec/java_home)
 fi
