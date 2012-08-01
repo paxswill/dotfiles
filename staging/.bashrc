@@ -381,13 +381,20 @@ elif which seq >/dev/null 2>&1; then
 	hashed_seq="$(seq 0 $((${#hashed_host} - 1)))"
 fi
 if [ ! -z "$hashed_host" -a ! -z "$hashed_seq" ]; then
-	# Sum all the digits, then choose one of the ANSI colors (31-37) for the
-	# host part of $PS1
+	# Sum all the digits modulo 9 (ANSI colors 31-37 normal, and 31 and 35
+	# bright. Solarized only has those two bright colors as actual colors)
 	sum=0
 	for i in $hashed_seq; do
 		sum=$(($sum + 0x${hashed_host:$i:1}))
 	done
-	host_color="\[\033[$((31 + ($sum % 7)))m\]"
+	sum=$((sum % 9))
+	if [ $sum -eq 7 ]; then
+		host_color="\[\033[1;31m\]"
+	elif [ $sum -eq 8 ]; then
+		host_color="\[\033[1;35m\]"
+	else
+		host_color="\[\033[$((31 + $sum))m\]"
+	fi
 else
 	host_color=""
 fi
