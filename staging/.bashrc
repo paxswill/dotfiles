@@ -2,7 +2,7 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-source $HOME/.dotfiles/util/*
+source $HOME/.dotfiles/util/common.sh
 
 # From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
 __vercmp () {
