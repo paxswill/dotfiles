@@ -212,8 +212,6 @@ elif [ "$DOMAINTAIL" = "cmf.nrl.navy.mil" ]; then
 fi
 # OS X Specific setup
 if [ "$SYSTYPE" = "Darwin" ]; then
-	# Add the undocumented airport command
-	__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	# MacPorts
 	if ! which brew > /dev/null; then
 		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
@@ -250,7 +248,11 @@ if [ "$SYSTYPE" = "Darwin" ]; then
 	fi
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
+		alias openclc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
+	fi
+	# Add the "hidden" airport command
+	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
+		alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
 	fi
 	# Man page to Preview
 	if which ps2pdf 2>&1 > /dev/null; then
