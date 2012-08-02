@@ -42,38 +42,46 @@ if [ -d "$HOME/local/bin" ]; then
 fi
 # Set a base PATH, depending on host
 SYSTYPE=$(uname -s)
-# A FQDN is required
-__HOSTNAME=$(hostname)
-# Sometimes a flag is needed
-if ! echo $__HOSTNAME | grep '\.' >/dev/null; then
+# Obtain the host name and domain name
+if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
 	if [ "$SYSTYPE" = "SunOS" ] && type getent >/dev/null 2>&1; then
-		__HOSTNAME=$(getent hosts $(hostname) | awk '{print $2}')
+		hostname=$(getent hosts $HOSTNAME | awk '{print $2}')
 	elif hostname -f >/dev/null 2>&1; then
-		__HOSTNAME=$(hostname -f)
+		hostname=$(hostname -f)
+	else
+		hostname=$HOSTNAME
 	fi
+	DOMAIN=${hostname#*.}
+	HOST=${hostname%%.*}
+	if [ $DOMAIN = $HOST ]; then
+		$DOMAIN=
+	fi
+	unset hostname
+else
+	DOMAIN=${HOSTNAME#*.}
+	HOST=${HOSTNAME%%.*}
 fi
-DOMAINTAIL=$(echo $__HOSTNAME | sed s/'^[a-zA-Z]*\.'/''/g)
 # Host specific configuration
-if [ "$__HOSTNAME" = "Macbeth" ] && [ "$SYSTYPE" = "Linux"  ]; then
+if [ "$HOST" = "Macbeth" ] && [ "$SYSTYPE" = "Linux"  ]; then
 	# Macbeth is my main Debian System
 	# Redefine path to include system binaries, like root
 	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 	JAVA_HOME=/usr/lib/jvm/default_java
-elif [ "$DOMAINTAIL" = "cs.odu.edu" ]; then
-	if [ "$__HOSTNAME" = "procyon.cs.odu.edu" ] || [ "$__HOSTNAME" = "capella.cs.odu.edu" ] || [ "$__HOSTNAME" = "antares.cs.odu.edu" ] || [ "$__HOSTNAME" = "vega.cs.odu.edu" ]; then
+elif [ "$DOMAIN" = "cs.odu.edu" ]; then
+	if [ "$HOST" = "procyon" ] || [ "$HOST" = "capella" ] || [ "$HOST" = "antares" ] || [ "$HOST" = "vega" ]; then
 		LOCALNAME="fast-sparc"
 		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
 		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
 		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
 		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
 		JAVA_HOME=/usr/java
-	elif [ "$__HOSTNAME" = "atria.cs.odu.edu" ] || [ "$__HOSTNAME" = "sirius.cs.odu.edu" ]; then
+	elif [ "$HOST" = "atria" ] || [ "$HOST" = "sirius" ]; then
 		LOCALNAME="fast-ubuntu"
-	elif [ "$__HOSTNAME" = "nvidia.cs.odu.edu" ]; then
+	elif [ "$HOST" = "nvidia" ]; then
 		LOCALNAME="nv-s1070"
-	elif [ "$__HOSTNAME" = "cuda.cs.odu.edu" ] || [ "$__HOSTNAME" = "tesla.cs.odu.edu" ] || [ "$__HOSTNAME" = "stream.cs.odu.edu" ]; then
+	elif [ "$HOST" = "cuda" ] || [ "$HOST" = "tesla" ] || [ "$HOST" = "stream" ]; then
 		LOCALNAME="nv-c870"
-	elif [ "$__HOSTNAME" = "smp.cs.odu.edu" ]; then
+	elif [ "$HOST" = "smp" ]; then
 		LOCALNAME="smp"
 	fi
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
@@ -88,7 +96,7 @@ elif [ "$DOMAINTAIL" = "cs.odu.edu" ]; then
 	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
-elif [ "$DOMAINTAIL" = "cmf.nrl.navy.mil" ]; then
+elif [ "$DOMAIN" = "cmf.nrl.navy.mil" ]; then
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		# PATH on CMF OS X machines is getting munged
 		unset PATH
@@ -310,9 +318,7 @@ export MANPATH
 export PKG_CONFIG_PATH
 
 # Clean up
-unset __HOSTNAME
 unset SYSTYPE
-unset DOMAINTAIL
 unset __prepend_to_path
 unset __append_to_manpath
 unset __prepend_to_manpath
