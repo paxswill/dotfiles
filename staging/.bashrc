@@ -142,7 +142,7 @@ else
 	PS1="[\u@${host_color}\h\[\033[0m\]:\W]\$ "
 fi
 
-_configure_apps
+configure_apps
 
 # Pull in dotfiles management functions
 if [ -d $HOME/.dotfiles ]; then
