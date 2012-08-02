@@ -4,6 +4,8 @@
 
 source $HOME/.dotfiles/util/common.sh
 source $HOME/.dotfiles/util/apps.sh
+source $HOME/.dotfiles/util/hosts.sh
+source $HOME/.dotfiles/util/os.sh
 
 # Bash Configuration
 # Use UTF8.
@@ -40,160 +42,9 @@ FIGNORE=".swp:.swo"
 if [ -d "$HOME/local/bin" ]; then
 	__append_to_path "$HOME/local/bin"
 fi
-# Set a base PATH, depending on host
-SYSTYPE=$(uname -s)
-# Obtain the host name and domain name
-if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
-	if [ "$SYSTYPE" = "SunOS" ] && type getent >/dev/null 2>&1; then
-		hostname=$(getent hosts $HOSTNAME | awk '{print $2}')
-	elif hostname -f >/dev/null 2>&1; then
-		hostname=$(hostname -f)
-	else
-		hostname=$HOSTNAME
-	fi
-	DOMAIN=${hostname#*.}
-	HOST=${hostname%%.*}
-	if [ $DOMAIN = $HOST ]; then
-		$DOMAIN=
-	fi
-	unset hostname
-else
-	DOMAIN=${HOSTNAME#*.}
-	HOST=${HOSTNAME%%.*}
-fi
-# Host specific configuration
-if [ "$HOST" = "Macbeth" ] && [ "$SYSTYPE" = "Linux"  ]; then
-	# Macbeth is my main Debian System
-	# Redefine path to include system binaries, like root
-	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
-	JAVA_HOME=/usr/lib/jvm/default_java
-elif [ "$DOMAIN" = "cs.odu.edu" ]; then
-	if [ "$HOST" = "procyon" ] || [ "$HOST" = "capella" ] || [ "$HOST" = "antares" ] || [ "$HOST" = "vega" ]; then
-		LOCALNAME="fast-sparc"
-		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
-		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
-		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
-		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
-		JAVA_HOME=/usr/java
-	elif [ "$HOST" = "atria" ] || [ "$HOST" = "sirius" ]; then
-		LOCALNAME="fast-ubuntu"
-	elif [ "$HOST" = "nvidia" ]; then
-		LOCALNAME="nv-s1070"
-	elif [ "$HOST" = "cuda" ] || [ "$HOST" = "tesla" ] || [ "$HOST" = "stream" ]; then
-		LOCALNAME="nv-c870"
-	elif [ "$HOST" = "smp" ]; then
-		LOCALNAME="smp"
-	fi
-    export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
-	unset LOCALNAME
-	# CUDA paths
-	if [ -d /usr/local/cuda ]; then
-		__append_to_path "/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin"
-		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
-	fi
-	__prepend_to_path "${LOCAL_PREFIX}/bin:${LOCAL_PREFIX}/sbin"
-	__prepend_to_libpath "${LOCAL_PREFIX}/lib:${LOCAL_PREFIX}/lib64"
-	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
-	# Autoconf Site configuration
-	export CONFIG_SITE=$HOME/local/config.site
-elif [ "$DOMAIN" = "cmf.nrl.navy.mil" ]; then
-	if [ "$SYSTYPE" = "Darwin" ]; then
-		# PATH on CMF OS X machines is getting munged
-		unset PATH
-		eval "$(/usr/libexec/path_helper -s)"
-		# Re-add ~/local/bin, unless there's /scratch/local/bin
-		MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
-		if [ -d "/scratch/wross/local/bin" ]; then
-			__prepend_to_path "/scratch/wross/local/bin"
-		elif [ -d "${MY_BIN}" ]; then
-			__prepend_to_path "${MY_BIN}"
-		fi
-		unset MY_BIN
-		# Staging/Linking up packages with Homebrew can fail when crossing file
-		# system boundaries. This forces the homebrew temporary folder to be
-		# on the same FS as the destination.
-		if which brew > /dev/null; then
-			export HOMEBREW_TEMP="$(brew --prefix)/.tmp/homebrew"
-			if ! [ -d "${HOMEBREW_TEMP}" ]; then
-				mkdir -p "${HOMEBREW_TEMP}"
-			fi
-		fi
-		if [ -d /scratch/wross ]; then
-			export VAGRANT_HOME=/scratch/wross/.vagrantd
-			mkdir -p $VAGRANT_HOME
-		fi
-	fi
-	if [ -z "$SCRATCH_VOLUME" -a -d /scratch -a -w /scratch ]; then
-		export CCACHE_DIR=/scratch/ccache
 
-	fi
-	# AFS Resources
-	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
-		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
-	fi
-fi
-# OS X Specific setup
-if [ "$SYSTYPE" = "Darwin" ]; then
-	# MacPorts
-	if ! which brew > /dev/null; then
-		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-				__append_to_path "/opt/local/bin:/opt/local/sbin"
-		fi
-		if [ -d /opt/local/share/man ]; then
-			__append_to_manpath "/opt/local/share/man"
-		fi
-	fi
-	# Homebrew setup
-	if type brew >/dev/null 2>&1; then
-		# Move homebrew to the front of the path if we have it
-		BREW_PREFIX=$(brew --prefix)
-		if [ -d "${BREW_PREFIX}/sbin" ]; then
-			__append_to_path "${BREW_PREFIX}/sbin"
-		fi
-		if brew list ruby >/dev/null; then
-			if [ -d "$(brew --prefix ruby)/bin" ]; then
-				__append_to_path "$(brew --prefix ruby)/bin"
-			fi
-		fi
-		# Use brewed pythons if we have them
-		for temp_python in python3 pypy python; do
-			if brew list $temp_python >/dev/null && \
-				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
-				__append_to_path "$BREW_PREFIX/share/$temp_python"
-			fi
-		done
-		# Add Node.js modules to PATH
-		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
-			__append_to_path "$(brew --prefix)/lib/node_modules"
-		fi
-		unset BREW_PREFIX
-	fi
-	# Add the OpenCL offline compiler if it's there
-	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		alias openclc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
-	fi
-	# Add the "hidden" airport command
-	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
-		alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
-	fi
-	# Man page to Preview
-	if which ps2pdf 2>&1 > /dev/null; then
-		__vercmp "$(sw_vers -productVersion)" "10.7"
-		if [[ $? == 2 ]]; then
-			pman_open_bg="-g"
-		fi
-		pman () {
-			man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
-		}
-	fi
-	# Increase the maximum number of open file descriptors
-	# This is primarily for the Android build process
-	if [ $(ulimit -n) -lt 1024 ]; then
-		ulimit -S -n 1024
-	fi
-	# Define JAVA_HOME on OS X
-	JAVA_HOME=$(/usr/libexec/java_home)
-fi
+configure_hosts
+configure_os
 
 # Enable programmable shell completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then

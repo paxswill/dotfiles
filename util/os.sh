@@ -1,0 +1,106 @@
+# OS based configuration
+
+_configure_darwin() {
+	# Only use MacPorts if we don't have Homebrew
+	if ! which brew > /dev/null; then
+		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
+				__append_to_path "/opt/local/bin:/opt/local/sbin"
+		fi
+		if [ -d /opt/local/share/man ]; then
+			__append_to_manpath "/opt/local/share/man"
+		fi
+	fi
+	# Homebrew setup
+	if type brew >/dev/null 2>&1; then
+		# Move homebrew to the front of the path if we have it
+		BREW_PREFIX=$(brew --prefix)
+		if [ -d "${BREW_PREFIX}/sbin" ]; then
+			__append_to_path "${BREW_PREFIX}/sbin"
+		fi
+		if brew list ruby >/dev/null; then
+			if [ -d "$(brew --prefix ruby)/bin" ]; then
+				__append_to_path "$(brew --prefix ruby)/bin"
+			fi
+		fi
+		# Use brewed pythons if we have them
+		for temp_python in python3 pypy python; do
+			if brew list $temp_python >/dev/null && \
+				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
+				__append_to_path "$BREW_PREFIX/share/$temp_python"
+			fi
+		done
+		# Add Node.js modules to PATH
+		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
+			__append_to_path "$(brew --prefix)/lib/node_modules"
+		fi
+		unset BREW_PREFIX
+	fi
+	# Add the OpenCL offline compiler if it's there
+	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
+		alias openclc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
+	fi
+	# Add the "hidden" airport command
+	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
+		alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
+	fi
+	# Man page to Preview
+	if which ps2pdf 2>&1 > /dev/null; then
+		__vercmp "$(sw_vers -productVersion)" "10.7"
+		if [[ $? == 2 ]]; then
+			pman_open_bg="-g"
+		fi
+		pman () {
+			man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
+		}
+	fi
+	# Increase the maximum number of open file descriptors
+	# This is primarily for the Android build process
+	if [ $(ulimit -n) -lt 1024 ]; then
+		ulimit -S -n 1024
+	fi
+	# Define JAVA_HOME on OS X
+	JAVA_HOME=$(/usr/libexec/java_home)
+
+}
+
+_configure_debian() {
+	# Set PATH to include system directories
+	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+	JAVA_HOME=/usr/lib/jvm/default_java
+	export PATH
+	export JAVA_HOME
+}
+
+_configure_linux() {
+	if type lsb_release >/dev/null 2>&1; then
+		DISTRO=$(lsb_release -i)
+		DISTRO=${DISTRO##*:}
+	fi
+	export DISTRO
+	case $DISTRO in
+		Debian)
+			_configure_debian;;
+		Ubuntu)
+			_configure_ubuntu;;
+	esac
+	unset _configure_debian
+	unset _configure_ubuntu
+}
+
+_configure_ubuntu() {
+	JAVA_HOME=/usr/lib/jvm/default_java
+	export JAVA_HOME
+}
+
+configure_os() {
+	case ${SYSTYPE:=$(uname -s)} in
+		Darwin)
+			_configure_darwin;;
+		Linux)
+			_configure_linux;;
+	esac
+	unset _configure_darwin
+	unset _configure_linux
+}
+
+
