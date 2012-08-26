@@ -123,6 +123,31 @@ _configure_vim() {
 	fi
 }
 
+_configure_bash() {
+	# don't put duplicate lines in the history. See bash(1) for more options
+	# ... or force ignoredups and ignorespace
+	HISTCONTROL=ignoreboth
+	# append to the history file, don't overwrite it
+	shopt -s histappend
+	# All shells share a history
+	PROMPT_COMMAND='history -a'
+	# Multi-line commands in the same history entry
+	shopt -s cmdhist
+	shopt -s lithist
+	# Files beginning with '.' are included in globbing
+	shopt -s dotglob
+	# Autocomplete for hostnames
+	shopt -s hostcomplete
+	# check the window size after each command and, if necessary,
+	# update the values of LINES and COLUMNS.
+	shopt -s checkwinsize
+	# Bash-related configuration
+	_configure_bash_completion
+	unset _configure_bash_completion
+	_configure_bash_PS1
+	unset _configure_bash_PS1
+}
+
 _configure_bash_completion() {
 	# Enable programmable shell completion features
 	if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
@@ -138,6 +163,18 @@ _configure_bash_completion() {
 		# Macports
 		. /opt/local/etc/bash_completion
 	fi
+}
+
+_configure_bash_PS1() {
+	# Set PS1 (prompt)
+	# If we have git PS1 magic
+	if type __git_ps1 >/dev/null 2>&1; then
+		# [user@host:dir(git branch)] $
+		GIT_PS1_SHOWUPSTREAM="auto"
+		git_branch='$(__git_ps1 " (%s)")'
+	fi
+	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${git_branch}]\$ "
+	unset git_branch
 }
 
 configure_apps() {
@@ -159,7 +196,7 @@ configure_apps() {
 	unset _configure_less
 	_configure_vim
 	unset _configure_vim
-	_configure_bash_completion
-	unset _configure_bash_completion
+	_configure_bash
+	unset _configure_bash
 }
 
