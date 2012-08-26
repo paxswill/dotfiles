@@ -80,8 +80,6 @@ _configure_linux() {
 		Ubuntu)
 			_configure_ubuntu;;
 	esac
-	unset _configure_debian
-	unset _configure_ubuntu
 }
 
 _configure_ubuntu() {
@@ -97,6 +95,8 @@ configure_os() {
 	esac
 	unset _configure_darwin
 	unset _configure_linux
+	unset _configure_debian
+	unset _configure_ubuntu
+	unset configure_os
 }
-
 

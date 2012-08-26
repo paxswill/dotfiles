@@ -28,14 +28,4 @@ if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/setup.sh
 fi
 
-# Clean up
-unset SYSTYPE
-unset __prepend_to_path
-unset __append_to_manpath
-unset __prepend_to_manpath
-unset __append_to_manpath
-unset __prepend_to_libpath
-unset __append_to_libpath
-unset __prepend_to_pkgconfpath
-unset __append_to_pkgconfpath
-#unset __vercmp
+cleanup_common

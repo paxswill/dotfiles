@@ -81,5 +81,6 @@ configure_colors() {
 	fi
 	unset _configure_host_color
 	unset _configure_less_colors
+	unset configure_colors
 }
 

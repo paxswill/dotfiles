@@ -101,6 +101,6 @@ configure_hosts() {
 	esac
 	unset _configure_cmf
 	unset _configure_oducs
+	unset configure_hosts
 }
-
 

@@ -198,5 +198,6 @@ configure_apps() {
 	unset _configure_vim
 	_configure_bash
 	unset _configure_bash
+	unset configure_apps
 }
 

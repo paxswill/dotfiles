@@ -25,4 +25,5 @@ configure_aliases() {
 	unset _alias_ls
 	_alias_grep
 	unset _alias_grep
+	unset configure_aliases
 }
