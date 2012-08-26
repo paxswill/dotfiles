@@ -28,13 +28,6 @@ if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/setup.sh
 fi
 
-# Export the configuration
-export PATH
-export JAVA_HOME
-export LD_LIBRARY_PATH
-export MANPATH
-export PKG_CONFIG_PATH
-
 # Clean up
 unset SYSTYPE
 unset __prepend_to_path

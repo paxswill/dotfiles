@@ -59,15 +59,13 @@ _configure_darwin() {
 		ulimit -S -n 1024
 	fi
 	# Define JAVA_HOME on OS X
-	JAVA_HOME=$(/usr/libexec/java_home)
+	export JAVA_HOME=$(/usr/libexec/java_home)
 }
 
 _configure_debian() {
 	# Set PATH to include system directories
-	PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
-	JAVA_HOME=/usr/lib/jvm/default_java
-	export PATH
-	export JAVA_HOME
+	export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+	export JAVA_HOME=/usr/lib/jvm/default_java
 }
 
 _configure_linux() {
@@ -87,8 +85,7 @@ _configure_linux() {
 }
 
 _configure_ubuntu() {
-	JAVA_HOME=/usr/lib/jvm/default_java
-	export JAVA_HOME
+	export JAVA_HOME=/usr/lib/jvm/default_java
 }
 
 configure_os() {
