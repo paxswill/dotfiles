@@ -60,8 +60,24 @@ _configure_host_color() {
 	fi
 }
 
+_configure_less_colors() {
+	# Prettify man pages
+	# Bold will be cyan
+	export LESS_TERMCAP_mb=$'\E[36m'
+	export LESS_TERMCAP_md=$'\E[36m'
+	export LESS_TERMCAP_me=$'\E[0m'
+	# Standaout uses a highlighted background and foreground
+	export LESS_TERMCAP_so=$'\E[1;40m'
+	export LESS_TERMCAP_se=$'\E[0m'
+	# Instead of underlines, use the highlighted back and foreground
+	export LESS_TERMCAP_us=$'\E[1;34;40m'
+	export LESS_TERMCAP_ue=$'\E[0m'
+}
+
 configure_colors() {
 	_configure_host_color
 	unset _configure_host_color
+	_configure_less_colors
+	unset _configure_less_colors
 }
 
