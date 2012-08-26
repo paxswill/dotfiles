@@ -110,6 +110,30 @@ _configure_less() {
 	fi
 }
 
+_configure_vim() {
+	# Ignore Vim temporary files for file completion
+	FIGNORE=".swp:.swo"
+	# Set Vim as $EDITOR if it's available
+	if which mvim >/dev/null 2>&1; then
+		 GUI_VIM=mvim
+	elif which gvim >/dev/null 2>&1; then
+		 GUI_VIM=gvim
+	fi
+	if which vim >/dev/null 2>&1; then
+		VI=vim
+	elif which vi >/dev/null 2>&1; then
+		VI=vi
+	fi
+	if [ ! -z $GUI_VIM ]; then
+		export EDITOR=$GUI_VIM
+		if [ ! -z $VI ]; then
+			export GIT_EDITOR=$VI
+		fi
+	elif [ ! -z $VI ]; then
+		export EDITOR=$VI
+	fi
+}
+
 configure_apps() {
 	_configure_android
 	unset _configure_android
@@ -127,5 +151,7 @@ configure_apps() {
 	unset _configure_virtualenv_wrapper
 	_configure_less
 	unset _configure_less
+	_configure_vim
+	unset _configure_vim
 }
 

@@ -28,9 +28,6 @@ shopt -s hostcomplete
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Ignore Vim temporary files for file completion
-FIGNORE=".swp:.swo"
-
 # Set up paths
 if [ -d "$HOME/local/bin" ]; then
 	__append_to_path "$HOME/local/bin"
@@ -52,26 +49,6 @@ elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --
 elif [ -f /opt/local/etc/bash_completion ]; then
 	# Macports
 	. /opt/local/etc/bash_completion
-fi
-
-# Set Vim as $EDITOR if it's available
-if which mvim >/dev/null 2>&1; then
-	 GUI_VIM=mvim
-elif which gvim >/dev/null 2>&1; then
-	 GUI_VIM=gvim
-fi
-if which vim >/dev/null 2>&1; then
-	VI=vim
-elif which vi >/dev/null 2>&1; then
-	VI=vi
-fi
-if [ ! -z $GUI_VIM ]; then
-	export EDITOR=$GUI_VIM
-	if [ ! -z $VI ]; then
-		export GIT_EDITOR=$VI
-	fi
-elif [ ! -z $VI ]; then
-	export EDITOR=$VI
 fi
 
 # Aliases
