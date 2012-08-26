@@ -28,13 +28,6 @@ shopt -s hostcomplete
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# make less more friendly for non-text input files, see lesspipe(1)
-if which lesspipe >/dev/null 2>&1; then
-	export LESSOPEN="|lesspipe %s"
-elif which lesspipe.sh >/dev/null 2>&1; then
-	export LESSOPEN="|lesspipe.sh %s"
-fi
-
 # Ignore Vim temporary files for file completion
 FIGNORE=".swp:.swo"
 
@@ -148,18 +141,6 @@ configure_apps
 if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/setup.sh
 fi
-
-# Prettify man pages
-# Bold will be cyan
-export LESS_TERMCAP_mb=$'\E[0;36m'
-export LESS_TERMCAP_md=$'\E[0;36m'
-export LESS_TERMCAP_me=$'\E[0m'
-# Standaout uses a highlighted background and foreground
-export LESS_TERMCAP_so=$'\E[01;40m'
-export LESS_TERMCAP_se=$'\E[0m'
-# Instead of underlines, use the highlighted back and foreground
-export LESS_TERMCAP_us=$'\E[01;34;40m'
-export LESS_TERMCAP_ue=$'\E[0m'
 
 # Export the configuration
 export PATH
