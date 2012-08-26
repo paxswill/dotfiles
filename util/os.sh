@@ -41,7 +41,7 @@ _configure_darwin() {
 	fi
 	# Add the "hidden" airport command
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
-		alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
+		__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
 	# Man page to Preview
 	if which ps2pdf 2>&1 > /dev/null; then
