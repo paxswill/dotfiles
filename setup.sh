@@ -117,7 +117,7 @@ setup_dotfiles(){
 	unset BASE
 }
 
-# Uupdate the dotfiles repo and relink it
+# Update the dotfiles repo and relink it
 update_dotfiles(){
 	start_dir=$PWD
 	cd $HOME/.dotfiles
