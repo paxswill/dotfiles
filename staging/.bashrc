@@ -106,11 +106,10 @@ fi
 if type __git_ps1 >/dev/null 2>&1; then
 	# [user@host:dir(git branch)] $
 	GIT_PS1_SHOWUPSTREAM="auto"
-	PS1="[\u@${host_color}\h\[\033[0m\]:\W$(__git_ps1 " (%s)")]\$ "
-else
-	# [user@host:dir] $
-	PS1="[\u@${host_color}\h\[\033[0m\]:\W]\$ "
+	git_branch='$(__git_ps1 " (%s)")'
 fi
+PS1="[\u@${host_color}\h\[\033[0m\]:\W${git_branch}]\$ "
+unset git_branch
 
 configure_apps
 
