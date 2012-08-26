@@ -1,58 +1,74 @@
 # Path utility functions
 __prepend_to_path() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export PATH="${__real_path}${PATH:+:}${PATH}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export PATH="${__real_path}${PATH:+:}${PATH}"
+		popd >/dev/null
+	fi
 }
 
 __append_to_path() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export PATH="${PATH}${PATH:+:}${1}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export PATH="${PATH}${PATH:+:}${1}"
+		popd >/dev/null
+	fi
 }
 
 __prepend_to_manpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export MANPATH="${__real_path}${MANPATH:+:}${MANPATH}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export MANPATH="${__real_path}${MANPATH:+:}${MANPATH}"
+		popd >/dev/null
+	fi
 }
 
 __append_to_manpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export MANPATH="${MANPATH}${MANPATH:+:}${__real_path}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export MANPATH="${MANPATH}${MANPATH:+:}${__real_path}"
+		popd >/dev/null
+	fi
 }
 
 __prepend_to_libpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export LD_LIBRARY_PATH="${__real_path}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export LD_LIBRARY_PATH="${__real_path}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
+		popd >/dev/null
+	fi
 }
 
 __append_to_libpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${__real_path}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${__real_path}"
+		popd >/dev/null
+	fi
 }
 
 __prepend_to_pkgconfpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export PKG_CONFIG_PATH="${__real_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export PKG_CONFIG_PATH="${__real_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+		popd >/dev/null
+	fi
 }
 
 __append_to_pkgconfpath() {
-	cd "${1}"
-	local __real_path="$(pwd -P)"
-	export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${__real_path}"
-	cd
+	if [ -d "${1}" ]; then
+		pushd "${1}" >/dev/null
+		local __real_path="$(pwd -P)"
+		export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${__real_path}"
+		popd >/dev/null
+	fi
 }
 
 # From http://stackoverflow.com/a/4025065/96454, as of 15 April 2012
