@@ -60,7 +60,6 @@ _configure_darwin() {
 	fi
 	# Define JAVA_HOME on OS X
 	JAVA_HOME=$(/usr/libexec/java_home)
-
 }
 
 _configure_debian() {

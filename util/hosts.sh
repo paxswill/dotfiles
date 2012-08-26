@@ -1,7 +1,5 @@
 # Host specific customizations
 
-
-
 _configure_cmf() {
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		# PATH on CMF OS X machines is getting munged

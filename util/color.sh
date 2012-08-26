@@ -1,6 +1,6 @@
 # Common color functions
 
-# Util
+# Define common control sequences
 CSI_START="\[\033["
 CSI_END="\]"
 SGR_END="m$CSI_END"
