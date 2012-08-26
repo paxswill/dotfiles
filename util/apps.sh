@@ -123,6 +123,23 @@ _configure_vim() {
 	fi
 }
 
+_configure_bash_completion() {
+	# Enable programmable shell completion features
+	if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+		# Normal, sane systems
+		. /etc/bash_completion
+	elif [ -f $HOME/local/common/share/bash-completion/bash_completion ] && shopt -oq posix; then
+		# Systems that need customized help (fast.cs.odu.edu Solaris machines)
+		. $HOME/local/common/share/bash-completion/bash_completion
+	elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+		# Homebrew
+		. $(brew --prefix)/etc/bash_completion
+	elif [ -f /opt/local/etc/bash_completion ]; then
+		# Macports
+		. /opt/local/etc/bash_completion
+	fi
+}
+
 configure_apps() {
 	_configure_android
 	unset _configure_android
@@ -142,5 +159,7 @@ configure_apps() {
 	unset _configure_less
 	_configure_vim
 	unset _configure_vim
+	_configure_bash_completion
+	unset _configure_bash_completion
 }
 
