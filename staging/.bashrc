@@ -7,6 +7,7 @@ source $HOME/.dotfiles/util/apps.sh
 source $HOME/.dotfiles/util/hosts.sh
 source $HOME/.dotfiles/util/os.sh
 source $HOME/.dotfiles/util/color.sh
+source $HOME/.dotfiles/util/aliases.sh
 
 # Bash Configuration
 # Use UTF8.
@@ -36,26 +37,7 @@ fi
 
 configure_hosts
 configure_os
-
-# Aliases
-# ls
-# BSD ls uses -G for color, GNU ls uses --color=auto
-if strings "$(which ls)" | grep 'GNU' > /dev/null; then
-    alias ls='ls --color=auto'
-elif ls -G >/dev/null 2>&1; then
-	alias ls='ls -G'
-fi
-alias ll='ls -lh'
-alias la='ls -A'
-alias lla='ls -lAh'
-
-# grep
-for GREPCMD in grep egrep fgrep; do
-	if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
-		alias ${GREPCMD}="${GREPCMD} --color=auto"
-	fi
-done
-
+configure_aliases
 configure_colors
 
 # Set PS1 (prompt)
