@@ -9,120 +9,6 @@ _configure_android() {
 	fi
 }
 
-_configure_ccache() {
-	# Enable ccache in Android if we have it, and set it up
-	if which ccache >/dev/null; then
-		if [ ! -z "$CCACHE_DIR" -a ! -d "$CCACHE_DIR" ]; then
-			mkdir "$CCACHE_DIR"
-		fi
-		if [ ! -w "$CCACHE_DIR" ]; then
-			unset CCACHE_DIR
-		else
-			export USE_CCACHE=1
-			ccache -M 50G > /dev/null
-		fi
-	fi
-}
-
-_configure_cmf_krb5() {
-	if [ -d /usr/krb5 ]; then
-		__prepend_to_path "/usr/krb5/bin"
-		__prepend_to_path "/usr/krb5/sbin"
-	elif [ -d /usr/local/krb5 ]; then
-		__prepend_to_path "/usr/local/krb5/bin"
-		__prepend_to_path "/usr/local/krb5/sbin"
-	fi
-}
-
-_configure_ec2() {
-	# Set up Amazon EC2 keys
-	if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then
-		# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
-		# I'll need to add special handling if I use other platforms in the future.
-		if which brew >/dev/null; then
-			export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
-		else
-			echo "WARNING: ec2-cmd detected but no Homebrew."
-		fi
-		export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
-		export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
-	fi
-}
-
-_configure_perlbrew() {
-	if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
-		. $HOME/perl5/perlbrew/etc/bashrc
-		# On modern systems setting MANPATH screws things up
-		if [ "$(uname -s)" = "Darwin" ]; then
-			unset MANPATH
-		fi
-	fi
-}
-
-_configure_rvm() {
-	if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-		source "$HOME/.rvm/scripts/rvm"
-	fi
-}
-
-_configure_virtualenv_wrapper() {
-	# Pull in virtualenvwrapper
-	local wrapper_source=$(which virtualenvwrapper.sh >/dev/null 2>&1)
-	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
-		# Use python3
-		if which python3 >/dev/null 2>&1; then
-			export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-		fi
-		# Set up the working directories
-		if [ -d "$HOME/Development/Python" ]; then
-			export PROJECT_HOME="$HOME/Development/Python"
-		else
-			export PROJECT_HOME="$HOME/Development"
-			if ! [ -d $PROJECT_HOME ]; then
-				mkdir $PROJECT_HOME
-			fi
-		fi
-		export WORKON_HOME="$HOME/.virtualenvs"
-		if ! [ -d $WORKON_HOME ]; then
-			mkdir $WORKON_HOME
-		fi
-		source $wrapper_source
-	fi
-}
-
-_configure_less() {
-	# Setup lesspipe
-	if which lesspipe >/dev/null 2>&1; then
-		export LESSOPEN="|lesspipe %s"
-	elif which lesspipe.sh >/dev/null 2>&1; then
-		export LESSOPEN="|lesspipe.sh %s"
-	fi
-}
-
-_configure_vim() {
-	# Ignore Vim temporary files for file completion
-	FIGNORE=".swp:.swo"
-	# Set Vim as $EDITOR if it's available
-	if which mvim >/dev/null 2>&1; then
-		 GUI_VIM=mvim
-	elif which gvim >/dev/null 2>&1; then
-		 GUI_VIM=gvim
-	fi
-	if which vim >/dev/null 2>&1; then
-		VI=vim
-	elif which vi >/dev/null 2>&1; then
-		VI=vi
-	fi
-	if [ ! -z $GUI_VIM ]; then
-		export EDITOR=$GUI_VIM
-		if [ ! -z $VI ]; then
-			export GIT_EDITOR=$VI
-		fi
-	elif [ ! -z $VI ]; then
-		export EDITOR=$VI
-	fi
-}
-
 _configure_bash() {
 	# don't put duplicate lines in the history. See bash(1) for more options
 	# ... or force ignoredups and ignorespace
@@ -177,27 +63,141 @@ _configure_bash_PS1() {
 	unset git_branch
 }
 
+_configure_ccache() {
+	# Enable ccache in Android if we have it, and set it up
+	if which ccache >/dev/null; then
+		if [ ! -z "$CCACHE_DIR" -a ! -d "$CCACHE_DIR" ]; then
+			mkdir "$CCACHE_DIR"
+		fi
+		if [ ! -w "$CCACHE_DIR" ]; then
+			unset CCACHE_DIR
+		else
+			export USE_CCACHE=1
+			ccache -M 50G > /dev/null
+		fi
+	fi
+}
+
+_configure_cmf_krb5() {
+	if [ -d /usr/krb5 ]; then
+		__prepend_to_path "/usr/krb5/bin"
+		__prepend_to_path "/usr/krb5/sbin"
+	elif [ -d /usr/local/krb5 ]; then
+		__prepend_to_path "/usr/local/krb5/bin"
+		__prepend_to_path "/usr/local/krb5/sbin"
+	fi
+}
+
+_configure_ec2() {
+	# Set up Amazon EC2 keys
+	if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then
+		# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
+		# I'll need to add special handling if I use other platforms in the future.
+		if which brew >/dev/null; then
+			export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
+		else
+			echo "WARNING: ec2-cmd detected but no Homebrew."
+		fi
+		export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
+		export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
+	fi
+}
+
+_configure_less() {
+	# Setup lesspipe
+	if which lesspipe >/dev/null 2>&1; then
+		export LESSOPEN="|lesspipe %s"
+	elif which lesspipe.sh >/dev/null 2>&1; then
+		export LESSOPEN="|lesspipe.sh %s"
+	fi
+}
+
+_configure_perlbrew() {
+	if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
+		. $HOME/perl5/perlbrew/etc/bashrc
+		# On modern systems setting MANPATH screws things up
+		if [ "$(uname -s)" = "Darwin" ]; then
+			unset MANPATH
+		fi
+	fi
+}
+
+_configure_rvm() {
+	if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+		source "$HOME/.rvm/scripts/rvm"
+	fi
+}
+
+_configure_vim() {
+	# Ignore Vim temporary files for file completion
+	FIGNORE=".swp:.swo"
+	# Set Vim as $EDITOR if it's available
+	if which mvim >/dev/null 2>&1; then
+		 GUI_VIM=mvim
+	elif which gvim >/dev/null 2>&1; then
+		 GUI_VIM=gvim
+	fi
+	if which vim >/dev/null 2>&1; then
+		VI=vim
+	elif which vi >/dev/null 2>&1; then
+		VI=vi
+	fi
+	if [ ! -z $GUI_VIM ]; then
+		export EDITOR=$GUI_VIM
+		if [ ! -z $VI ]; then
+			export GIT_EDITOR=$VI
+		fi
+	elif [ ! -z $VI ]; then
+		export EDITOR=$VI
+	fi
+}
+
+_configure_virtualenv_wrapper() {
+	# Pull in virtualenvwrapper
+	local wrapper_source=$(which virtualenvwrapper.sh >/dev/null 2>&1)
+	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
+		# Use python3
+		if which python3 >/dev/null 2>&1; then
+			export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+		fi
+		# Set up the working directories
+		if [ -d "$HOME/Development/Python" ]; then
+			export PROJECT_HOME="$HOME/Development/Python"
+		else
+			export PROJECT_HOME="$HOME/Development"
+			if ! [ -d $PROJECT_HOME ]; then
+				mkdir $PROJECT_HOME
+			fi
+		fi
+		export WORKON_HOME="$HOME/.virtualenvs"
+		if ! [ -d $WORKON_HOME ]; then
+			mkdir $WORKON_HOME
+		fi
+		source $wrapper_source
+	fi
+}
+
 configure_apps() {
 	_configure_android
 	unset _configure_android
+	_configure_bash
+	unset _configure_bash
 	_configure_ccache
 	unset _configure_ccache
 	_configure_cmf_krb5
 	unset _configure_cmf_krb5
 	_configure_ec2
 	unset _configure_ec2
+	_configure_less
+	unset _configure_less
 	_configure_perlbrew
 	unset _configure_perlbrew
 	_configure_rvm
 	unset _configure_rvm
-	_configure_virtualenv_wrapper
-	unset _configure_virtualenv_wrapper
-	_configure_less
-	unset _configure_less
 	_configure_vim
 	unset _configure_vim
-	_configure_bash
-	unset _configure_bash
+	_configure_virtualenv_wrapper
+	unset _configure_virtualenv_wrapper
 	unset configure_apps
 }
 

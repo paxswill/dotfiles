@@ -1,5 +1,13 @@
 # Shell aliases
 
+_alias_grep() {
+	for GREPCMD in grep egrep fgrep; do
+		if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
+			alias ${GREPCMD}="${GREPCMD} --color=auto"
+		fi
+	done
+}
+
 _alias_ls() {
 	# BSD ls uses -G for color, GNU ls uses --color=auto
 	if strings "$(which ls)" | grep 'GNU' > /dev/null; then
@@ -12,18 +20,10 @@ _alias_ls() {
 	alias lla='ls -lAh'
 }
 
-_alias_grep() {
-	for GREPCMD in grep egrep fgrep; do
-		if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
-			alias ${GREPCMD}="${GREPCMD} --color=auto"
-		fi
-	done
-}
-
 configure_aliases() {
-	_alias_ls
-	unset _alias_ls
 	_alias_grep
 	unset _alias_grep
+	_alias_ls
+	unset _alias_ls
 	unset configure_aliases
 }
