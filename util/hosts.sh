@@ -82,7 +82,7 @@ configure_hosts() {
 		DOMAIN=${hostname#*.}
 		HOST=${hostname%%.*}
 		if [ $DOMAIN = $HOST ]; then
-			$DOMAIN=
+			DOMAIN=""
 		fi
 		unset hostname
 	else
