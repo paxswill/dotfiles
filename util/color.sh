@@ -77,7 +77,7 @@ _configure_less_colors() {
 
 configure_colors() {
 	case "$TERM" in
-		xterm*|rxvt*)
+		xterm*|rxvt*|screen*color)
 			_configure_host_color
 			_configure_less_colors
 			;;
