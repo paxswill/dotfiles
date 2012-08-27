@@ -75,10 +75,12 @@ _configure_less_colors() {
 }
 
 configure_colors() {
-	if [ $TERM = "xterm-color" -o $TERM = "xterm-256color" ]; then
-		_configure_host_color
-		_configure_less_colors
-	fi
+	case "$TERM" in
+		xterm*|rxvt*)
+			_configure_host_color
+			_configure_less_colors
+			;;
+	esac
 	unset _configure_host_color
 	unset _configure_less_colors
 	unset configure_colors
