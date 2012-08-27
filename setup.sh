@@ -70,12 +70,14 @@ setup_dotfiles(){
 				unlink $F
 			fi
 		done
+		rm "${BASE}/links.txt"
 	fi
 	if [ -f $BASE/dirs.txt ]; then
 		DIRS=$(cat $BASE/dirs.txt)
 		for D in $DIRS; do
 			rmdir $DIRS >/dev/null 2>&1
 		done
+		rm "${BASE}/dirs.txt"
 	fi
 
 	# Process files with M4
