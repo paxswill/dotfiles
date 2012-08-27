@@ -28,13 +28,14 @@ COLOR_RESET="${CSI_START}${SGR_RESET}${SGR_END}"
 
 _configure_host_color() {
 	# Generate a color that is semi-unique for this host
-	# BSD includes md5, GNU includes md5sum
+	# BSD includes md5, GNU and Solaris include md5sum
 	if which md5 >/dev/null 2>&1; then
 		hashed_host=$(hostname | md5)
 	elif which md5sum >/dev/null 2>&1; then
-		hashed_host=$(hostname | md5sum | grep -o -e '^[0-9a-f]*')
+		hashed_host=$(hostname | md5sum)
+		hashed_host=${hashed_host:0:32}
 	fi
-	# BSD has jot for generating sequences, GNU has seq
+	# BSD has jot for generating sequences, GNU has seq, and Solaris has both.
 	if which jot >/dev/null 2>&1; then
 		hashed_seq="$(jot ${#hashed_host} 0)"
 	elif which seq >/dev/null 2>&1; then
