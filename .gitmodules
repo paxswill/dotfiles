@@ -19,3 +19,6 @@
 [submodule "staging/.vim/bundle/supertab"]
 	path = staging/.vim/bundle/supertab
 	url = git://github.com/ervandew/supertab.git
+[submodule "staging/.vim/bundle/nginx-vim-syntax"]
+	path = staging/.vim/bundle/nginx-vim-syntax
+	url = git://github.com/evanmiller/nginx-vim-syntax.git
