@@ -75,11 +75,17 @@ _configure_less_colors() {
 	export LESS_TERMCAP_ue=$'\E[0m'
 }
 
+get_term_colors() {
+	if [ -x $TERM_COLORS ]; then
+		TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
+		TERM_COLORS=${TERM_COLORS:8}
+		TERM_COLORS=${TERM_COLORS%,}
+	fi
+}
+
 configure_colors() {
-	num_colors=$(infocmp -I -1 $TERM | grep 'colors')
-	num_colors=${num_colors:7}
-	num_colors=${num_colors%,}
-	if [ $num_colors -ge 8 ]; then
+	get_term_colors
+	if [ $TERM_COLORS -ge 8 ]; then
 		_configure_host_color
 		_configure_less_colors
 	fi
