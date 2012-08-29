@@ -76,12 +76,13 @@ _configure_less_colors() {
 }
 
 configure_colors() {
-	case "$TERM" in
-		xterm*|rxvt*|screen*color)
-			_configure_host_color
-			_configure_less_colors
-			;;
-	esac
+	num_colors=$(infocmp -I -1 $TERM | grep 'colors')
+	num_colors=${num_colors:7}
+	num_colors=${num_colors%,}
+	if [ $num_colors -ge 8 ]; then
+		_configure_host_color
+		_configure_less_colors
+	fi
 	unset _configure_host_color
 	unset _configure_less_colors
 	unset configure_colors
