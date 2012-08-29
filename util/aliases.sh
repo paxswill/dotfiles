@@ -1,11 +1,15 @@
 # Shell aliases
+source $HOME/.dotfiles/util/color.sh
 
 _alias_grep() {
-	for GREPCMD in grep egrep fgrep; do
-		if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
-			alias ${GREPCMD}="${GREPCMD} --color=auto"
-		fi
-	done
+	get_term_colors
+	if [ $TERM_COLORS -ge 8 ]; then
+		for GREPCMD in grep egrep fgrep; do
+			if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
+				alias ${GREPCMD}="${GREPCMD} --color=auto"
+			fi
+		done
+	fi
 }
 
 _alias_ls() {
