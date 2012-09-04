@@ -22,3 +22,6 @@
 [submodule "staging/.vim/bundle/nginx-vim-syntax"]
 	path = staging/.vim/bundle/nginx-vim-syntax
 	url = git://github.com/evanmiller/nginx-vim-syntax.git
+[submodule "staging/.vim/bundle/vundle"]
+	path = staging/.vim/bundle/vundle
+	url = https://github.com/gmarik/vundle.git
