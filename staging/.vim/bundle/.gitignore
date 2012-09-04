@@ -1,0 +1,5 @@
+# Ignore everything
+*
+# ...Except the vundle directory and this file
+!vundle/
+!.gitignore
