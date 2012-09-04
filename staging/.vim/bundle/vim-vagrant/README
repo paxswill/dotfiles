@@ -1,5 +1,0 @@
-This is just a quick plugin setup so the vim file enabling Ruby syntax 
-highlighting for Vagrant. It's pulled directly from 
-https://github.com/mitchellh/vagrant/blob/master/contrib/vim/vagrantfile.vim
-at revision 7cfa2b69868e0ca6dbcc3ccffa2568ac292faff8. I just put it in a
-plugin structure so Pathogen would read it nicely.
