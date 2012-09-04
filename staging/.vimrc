@@ -8,6 +8,16 @@ set nocompatible
 " Manage Vundle with Vundle
 Bundle 'gmarix/vundle'
 
+""" Bundle vim plugins
+Bundle 'tpope/vim-fugitive'
+Bundle 'Rip-Rip/clang_complete'
+Bundle 'ervandew/supertab'
+Bundle 'paxswill/vim-opencl'
+Bundle 'tangledhelix/vim-octopress'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'smerrill/vagrant-vim'
+Bundle 'nginx.vim'
+
 " Show incomplete commands
 set showcmd
 
