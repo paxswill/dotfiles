@@ -16,6 +16,7 @@ Bundle 'paxswill/vim-opencl'
 Bundle 'tangledhelix/vim-octopress'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'smerrill/vagrant-vim'
+Bundle 'tpope/vim-surround'
 Bundle 'nginx.vim'
 
 " Show incomplete commands
