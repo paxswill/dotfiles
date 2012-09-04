@@ -1,7 +1,12 @@
-" Enable Pathogen
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
+" Enable Vundle
+filetype off
+set rtp +=~/.vim/bundle/vundle/
+call vundle#rc()
+
 set nocompatible
+
+" Manage Vundle with Vundle
+Bundle 'gmarix/vundle'
 
 " Show incomplete commands
 set showcmd
@@ -113,3 +118,6 @@ if has("gui_running")
 	" Always show tabs in the GUI
 	set showtabline=2
 endif
+
+" Reenable filetype stuff that Vundle needed turned off
+filetype plugin indent on
