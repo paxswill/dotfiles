@@ -17,8 +17,8 @@ if [ -d "$HOME/local/bin" ]; then
 	__append_to_path "$HOME/local/bin"
 fi
 
-configure_hosts
 configure_os
+configure_hosts
 configure_aliases
 configure_colors
 configure_apps
