@@ -58,12 +58,17 @@ _configure_oducs() {
 	unset LOCALNAME
 	# CUDA paths
 	if [ -d /usr/local/cuda ]; then
-		__append_to_path "/usr/local/cuda/bin:/usr/local/cuda/computeprof/bin"
-		__append_to_libpath "/usr/local/cuda/lib64:/usr/local/cuda/lib"
+		__append_to_path "/usr/local/cuda/computeprof/bin"
+		__append_to_path "/usr/local/cuda/bin"
+		__append_to_libpath "/usr/local/cuda/lib"
+		__append_to_libpath "/usr/local/cuda/lib64"
 	fi
-	__prepend_to_path "${LOCAL_PREFIX}/bin:${LOCAL_PREFIX}/sbin"
-	__prepend_to_libpath "${LOCAL_PREFIX}/lib:${LOCAL_PREFIX}/lib64"
-	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig:${LOCAL_PREFIX}/lib64/pkgconfig"
+	__prepend_to_path "${LOCAL_PREFIX}/bin"
+	__prepend_to_path "${LOCAL_PREFIX}/sbin"
+	__prepend_to_libpath "${LOCAL_PREFIX}/lib"
+	__prepend_to_libpath "${LOCAL_PREFIX}/lib64"
+	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig"
+	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib64/pkgconfig"
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
 }
@@ -78,21 +83,6 @@ configure_hosts() {
 			hostname=$(hostname -f)
 		else
 			hostname=$HOSTNAME
-		fi
-		# ODU CS Solaris Workaround
-		if [ $HOSTNAME = ${HOSTNAME#*.} -a $SYSTYPE = "SunOS" ]; then
-			# In upgrading the Solaris machines to Solaris 11, the systems group forgot
-			# to rebuild /etc/hosts properly with the public IPs and the FQDN for each
-			# host. This results in my old method of host resolution breaking, so this
-			# is a workaround until they fix it.
-			local ip_address
-			local fqdn
-			ip_address=$(/sbin/ifconfig net0)
-			ip_address=${ip_address#*inet}
-			ip_address=${ip_address% netmask*}
-			fqdn=$(/sbin/dig -x ${ip_address} | /usr/bin/grep ${HOSTNAME})
-			fqdn=${fqdn#*PTR	}
-			hostname=${fqdn%.}
 		fi
 		DOMAIN=${hostname#*.}
 		HOST=${hostname%%.*}
