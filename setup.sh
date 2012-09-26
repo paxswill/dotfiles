@@ -24,7 +24,7 @@ setup_dotfiles(){
 		BASE="$DEST/.dotfiles"
 	fi
 
-	local M4_DEFS=""
+	local M4_DEFS="-DTMPDIR=$TMPDIR"
 	# Set up macro definitions
 	if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DNRL"

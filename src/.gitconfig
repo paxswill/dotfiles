@@ -33,3 +33,5 @@ ifdef(`NRL',
 	lg = log --graph --decorate --oneline
 	st = status
 	ap = add --patch
+[credential]
+	helper = cache --socket TMPDIR/git-credential-cache-socket
