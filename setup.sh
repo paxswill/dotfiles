@@ -29,7 +29,7 @@ setup_dotfiles(){
 		source "$BASE/util/hosts.sh"
 	fi
 	# Set up macro definitions
-	local M4_DEFS="-DTMPDIR=$TMPDIR"
+	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
 	if [[ "$DOMAIN" =~ "nrl\.navy\.mil" ]]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=wross@cmf.nrl.navy.mil"

@@ -32,4 +32,4 @@
 	ap = add --patch
 [credential]
 ifdef(`OSX',`	helper = osxkeychain',`dnl')
-	helper = cache --socket TMPDIR/git-credential-cache-socket
+	helper = cache --socket /tmp/USER/git-credential-cache-socket
