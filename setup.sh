@@ -27,19 +27,19 @@ setup_dotfiles(){
 	local M4_DEFS=""
 	# Set up macro definitions
 	if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
-		M4_DEFS="${M4_DEFS}-DNRL "
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DNRL"
 	fi
 	if ! __check_ssh_option "ControlMaster=auto"; then
-		M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_MASTER "
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_MASTER"
 		if ! __check_ssh_option "ControlPersist=15m"; then
-			M4_DEFS="${M4_DEFS}-DSSH_HAS_CONTROL_PERSIST "
+			M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_PERSIST"
 		fi
 	fi
 	if ! __check_ssh_option "ExitOnForwardFailure=yes"; then
-		M4_DEFS="${M4_DEFS}-DSSH_HAS_EXIT_ON_FORWARD_FAILURE "
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_EXIT_ON_FORWARD_FAILURE"
 	fi
 	if ! __check_ssh_option "HashKnownHosts=yes"; then
-		M4_DEFS="${M4_DEFS}-DSSH_HAS_HASH_KNOWN_HOSTS "
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_HASH_KNOWN_HOSTS"
 	fi
 
 	# Make sure BASE is set and that it isn't the DEST
