@@ -73,30 +73,36 @@ _configure_oducs() {
 	export CONFIG_SITE=$HOME/local/config.site
 }
 
-configure_hosts() {
-	# Get some information to base later decisions on
-	# Obtain and normalize the host name and domain name
-	if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
-		if [ "${SYSTYPE:=$(uname -s)}" = "SunOS" ] && type getent >/dev/null 2>&1; then
-			hostname=$(getent hosts $HOSTNAME | awk '{print $2}')
-		elif hostname -f >/dev/null 2>&1; then
-			hostname=$(hostname -f)
+parse_fqdn() {
+	if [ -z $HOST -a -z $DOMAIN ]; then
+		# Get some information to base later decisions on
+		# Obtain and normalize the host name and domain name
+		if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
+			if [ "${SYSTYPE:=$(uname -s)}" = "SunOS" ] && type getent >/dev/null 2>&1; then
+				hostname=$(getent hosts $HOSTNAME | awk '{print $2}')
+			elif hostname -f >/dev/null 2>&1; then
+				hostname=$(hostname -f)
+			else
+				hostname=$HOSTNAME
+			fi
+			DOMAIN=${hostname#*.}
+			HOST=${hostname%%.*}
+			if [ $DOMAIN = $HOST ]; then
+				DOMAIN=""
+			fi
+			unset hostname
 		else
-			hostname=$HOSTNAME
+			DOMAIN=${HOSTNAME#*.}
+			HOST=${HOSTNAME%%.*}
 		fi
-		DOMAIN=${hostname#*.}
-		HOST=${hostname%%.*}
-		if [ $DOMAIN = $HOST ]; then
-			DOMAIN=""
-		fi
-		unset hostname
-	else
-		DOMAIN=${HOSTNAME#*.}
-		HOST=${HOSTNAME%%.*}
+		export SYSTYPE
+		export HOST
+		export DOMAIN
 	fi
-	export SYSTYPE
-	export HOST
-	export DOMAIN
+}
+
+configure_hosts() {
+	parse_fqdn
 	# Configure for host
 	case $HOST.$DOMAIN in
 		*.cs.odu.edu)

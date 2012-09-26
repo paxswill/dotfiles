@@ -24,10 +24,17 @@ setup_dotfiles(){
 		BASE="$DEST/.dotfiles"
 	fi
 
-	local M4_DEFS="-DTMPDIR=$TMPDIR"
+	# Get the domain this is being run on right now
+	if ! type parse_fqdn >/dev/null 2>&1; then
+		source "$BASE/util/hosts.sh"
+	fi
 	# Set up macro definitions
-	if ! [ -z $1 ] && [ "$1" == "NRL" ]; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DNRL"
+	local M4_DEFS="-DTMPDIR=$TMPDIR"
+	# Choose an email for git
+	if [[ "$DOMAIN" =~ "nrl\.navy\.mil" ]]; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=wross@cmf.nrl.navy.mil"
+	else
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@gmail.com"
 	fi
 	if ! __check_ssh_option "ControlMaster=auto"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_MASTER"

@@ -10,10 +10,7 @@
 	log = 20
 [user]
 	name = Will Ross
-ifdef(`NRL',
-`	email = wross@cmf.nrl.navy.mil',dnl
-`	email = paxswill@gmail.com'dnl
-)
+	email = EMAIL
 [core]
 	excludesfile = ~/.cvsignore
 [color]
