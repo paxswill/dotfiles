@@ -31,4 +31,5 @@
 	st = status
 	ap = add --patch
 [credential]
+ifdef(`OSX',`	helper = osxkeychain',`dnl')
 	helper = cache --socket TMPDIR/git-credential-cache-socket

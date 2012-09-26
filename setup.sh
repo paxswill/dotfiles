@@ -36,6 +36,9 @@ setup_dotfiles(){
 	else
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@gmail.com"
 	fi
+	# Check SSH configuration options. Basically, Solaris SSH is old and likes
+	# being different and OpenSSH likes adding useful new features. Also, OS X
+	# can sometimes use an old version of OpenSSH.
 	if ! __check_ssh_option "ControlMaster=auto"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_MASTER"
 		if ! __check_ssh_option "ControlPersist=15m"; then
@@ -47,6 +50,10 @@ setup_dotfiles(){
 	fi
 	if ! __check_ssh_option "HashKnownHosts=yes"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_HASH_KNOWN_HOSTS"
+	fi
+	# Check for OS X (for the git keychain connector)
+	if [ "$SYSTYPE" = "Darwin" ]; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
 	fi
 
 	# Make sure BASE is set and that it isn't the DEST
