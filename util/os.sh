@@ -74,12 +74,11 @@ _configure_linux() {
 		DISTRO=${DISTRO##*:}
 	fi
 	export DISTRO
-	case $DISTRO in
-		Debian)
-			_configure_debian;;
-		Ubuntu)
-			_configure_ubuntu;;
-	esac
+	if [ $DISTRO = "Debian" ]; then
+		_configure_debian
+	elif [ $DISTRO = "Ubuntu" ]; then
+		_configure_ubuntu
+	fi
 }
 
 _configure_ubuntu() {
