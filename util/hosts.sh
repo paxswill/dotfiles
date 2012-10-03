@@ -74,7 +74,7 @@ _configure_oducs() {
 }
 
 parse_fqdn() {
-	if [ -z $HOST -a -z $DOMAIN ]; then
+	if [ -z $HOST ] && [ -z $DOMAIN ]; then
 		# Get some information to base later decisions on
 		# Obtain and normalize the host name and domain name
 		if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
