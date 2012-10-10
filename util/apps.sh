@@ -154,12 +154,8 @@ _configure_vim() {
 
 _configure_virtualenv_wrapper() {
 	# Pull in virtualenvwrapper
-	local wrapper_source=$(which virtualenvwrapper.sh >/dev/null 2>&1)
+	local wrapper_source=$(which virtualenvwrapper.sh)
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
-		# Use python3
-		if which python3 >/dev/null 2>&1; then
-			export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-		fi
 		# Set up the working directories
 		if [ -d "$HOME/Development/Python" ]; then
 			export PROJECT_HOME="$HOME/Development/Python"
@@ -168,10 +164,6 @@ _configure_virtualenv_wrapper() {
 			if ! [ -d $PROJECT_HOME ]; then
 				mkdir $PROJECT_HOME
 			fi
-		fi
-		export WORKON_HOME="$HOME/.virtualenvs"
-		if ! [ -d $WORKON_HOME ]; then
-			mkdir $WORKON_HOME
 		fi
 		source $wrapper_source
 	fi
