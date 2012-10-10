@@ -15,8 +15,9 @@ _configure_darwin() {
 		# Move homebrew to the front of the path if we have it
 		BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
-			__append_to_path "${BREW_PREFIX}/sbin"
+			__prepend_to_path "${BREW_PREFIX}/sbin"
 		fi
+		__prepend_to_path "${BREW_PREFIX}/bin"
 		if brew list ruby >/dev/null; then
 			if [ -d "$(brew --prefix ruby)/bin" ]; then
 				__append_to_path "$(brew --prefix ruby)/bin"
