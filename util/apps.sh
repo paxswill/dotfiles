@@ -122,6 +122,12 @@ _configure_perlbrew() {
 	fi
 }
 
+_configure_postgres_app() {
+	if [ -d /Applications/Postgres.app ]; then
+		__prepend_to_path "/Applications/Postgres.app/Contents/MacOS/bin"
+	fi
+}
+
 _configure_rvm() {
 	if [ -s "$HOME/.rvm/scripts/rvm" ]; then
 		source "$HOME/.rvm/scripts/rvm"
@@ -184,6 +190,8 @@ configure_apps() {
 	unset _configure_less
 	_configure_perlbrew
 	unset _configure_perlbrew
+	_configure_postgres_app
+	unset _configure_postgres_app
 	_configure_rvm
 	unset _configure_rvm
 	_configure_vim
