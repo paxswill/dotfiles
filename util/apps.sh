@@ -122,6 +122,12 @@ _configure_perlbrew() {
 	fi
 }
 
+_configure_pip() {
+	if which pip >/dev/null 2>&1; then
+		eval "$(pip completion --bash)"
+	fi
+}
+
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app ]; then
 		__prepend_to_path "/Applications/Postgres.app/Contents/MacOS/bin"
@@ -190,6 +196,8 @@ configure_apps() {
 	unset _configure_less
 	_configure_perlbrew
 	unset _configure_perlbrew
+	_configure_pip
+	unset _configure_pip
 	_configure_postgres_app
 	unset _configure_postgres_app
 	_configure_rvm
