@@ -33,3 +33,5 @@
 [credential]
 ifdef(`OSX',`	helper = osxkeychain',`dnl')
 	helper = cache --socket /tmp/USER/git-credential-cache-socket
+[push]
+	default = current
