@@ -103,7 +103,7 @@ _configure_ec2() {
 	fi
 }
 
-_configure_less() {
+_configure_lesspipe() {
 	# Setup lesspipe
 	if which lesspipe >/dev/null 2>&1; then
 		export LESSOPEN="|lesspipe %s"
@@ -192,8 +192,8 @@ configure_apps() {
 	unset _configure_cmf_krb5
 	_configure_ec2
 	unset _configure_ec2
-	_configure_less
-	unset _configure_less
+	_configure_lesspipe
+	unset _configure_lesspipe
 	_configure_perlbrew
 	unset _configure_perlbrew
 	_configure_pip
