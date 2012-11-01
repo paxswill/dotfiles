@@ -103,6 +103,12 @@ _configure_ec2() {
 	fi
 }
 
+_configure_git_hub(){
+	if which hub >/dev/null 2>&1; then
+		alias git="hub"
+	fi
+}
+
 _configure_lesspipe() {
 	# Setup lesspipe
 	if which lesspipe >/dev/null 2>&1; then
@@ -192,6 +198,8 @@ configure_apps() {
 	unset _configure_cmf_krb5
 	_configure_ec2
 	unset _configure_ec2
+	_configure_git_hub
+	unset _configure_git_hub
 	_configure_lesspipe
 	unset _configure_lesspipe
 	_configure_perlbrew
