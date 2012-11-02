@@ -8,9 +8,9 @@ _configure_cmf() {
 		# Re-add ~/local/bin, unless there's /scratch/local/bin
 		local MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
 		if [ -d "/scratch/wross/local/bin" ]; then
-			__prepend_to_path "/scratch/wross/local/bin"
+			_prepend_to_path "/scratch/wross/local/bin"
 		elif [ -d "${MY_BIN}" ]; then
-			__prepend_to_path "${MY_BIN}"
+			_prepend_to_path "${MY_BIN}"
 		fi
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
@@ -32,7 +32,7 @@ _configure_cmf() {
 	fi
 	# AFS Resources
 	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
-		__append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
+		_append_to_path "/afs/cmf.nrl.navy.mil/@sys/bin"
 	fi
 }
 
@@ -57,17 +57,17 @@ _configure_oducs() {
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
 	# CUDA paths
 	if [ -d /usr/local/cuda ]; then
-		__append_to_path "/usr/local/cuda/computeprof/bin"
-		__append_to_path "/usr/local/cuda/bin"
-		__append_to_libpath "/usr/local/cuda/lib"
-		__append_to_libpath "/usr/local/cuda/lib64"
+		_append_to_path "/usr/local/cuda/computeprof/bin"
+		_append_to_path "/usr/local/cuda/bin"
+		_append_to_libpath "/usr/local/cuda/lib"
+		_append_to_libpath "/usr/local/cuda/lib64"
 	fi
-	__prepend_to_path "${LOCAL_PREFIX}/bin"
-	__prepend_to_path "${LOCAL_PREFIX}/sbin"
-	__prepend_to_libpath "${LOCAL_PREFIX}/lib"
-	__prepend_to_libpath "${LOCAL_PREFIX}/lib64"
-	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig"
-	__prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib64/pkgconfig"
+	_prepend_to_path "${LOCAL_PREFIX}/bin"
+	_prepend_to_path "${LOCAL_PREFIX}/sbin"
+	_prepend_to_libpath "${LOCAL_PREFIX}/lib"
+	_prepend_to_libpath "${LOCAL_PREFIX}/lib64"
+	_prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig"
+	_prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib64/pkgconfig"
 	# Autoconf Site configuration
 	export CONFIG_SITE=$HOME/local/config.site
 }

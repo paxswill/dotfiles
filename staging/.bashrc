@@ -5,7 +5,7 @@
 # Use UTF8 for everything
 export LANG=en_US.UTF-8
 
-__load_util() {
+_load_util() {
 	source $HOME/.dotfiles/util/common.sh
 	source $HOME/.dotfiles/util/apps.sh
 	source $HOME/.dotfiles/util/hosts.sh
@@ -16,10 +16,10 @@ __load_util() {
 
 # Set up paths
 if [ -d "$HOME/local/bin" ]; then
-	__append_to_path "$HOME/local/bin"
+	_append_to_path "$HOME/local/bin"
 fi
 
-__configure_all() {
+_configure_all() {
 	configure_os
 	configure_hosts
 	configure_aliases
@@ -28,8 +28,8 @@ __configure_all() {
 }
 
 load_bashrc() {
-	__load_util
-	__configure_all
+	_load_util
+	_configure_all
 }
 load_bashrc
 

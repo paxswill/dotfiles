@@ -6,41 +6,41 @@ _configure_darwin() {
 		# Homebrew setup
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
-		__prepend_to_path "${BREW_PREFIX}/sbin"
-		__prepend_to_path "${BREW_PREFIX}/bin"
+		_prepend_to_path "${BREW_PREFIX}/sbin"
+		_prepend_to_path "${BREW_PREFIX}/bin"
 		if brew list ruby >/dev/null; then
 			if [ -d "$(brew --prefix ruby)/bin" ]; then
-				__append_to_path "$(brew --prefix ruby)/bin"
+				_append_to_path "$(brew --prefix ruby)/bin"
 			fi
 		fi
 		# Use brewed pythons if we have them
 		for temp_python in python3 pypy python; do
 			if brew list $temp_python >/dev/null && \
 				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
-				__append_to_path "$BREW_PREFIX/share/$temp_python"
+				_append_to_path "$BREW_PREFIX/share/$temp_python"
 			fi
 		done
 		# Add Node.js modules to PATH
 		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
-			__append_to_path "$(brew --prefix)/lib/node_modules"
+			_append_to_path "$(brew --prefix)/lib/node_modules"
 		fi
 	elif [ -d /opt ]; then
 		# MacPorts
-		__append_to_path "/opt/local/bin"
-		__append_to_path "/opt/local/sbin"
+		_append_to_path "/opt/local/bin"
+		_append_to_path "/opt/local/sbin"
 	fi
 	# Add the OpenCL offline compiler if available
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
+		_append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Add the "hidden" airport command
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
-		__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
+		_append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
 	# Man page to Preview
 	if [ ! -z "$PS1" ]; then
 		if which ps2pdf 2>&1 > /dev/null; then
-			__vercmp "$(sw_vers -productVersion)" "10.7"
+			_vercmp "$(sw_vers -productVersion)" "10.7"
 			if [[ $? == 2 ]]; then
 				pman_open_bg="-g"
 			fi
@@ -61,8 +61,8 @@ _configure_darwin() {
 _configure_debian() {
 	# Set PATH to include system directories
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-	__append_to_path /usr/local/games
-	__append_to_path /usr/games
+	_append_to_path /usr/local/games
+	_append_to_path /usr/games
 	export JAVA_HOME=/usr/lib/jvm/default_java
 }
 

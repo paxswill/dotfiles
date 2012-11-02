@@ -1,6 +1,6 @@
 #!/bin/bash
 
-__check_ssh_option() {
+_check_ssh_option() {
 	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
 		return 0
 	else
@@ -37,16 +37,16 @@ setup_dotfiles(){
 	# Check SSH configuration options. Basically, Solaris SSH is old and likes
 	# being different and OpenSSH likes adding useful new features. Also, OS X
 	# can sometimes use an old version of OpenSSH.
-	if ! __check_ssh_option "ControlMaster=auto"; then
+	if ! _check_ssh_option "ControlMaster=auto"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_MASTER"
-		if ! __check_ssh_option "ControlPersist=15m"; then
+		if ! _check_ssh_option "ControlPersist=15m"; then
 			M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_PERSIST"
 		fi
 	fi
-	if ! __check_ssh_option "ExitOnForwardFailure=yes"; then
+	if ! _check_ssh_option "ExitOnForwardFailure=yes"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_EXIT_ON_FORWARD_FAILURE"
 	fi
-	if ! __check_ssh_option "HashKnownHosts=yes"; then
+	if ! _check_ssh_option "HashKnownHosts=yes"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_HASH_KNOWN_HOSTS"
 	fi
 	# Check for OS X (for the git keychain connector)
