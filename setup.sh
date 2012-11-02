@@ -117,20 +117,21 @@ setup_dotfiles(){
 
 # Update the dotfiles repo and relink it
 update_dotfiles(){
-	start_dir=$PWD
-	cd $HOME/.dotfiles
+	local oldpwd="$OLDPWD"
+	pushd "$HOME/.dotfiles" >/dev/null
 	if [ "$(git status --porcelain)" != "" ]; then
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
 	fi
 	git pull origin
-	cd $start_dit
-	unset start_dir
-	setup_dotfiles $1
+	popd >/dev/null
+	OLDPWD="$oldpwd"
+	setup_dotfiles
+	load_bashrc
 }
 
 if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
 	# We're running as a script within a shell
 	# This is the case if this is during bootstrap, or during a manual setup
-	setup_dotfiles $1
+	setup_dotfiles
 fi
