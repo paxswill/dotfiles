@@ -92,10 +92,5 @@ configure_os() {
 		Linux)
 			_configure_linux;;
 	esac
-	unset _configure_darwin
-	unset _configure_linux
-	unset _configure_debian
-	unset _configure_ubuntu
-	unset configure_os
 }
 

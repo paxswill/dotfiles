@@ -29,9 +29,7 @@ _configure_bash() {
 	shopt -s checkwinsize
 	# Bash-related configuration
 	_configure_bash_completion
-	unset _configure_bash_completion
 	_configure_bash_PS1
-	unset _configure_bash_PS1
 }
 
 _configure_bash_completion() {
@@ -189,31 +187,17 @@ _configure_virtualenv_wrapper() {
 
 configure_apps() {
 	_configure_android
-	unset _configure_android
 	_configure_bash
-	unset _configure_bash
 	_configure_ccache
-	unset _configure_ccache
 	_configure_cmf_krb5
-	unset _configure_cmf_krb5
 	_configure_ec2
-	unset _configure_ec2
 	_configure_git_hub
-	unset _configure_git_hub
 	_configure_lesspipe
-	unset _configure_lesspipe
 	_configure_perlbrew
-	unset _configure_perlbrew
 	_configure_pip
-	unset _configure_pip
 	_configure_postgres_app
-	unset _configure_postgres_app
 	_configure_rvm
-	unset _configure_rvm
 	_configure_vim
-	unset _configure_vim
 	_configure_virtualenv_wrapper
-	unset _configure_virtualenv_wrapper
-	unset configure_apps
 }
 
