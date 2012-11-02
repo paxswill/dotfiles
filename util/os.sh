@@ -6,9 +6,7 @@ _configure_darwin() {
 		# Homebrew setup
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
-		if [ -d "${BREW_PREFIX}/sbin" ]; then
-			__prepend_to_path "${BREW_PREFIX}/sbin"
-		fi
+		__prepend_to_path "${BREW_PREFIX}/sbin"
 		__prepend_to_path "${BREW_PREFIX}/bin"
 		if brew list ruby >/dev/null; then
 			if [ -d "$(brew --prefix ruby)/bin" ]; then
@@ -31,9 +29,9 @@ _configure_darwin() {
 		__append_to_path "/opt/local/bin"
 		__append_to_path "/opt/local/sbin"
 	fi
-	# Add the OpenCL offline compiler if it's there
+	# Add the OpenCL offline compiler if available
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		alias openclc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
+		__append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Add the "hidden" airport command
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
