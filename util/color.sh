@@ -1,5 +1,7 @@
 # Common color functions
 
+source $HOME/.dotfiles/util/hosts.sh
+
 # Define common control sequences
 CSI_START="\[\033["
 CSI_END="\]"
@@ -28,11 +30,15 @@ COLOR_RESET="${CSI_START}${SGR_RESET}${SGR_END}"
 
 _configure_host_color() {
 	# Generate a color that is semi-unique for this host
+	parse_fqdn
+	# Normalize hostnames to only lower-case letters, numbers, and '-',
+	# i.e. proper hostnames
+	local name="$(printf $HOST | tr [:upper:] [:lower:] | tr -d -c "a-z0-9-")"
 	# BSD includes md5, GNU and Solaris include md5sum
 	if which md5 >/dev/null 2>&1; then
-		hashed_host=$(hostname | md5)
+		hashed_host=$(printf $name | md5)
 	elif which md5sum >/dev/null 2>&1; then
-		hashed_host=$(hostname | md5sum)
+		hashed_host=$(printf $name | md5sum)
 		hashed_host=${hashed_host:0:32}
 	fi
 	# BSD has jot for generating sequences, GNU has seq, and Solaris has both.
@@ -57,6 +63,7 @@ _configure_host_color() {
 			HOST_COLOR="${CSI_START}$((31 + $sum))${SGR_END}"
 		fi
 	else
+		# Default to no color
 		HOST_COLOR=""
 	fi
 }
