@@ -82,15 +82,3 @@ profile
 Session.vim
 TAGS
 tags
-
-# Python
-*.py[co]
-
-# C/C++/Obj-C
-*.o
-
-# Java
-*.class
-*.jar
-*.war
-*.ear
