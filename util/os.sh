@@ -1,17 +1,9 @@
 # OS based configuration
 
 _configure_darwin() {
-	# Only use MacPorts if we don't have Homebrew
-	if ! which brew > /dev/null; then
-		if [ -d /opt/local/bin -a -d /opt/local/sbin ]; then
-				__append_to_path "/opt/local/bin:/opt/local/sbin"
-		fi
-		if [ -d /opt/local/share/man ]; then
-			__append_to_manpath "/opt/local/share/man"
-		fi
-	fi
-	# Homebrew setup
+	# Check for Homebrew, then fall back to MacPorts
 	if type brew >/dev/null 2>&1; then
+		# Homebrew setup
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
@@ -34,6 +26,10 @@ _configure_darwin() {
 		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
 			__append_to_path "$(brew --prefix)/lib/node_modules"
 		fi
+	elif [ -d /opt ]; then
+		# MacPorts
+		__append_to_path "/opt/local/bin"
+		__append_to_path "/opt/local/sbin"
 	fi
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
