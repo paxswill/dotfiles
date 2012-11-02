@@ -9,24 +9,22 @@ __check_ssh_option() {
 }
 
 setup_dotfiles(){
-	# Save starting directory
-	local DEST="$PWD"
-
+	local oldpwd="$OLDPWD"
+	local DEST="$HOME/.dotfiles"
 	# Get the dotfiles directory if needed
-	if ! [ -d "$DEST/.dotfiles" ]; then
-		if ! git clone git@github.com:paxswill/dotfiles.git $DEST/.dotfiles; then
+	if [ ! -d "$DEST" ]; then
+		if ! git clone git@github.com:paxswill/dotfiles.git "$DEST"; then
 			echo "Cloning public URL"
-			git clone git://github.com/paxswill/dotfiles.git $DEST/.dotfiles
+			git clone git://github.com/paxswill/dotfiles.git "$DEST"
 		fi
-		cd $DEST/.dotfiles
+		pushd "$DEST" >/dev/null
 		git submodule update -i
-		cd $DEST
-		BASE="$DEST/.dotfiles"
+		popd >/dev/null
 	fi
 
 	# Get the domain this is being run on right now
 	if ! type parse_fqdn >/dev/null 2>&1; then
-		source "$BASE/util/hosts.sh"
+		source "$DEST/util/hosts.sh"
 	fi
 	# Set up macro definitions
 	local M4_DEFS="-DUSER=$USER"
@@ -56,81 +54,65 @@ setup_dotfiles(){
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
 	fi
 
-	# Make sure BASE is set and that it isn't the DEST
-	if [ -z $BASE ]; then
-		if [ -d $HOME/.dotfiles ]; then
-			BASE="$HOME/.dotfiles"
-		else
-			BASE=$(dirname $0)
-			cd $BASE
-			BASE=$PWD
-			cd $OLDPWD
-		fi
-	fi
-	cd $BASE
-	if [ "$PWD" == "$DEST" ]; then
-		echo "Cannot install into the base directory"
-		return 1
-	else
-		cd "$DEST"
-	fi
-
 	# Clean up any old files and directories
-	cd $DEST
-	if [ -f $BASE/links.txt ]; then
-		FILES=$(cat $BASE/links.txt)
+	local FILES
+	local DIRS
+	pushd "$HOME" >/dev/null
+	if [ -f $DEST/links.txt ]; then
+		FILES=$(cat $DEST/links.txt)
 		for F in $FILES; do
 			if [ -h $F ]; then
 				unlink $F
 			fi
 		done
-		rm "${BASE}/links.txt"
+		rm "${DEST}/links.txt"
 	fi
-	if [ -f $BASE/dirs.txt ]; then
-		DIRS=$(cat $BASE/dirs.txt)
+	if [ -f $DEST/dirs.txt ]; then
+		DIRS=$(cat $DEST/dirs.txt)
 		for D in $DIRS; do
 			rmdir $DIRS >/dev/null 2>&1
 		done
-		rm "${BASE}/dirs.txt"
+		rm "${DEST}/dirs.txt"
 	fi
+	popd >/dev/null
 
-	# Process files with M4
-	cd $BASE/src
-	FILES=$(find . -type f ! -name '*.sw*')
-	cd $DEST
-	for F in $FILES; do
-		mkdir -p $BASE/staging/$(dirname $F)
-		m4 $M4_DEFS $BASE/src/$F > $BASE/staging/$F
+	# Process source files with M4
+	pushd "$DEST/src" >/dev/null
+	local M4FILES=$(find . -type f ! -name '*.sw*')
+	pushd "$DEST" >/dev/null
+	for F in $M4FILES; do
+		mkdir -p $DEST/staging/$(dirname $F)
+		m4 $M4_DEFS $DEST/src/$F > $DEST/staging/$F
 	done
+	popd >/dev/null
+	popd >/dev/null
 
 	# Link everything up
-	cd $BASE/staging
+	pushd "$DEST/staging" >/dev/null
 	DIRS=$(find . -type d ! -name . -prune)
 	FILES=$(find . ! -name . -prune -type f ! -name '*.sw*')
 	for D in $DIRS; do
-		goback=$PWD
-		cd "$D"
-		tmp_files=$(find . ! -name . -prune ! -name '*.sw*')
+		pushd "$D" >/dev/null
+		local tmp_files=$(find . ! -name . -prune ! -name '*.sw*')
 		for f in $tmp_files; do
 			FILES="$FILES $D/$f"
 		done
-		cd $goback
-		unset tmp_files
+		popd >/dev/null
 	done
-	cd $DEST
+	popd >/dev/null
+	pushd "$HOME" >/dev/null
 	for D in $DIRS; do
 		mkdir $D >/dev/null 2>&1
 	done
 	for F in $FILES; do
-		ln -s $BASE/staging/$F $F
+		ln -s $DEST/staging/$F $F
 	done
+	popd >/dev/null
 
 	# Save record of links and directories for future upgrades
-	echo "$FILES" > $BASE/links.txt
-	echo "$DIRS" > $BASE/dirs.txt
-	unset FILES
-	unset DIRS
-	unset BASE
+	echo "$FILES" > $DEST/links.txt
+	echo "$DIRS" > $DEST/dirs.txt
+	OLDPWD="$oldpwd"
 }
 
 # Update the dotfiles repo and relink it
