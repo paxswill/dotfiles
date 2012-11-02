@@ -110,8 +110,5 @@ configure_hosts() {
 		*.cmf.nrl.navy.mil)
 			_configure_cmf;;
 	esac
-	unset _configure_cmf
-	unset _configure_oducs
-	unset configure_hosts
 }
 
