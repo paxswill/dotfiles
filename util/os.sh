@@ -13,7 +13,7 @@ _configure_darwin() {
 	# Homebrew setup
 	if type brew >/dev/null 2>&1; then
 		# Move homebrew to the front of the path if we have it
-		BREW_PREFIX=$(brew --prefix)
+		local BREW_PREFIX=$(brew --prefix)
 		if [ -d "${BREW_PREFIX}/sbin" ]; then
 			__prepend_to_path "${BREW_PREFIX}/sbin"
 		fi
@@ -34,7 +34,6 @@ _configure_darwin() {
 		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
 			__append_to_path "$(brew --prefix)/lib/node_modules"
 		fi
-		unset BREW_PREFIX
 	fi
 	# Add the OpenCL offline compiler if it's there
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then

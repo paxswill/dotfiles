@@ -6,13 +6,12 @@ _configure_cmf() {
 		unset PATH
 		eval "$(/usr/libexec/path_helper -s)"
 		# Re-add ~/local/bin, unless there's /scratch/local/bin
-		MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
+		local MY_BIN="/afs/cmf.nrl.navy.mil/users/wross/local/bin"
 		if [ -d "/scratch/wross/local/bin" ]; then
 			__prepend_to_path "/scratch/wross/local/bin"
 		elif [ -d "${MY_BIN}" ]; then
 			__prepend_to_path "${MY_BIN}"
 		fi
-		unset MY_BIN
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
@@ -38,6 +37,7 @@ _configure_cmf() {
 }
 
 _configure_oducs() {
+	local LOCALNAME
 	if [ "$HOST" = "procyon" ] || [ "$HOST" = "capella" ] || [ "$HOST" = "antares" ] || [ "$HOST" = "vega" ]; then
 		LOCALNAME="fast-sparc"
 		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
@@ -55,7 +55,6 @@ _configure_oducs() {
 		LOCALNAME="smp"
 	fi
     export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
-	unset LOCALNAME
 	# CUDA paths
 	if [ -d /usr/local/cuda ]; then
 		__append_to_path "/usr/local/cuda/computeprof/bin"
