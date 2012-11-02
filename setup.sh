@@ -123,7 +123,7 @@ update_dotfiles(){
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
 	fi
-	git pull origin
+	git pull
 	popd >/dev/null
 	OLDPWD="$oldpwd"
 	setup_dotfiles
