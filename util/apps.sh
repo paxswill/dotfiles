@@ -153,6 +153,12 @@ _configure_rvm() {
 	fi
 }
 
+_configure_vagrant() {
+	if which vagrant >/dev/null 2>&1; then
+		complete -W "$(echo `vagrant --help | awk '^    /{print $1}'`;)" vagrant
+	fi
+}
+
 _configure_vim() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -210,6 +216,7 @@ configure_apps() {
 	_configure_pip
 	_configure_postgres_app
 	_configure_rvm
+	_configure_vagrant
 	_configure_vim
 	_configure_virtualenv_wrapper
 }
