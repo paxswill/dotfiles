@@ -10,6 +10,8 @@ _configure_android() {
 }
 
 _configure_bash() {
+	# Run only for interactive terminals
+	[ -z "$PS1" ] && return
 	# don't put duplicate lines in the history. See bash(1) for more options
 	# ... or force ignoredups and ignorespace
 	HISTCONTROL=ignoreboth
@@ -102,12 +104,16 @@ _configure_ec2() {
 }
 
 _configure_git_hub(){
+	# Only for interactive sessions
+	[ -z "$PS1" ] && return
 	if which hub >/dev/null 2>&1; then
 		alias git="hub"
 	fi
 }
 
 _configure_lesspipe() {
+	# Only for interactive sessions
+	[ -z "$PS1" ] && return
 	# Setup lesspipe
 	if which lesspipe >/dev/null 2>&1; then
 		export LESSOPEN="|lesspipe %s"
@@ -127,6 +133,9 @@ _configure_perlbrew() {
 }
 
 _configure_pip() {
+	# Only for interactive sessions
+	[ -z "$PS1" ] && return
+	# Add command completion for pip
 	if which pip >/dev/null 2>&1; then
 		eval "$(pip completion --bash)"
 	fi
@@ -145,6 +154,8 @@ _configure_rvm() {
 }
 
 _configure_vim() {
+	# Only for interactive sessions
+	[ -z "$PS1" ] && return
 	# Ignore Vim temporary files for file completion
 	FIGNORE=".swp:.swo"
 	# Set Vim as $EDITOR if it's available
@@ -169,6 +180,8 @@ _configure_vim() {
 }
 
 _configure_virtualenv_wrapper() {
+	# Only for interactive sessions
+	[ -z "$PS1" ] && return
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(which virtualenvwrapper.sh)
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then

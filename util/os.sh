@@ -44,14 +44,16 @@ _configure_darwin() {
 		__append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
 	# Man page to Preview
-	if which ps2pdf 2>&1 > /dev/null; then
-		__vercmp "$(sw_vers -productVersion)" "10.7"
-		if [[ $? == 2 ]]; then
-			pman_open_bg="-g"
+	if [ ! -z "$PS1" ]; then
+		if which ps2pdf 2>&1 > /dev/null; then
+			__vercmp "$(sw_vers -productVersion)" "10.7"
+			if [[ $? == 2 ]]; then
+				pman_open_bg="-g"
+			fi
+			pman () {
+				man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
+			}
 		fi
-		pman () {
-			man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
-		}
 	fi
 	# Increase the maximum number of open file descriptors
 	# This is primarily for the Android build process
