@@ -7,6 +7,12 @@
 .LSOverride
 Icon
 
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
 # Other Version Control
 .svn
 /.hg/*
