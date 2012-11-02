@@ -13,6 +13,21 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
+# Archives
+*.[7gx]z
+*.[jwrt]ar
+*.zip
+*.bz
+*.bzip
+*.lzma
+*.iso
+*.dmg
+*.xpi
+*.gem
+*.egg
+*.deb
+*.rpm
+
 # Other Version Control
 .svn
 /.hg/*
