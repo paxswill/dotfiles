@@ -30,6 +30,7 @@
 	lg = log --graph --decorate --oneline
 	st = status
 	ap = add --patch
+	cip = commit --patch
 [credential]
 ifdef(`OSX',`	helper = osxkeychain',`dnl')
 	helper = cache --socket /tmp/USER/git-credential-cache-socket
