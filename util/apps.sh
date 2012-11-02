@@ -159,7 +159,7 @@ _configure_rvm() {
 
 _configure_vagrant() {
 	if which vagrant >/dev/null 2>&1; then
-		complete -W "$(echo `vagrant --help | awk '^    /{print $1}'`;)" vagrant
+		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
 	fi
 }
 
