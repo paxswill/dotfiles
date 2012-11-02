@@ -80,5 +80,4 @@ profile
 *.sw[a-z]
 *.un~
 Session.vim
-TAGS
-tags
+.netrwhist
