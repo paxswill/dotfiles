@@ -204,6 +204,8 @@ _configure_virtualenv_wrapper() {
 				mkdir $PROJECT_HOME
 			fi
 		fi
+		# Use Distribute instead of Setuptools by default
+		export VIRTUALENV_DISTRIBUTE=1
 		source $wrapper_source
 	fi
 }
