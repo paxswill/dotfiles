@@ -83,7 +83,7 @@ _configure_less_colors() {
 }
 
 get_term_colors() {
-	if [ -z $TERM_COLORS ]; then
+	if [ -z $TERM_COLORS ] && which infocmp >/dev/null 2>&1; then
 		TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
 		TERM_COLORS=${TERM_COLORS#*colors#}
 		TERM_COLORS=${TERM_COLORS%,}
