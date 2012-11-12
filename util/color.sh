@@ -85,7 +85,7 @@ _configure_less_colors() {
 get_term_colors() {
 	if [ -z $TERM_COLORS ]; then
 		TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
-		TERM_COLORS=${TERM_COLORS:8}
+		TERM_COLORS=${TERM_COLORS#*colors#}
 		TERM_COLORS=${TERM_COLORS%,}
 	fi
 	if [ -z $TERM_COLORS ] || ! [[ "$TERM_COLORS" =~ ^[0-9]$ ]]; then
