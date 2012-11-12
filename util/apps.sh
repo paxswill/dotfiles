@@ -40,8 +40,9 @@ _configure_bash_completion() {
 		if [ -f /usr/share/bash-completion/bash_completion ]; then
 			. /usr/share/bash-completion/bash_completion
 		elif [ -f /etc/bash_completion ]; then
-			# Normal, sane systems
 			. /etc/bash_completion
+		elif [ -f /usr/local/etc/bash_completion ]; then
+			. /etc/local/etc/bash_completion
 		elif [ -f $HOME/local/common/share/bash-completion/bash_completion ]; then
 			# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 			. $HOME/local/common/share/bash-completion/bash_completion
