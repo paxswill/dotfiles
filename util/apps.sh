@@ -225,5 +225,8 @@ configure_apps() {
 	_configure_vagrant
 	_configure_vim
 	_configure_virtualenv_wrapper
+	# And now for tiny enironmental configurtion that doesn't fit elsewhere
+	# AKA, Misc.
+	export BLOCKSIZE=K
 }
 
