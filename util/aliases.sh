@@ -15,9 +15,9 @@ _alias_grep() {
 _alias_ls() {
 	# BSD ls uses -G for color, GNU ls uses --color=auto
 	if strings "$(which ls)" | grep 'GNU' > /dev/null; then
-		alias ls='ls --color=auto'
+		alias ls='ls --color=auto -F'
 	elif ls -G >/dev/null 2>&1; then
-		alias ls='ls -G'
+		alias ls='ls -GF'
 	fi
 	alias ll='ls -lh'
 	alias la='ls -A'
