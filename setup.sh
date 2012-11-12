@@ -49,6 +49,9 @@ setup_dotfiles(){
 	if ! _check_ssh_option "HashKnownHosts=yes"; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_HASH_KNOWN_HOSTS"
 	fi
+	if ! _check_ssh_option "GSSAPIAuthentication" && ! _check_ssh_option "GSSAPIKeyExchange"
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_GSSAPI"
+	fi
 	# Check for OS X (for the git keychain connector)
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
