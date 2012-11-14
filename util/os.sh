@@ -9,21 +9,14 @@ _configure_darwin() {
 		_prepend_to_path "${BREW_PREFIX}/sbin"
 		_prepend_to_path "${BREW_PREFIX}/bin"
 		if brew list ruby &>/dev/null; then
-			if [ -d "$(brew --prefix ruby)/bin" ]; then
-				_append_to_path "$(brew --prefix ruby)/bin"
-			fi
+			_append_to_path "$(brew --prefix ruby)/bin"
 		fi
 		# Use brewed pythons if we have them
 		for temp_python in python3 pypy python; do
-			if brew list $temp_python &>/dev/null && \
-				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
-				_append_to_path "$BREW_PREFIX/share/$temp_python"
-			fi
+			_append_to_path "$BREW_PREFIX/share/$temp_python"
 		done
 		# Add Node.js modules to PATH
-		if [ -d "$(brew --prefix)/lib/node_modules" ]; then
-			_append_to_path "$(brew --prefix)/lib/node_modules"
-		fi
+		_append_to_path "$(brew --prefix)/lib/node_modules"
 	elif [ -d /opt ]; then
 		# MacPorts
 		_append_to_path "/opt/local/bin"
