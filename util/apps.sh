@@ -64,7 +64,7 @@ _configure_bash_PS1() {
 		GIT_PS1_SHOWUPSTREAM="auto"
 		git_branch='$(__git_ps1 " (%s)")'
 	fi
-	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${git_branch}]\$ "
+	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${git_branch}]\\$ "
 	unset git_branch
 }
 
