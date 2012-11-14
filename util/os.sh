@@ -8,14 +8,14 @@ _configure_darwin() {
 		local BREW_PREFIX=$(brew --prefix)
 		_prepend_to_path "${BREW_PREFIX}/sbin"
 		_prepend_to_path "${BREW_PREFIX}/bin"
-		if brew list ruby >/dev/null; then
+		if brew list ruby &>/dev/null; then
 			if [ -d "$(brew --prefix ruby)/bin" ]; then
 				_append_to_path "$(brew --prefix ruby)/bin"
 			fi
 		fi
 		# Use brewed pythons if we have them
 		for temp_python in python3 pypy python; do
-			if brew list $temp_python >/dev/null && \
+			if brew list $temp_python &>/dev/null && \
 				[ -d "$BREW_PREFIX/share/$temp_python" ]; then
 				_append_to_path "$BREW_PREFIX/share/$temp_python"
 			fi

@@ -59,7 +59,7 @@ _configure_bash_completion() {
 _configure_bash_PS1() {
 	# Set PS1 (prompt)
 	# If we have git PS1 magic
-	if type __git_ps1 >/dev/null 2>&1; then
+	if type __git_ps1 &>/dev/null; then
 		# [user@host:dir(git branch)] $
 		GIT_PS1_SHOWUPSTREAM="auto"
 		git_branch='$(__git_ps1 " (%s)")'
@@ -78,7 +78,7 @@ _configure_ccache() {
 			unset CCACHE_DIR
 		else
 			export USE_CCACHE=1
-			ccache -M 50G > /dev/null
+			ccache -M 50G &>/dev/null
 		fi
 	fi
 }

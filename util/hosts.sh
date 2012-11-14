@@ -77,9 +77,9 @@ parse_fqdn() {
 		# Get some information to base later decisions on
 		# Obtain and normalize the host name and domain name
 		if [ $HOSTNAME = ${HOSTNAME#*.} ]; then
-			if [ "${SYSTYPE:=$(uname -s)}" = "SunOS" ] && type getent >/dev/null 2>&1; then
+			if [ "${SYSTYPE:=$(uname -s)}" = "SunOS" ] && type getent &>/dev/null; then
 				hostname=$(getent hosts $HOSTNAME | awk '{print $2}')
-			elif hostname -f >/dev/null 2>&1; then
+			elif hostname -f &>/dev/null; then
 				hostname=$(hostname -f)
 			else
 				hostname=$HOSTNAME

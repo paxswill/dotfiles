@@ -5,9 +5,9 @@ _common_prepend() {
 	# $2 is the directory to prepend
 	if [ -d "$2" ]; then
 		# Disambiguate the directory
-		pushd "$2" >/dev/null
+		pushd "$2" &>/dev/null
 		local realpath="$(/bin/pwd -P)"
-		popd >/dev/null
+		popd &>/dev/null
 		# Remove any old instances of the path from the current value
 		local oldpath="$(eval "printf \"\$$1\"")"
 		oldpath="${oldpath:+:}${oldpath}${oldpath:+:}"
@@ -22,9 +22,9 @@ _common_append() {
 	# $2 is the directory to append
 	if [ -d "$2" ]; then
 		# Disambiguate the directory
-		pushd "$2" >/dev/null
+		pushd "$2" &>/dev/null
 		local realpath="$(/bin/pwd -P)"
-		popd >/dev/null
+		popd &>/dev/null
 		# Remove any old instances of the path from the current value
 		local oldpath="$(eval "printf \"\$$1\"")"
 		oldpath="${oldpath:+:}${oldpath}${oldpath:+:}"

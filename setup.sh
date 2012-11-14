@@ -1,7 +1,7 @@
 #!/bin/bash
 
 _check_ssh_option() {
-	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' >/dev/null; then
+	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' &>/dev/null; then
 		return 0
 	else
 		return 1
@@ -17,13 +17,13 @@ setup_dotfiles(){
 			echo "Cloning public URL"
 			git clone git://github.com/paxswill/dotfiles.git "$DEST"
 		fi
-		pushd "$DEST" >/dev/null
+		pushd "$DEST" &>/dev/null
 		git submodule update -i
-		popd >/dev/null
+		popd &>/dev/null
 	fi
 
 	# Get the domain this is being run on right now
-	if ! type parse_fqdn >/dev/null 2>&1; then
+	if ! type parse_fqdn &>/dev/null ; then
 		source "$DEST/util/hosts.sh"
 	fi
 	# Set up macro definitions
@@ -61,7 +61,7 @@ setup_dotfiles(){
 	# Clean up any old files and directories
 	local FILES
 	local DIRS
-	pushd "$HOME" >/dev/null
+	pushd "$HOME" &>/dev/null
 	if [ -f $DEST/links.txt ]; then
 		FILES=$(cat $DEST/links.txt)
 		for F in $FILES; do
@@ -74,44 +74,44 @@ setup_dotfiles(){
 	if [ -f $DEST/dirs.txt ]; then
 		DIRS=$(cat $DEST/dirs.txt)
 		for D in $DIRS; do
-			rmdir $DIRS >/dev/null 2>&1
+			rmdir $DIRS &>/dev/null
 		done
 		rm "${DEST}/dirs.txt"
 	fi
-	popd >/dev/null
+	popd &>/dev/null
 
 	# Process source files with M4
-	pushd "$DEST/src" >/dev/null
+	pushd "$DEST/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')
-	pushd "$DEST" >/dev/null
+	pushd "$DEST" &>/dev/null
 	for F in $M4FILES; do
 		mkdir -p $DEST/staging/$(dirname $F)
 		m4 $M4_DEFS $DEST/src/$F > $DEST/staging/$F
 	done
-	popd >/dev/null
-	popd >/dev/null
+	popd &>/dev/null
+	popd &>/dev/null
 
 	# Link everything up
-	pushd "$DEST/staging" >/dev/null
+	pushd "$DEST/staging" &>/dev/null
 	DIRS=$(find . -type d ! -name . -prune)
 	FILES=$(find . ! -name . -prune -type f ! -name '*.sw*')
 	for D in $DIRS; do
-		pushd "$D" >/dev/null
+		pushd "$D" &>/dev/null
 		local tmp_files=$(find . ! -name . -prune ! -name '*.sw*')
 		for f in $tmp_files; do
 			FILES="$FILES $D/$f"
 		done
-		popd >/dev/null
+		popd &>/dev/null
 	done
-	popd >/dev/null
-	pushd "$HOME" >/dev/null
+	popd &>/dev/null
+	pushd "$HOME" &>/dev/null
 	for D in $DIRS; do
-		mkdir $D >/dev/null 2>&1
+		mkdir $D &>/dev/null
 	done
 	for F in $FILES; do
 		ln -s $DEST/staging/$F $F
 	done
-	popd >/dev/null
+	popd &>/dev/null
 
 	# Save record of links and directories for future upgrades
 	echo "$FILES" > $DEST/links.txt
@@ -122,13 +122,13 @@ setup_dotfiles(){
 # Update the dotfiles repo and relink it
 update_dotfiles(){
 	local oldpwd="$OLDPWD"
-	pushd "$HOME/.dotfiles" >/dev/null
+	pushd "$HOME/.dotfiles" &>/dev/null
 	if [ "$(git status --porcelain)" != "" ]; then
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
 	fi
 	git pull
-	popd >/dev/null
+	popd &>/dev/null
 	OLDPWD="$oldpwd"
 	setup_dotfiles
 	load_bashrc

@@ -5,7 +5,7 @@ _alias_grep() {
 	get_term_colors
 	if [ $TERM_COLORS -ge 8 ]; then
 		for GREPCMD in grep egrep fgrep; do
-			if echo f | ${GREPCMD} --color=auto 'f' >/dev/null 2>&1; then
+			if echo f | ${GREPCMD} --color=auto 'f' &>/dev/null; then
 				alias ${GREPCMD}="${GREPCMD} --color=auto"
 			fi
 		done
@@ -14,9 +14,9 @@ _alias_grep() {
 
 _alias_ls() {
 	# BSD ls uses -G for color, GNU ls uses --color=auto
-	if strings "$(type -p ls)" | grep 'GNU' > /dev/null; then
+	if strings "$(type -p ls)" | grep 'GNU' &>/dev/null; then
 		alias ls='ls --color=auto -F'
-	elif ls -G >/dev/null 2>&1; then
+	elif ls -G &>/dev/null; then
 		alias ls='ls -GF'
 	fi
 	alias ll='ls -lh'
