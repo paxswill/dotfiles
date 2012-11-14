@@ -98,3 +98,11 @@ _vercmp () {
     return 0
 }
 
+_prog_exists () {
+	if type -p "$1" &>/dev/null; then
+		return 0
+	else
+		return 1
+	fi
+}
+

@@ -2,7 +2,7 @@
 
 _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
-	if type brew >/dev/null 2>&1; then
+	if _prog_exists brew; then
 		# Homebrew setup
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
@@ -39,7 +39,7 @@ _configure_darwin() {
 	fi
 	# Man page to Preview
 	if [ ! -z "$PS1" ]; then
-		if which ps2pdf 2>&1 > /dev/null; then
+		if _prog_exists ps2pdf; then
 			_vercmp "$(sw_vers -productVersion)" "10.7"
 			if [[ $? == 2 ]]; then
 				pman_open_bg="-g"
@@ -67,7 +67,7 @@ _configure_debian() {
 }
 
 _configure_linux() {
-	if type lsb_release >/dev/null 2>&1; then
+	if _prog_exists lsb_release; then
 		DISTRO=$(lsb_release -i)
 		DISTRO=${DISTRO##*:}
 	fi

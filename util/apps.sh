@@ -46,7 +46,7 @@ _configure_bash_completion() {
 		elif [ -f $HOME/local/common/share/bash-completion/bash_completion ]; then
 			# Systems that need customized help (fast.cs.odu.edu Solaris machines)
 			. $HOME/local/common/share/bash-completion/bash_completion
-		elif [ "$SYSTYPE" == "Darwin" ] && which brew 2>&1 > /dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
+		elif [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
 			# Homebrew
 			. $(brew --prefix)/etc/bash_completion
 		elif [ -f /opt/local/etc/bash_completion ]; then
@@ -70,7 +70,7 @@ _configure_bash_PS1() {
 
 _configure_ccache() {
 	# Enable ccache in Android if we have it, and set it up
-	if which ccache >/dev/null; then
+	if _prog_exists ccache; then
 		if [ ! -z "$CCACHE_DIR" -a ! -d "$CCACHE_DIR" ]; then
 			mkdir "$CCACHE_DIR"
 		fi
@@ -95,10 +95,10 @@ _configure_cmf_krb5() {
 
 _configure_ec2() {
 	# Set up Amazon EC2 keys
-	if [ -d "$HOME/.ec2" ] && which ec2-cmd >/dev/null; then
+	if [ -d "$HOME/.ec2" ] && _prog_exists ec2-cmd; then
 		# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
 		# I'll need to add special handling if I use other platforms in the future.
-		if which brew >/dev/null; then
+		if _prog_exists brew; then
 			export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
 		else
 			echo "WARNING: ec2-cmd detected but no Homebrew."
@@ -111,7 +111,7 @@ _configure_ec2() {
 _configure_git_hub(){
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
-	if which hub >/dev/null 2>&1; then
+	if _prog_exists hub; then
 		alias git="hub"
 	fi
 }
@@ -120,9 +120,9 @@ _configure_lesspipe() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
 	# Setup lesspipe
-	if which lesspipe >/dev/null 2>&1; then
+	if _prog_exists lesspipe; then
 		export LESSOPEN="|lesspipe %s"
-	elif which lesspipe.sh >/dev/null 2>&1; then
+	elif _prog_exists lesspipe.sh; then
 		export LESSOPEN="|lesspipe.sh %s"
 	fi
 }
@@ -141,7 +141,7 @@ _configure_pip() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
 	# Add command completion for pip
-	if which pip >/dev/null 2>&1; then
+	if _prog_exists pip; then
 		eval "$(pip completion --bash)"
 	fi
 }
@@ -159,7 +159,7 @@ _configure_rvm() {
 }
 
 _configure_vagrant() {
-	if which vagrant >/dev/null 2>&1; then
+	if _prog_exists vagrant; then
 		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
 	fi
 }
@@ -170,14 +170,14 @@ _configure_vim() {
 	# Ignore Vim temporary files for file completion
 	FIGNORE=".swp:.swo"
 	# Set Vim as $EDITOR if it's available
-	if which mvim >/dev/null 2>&1; then
+	if _prog_exists mvim; then
 		 GUI_VIM=mvim
-	elif which gvim >/dev/null 2>&1; then
+	elif _prog_exists gvim; then
 		 GUI_VIM=gvim
 	fi
-	if which vim >/dev/null 2>&1; then
+	if _prog_exists vim; then
 		VI=vim
-	elif which vi >/dev/null 2>&1; then
+	elif _prog_exists vi; then
 		VI=vi
 	fi
 	if [ ! -z $GUI_VIM ]; then
@@ -194,7 +194,7 @@ _configure_virtualenv_wrapper() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
 	# Pull in virtualenvwrapper
-	local wrapper_source=$(which virtualenvwrapper.sh)
+	local wrapper_source=$(type -p virtualenvwrapper.sh)
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 		# Set up the working directories
 		if [ -d "$HOME/Development/Python" ]; then

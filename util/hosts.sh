@@ -15,7 +15,7 @@ _configure_cmf() {
 		# Staging/Linking up packages with Homebrew can fail when crossing file
 		# system boundaries. This forces the homebrew temporary folder to be
 		# on the same FS as the destination.
-		if which brew > /dev/null; then
+		if _prog_exists brew; then
 			export HOMEBREW_TEMP="$(brew --prefix)/.tmp/homebrew"
 			if ! [ -d "${HOMEBREW_TEMP}" ]; then
 				mkdir -p "${HOMEBREW_TEMP}"

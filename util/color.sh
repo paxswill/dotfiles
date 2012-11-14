@@ -35,16 +35,16 @@ _configure_host_color() {
 	# i.e. proper hostnames
 	local name="$(printf $HOST | tr [:upper:] [:lower:] | tr -d -c "a-z0-9-")"
 	# BSD includes md5, GNU and Solaris include md5sum
-	if which md5 >/dev/null 2>&1; then
+	if _prog_exists md5; then
 		hashed_host=$(printf $name | md5)
-	elif which md5sum >/dev/null 2>&1; then
+	elif _prog_exists md5sum; then
 		hashed_host=$(printf $name | md5sum)
 		hashed_host=${hashed_host:0:32}
 	fi
 	# BSD has jot for generating sequences, GNU has seq, and Solaris has both.
-	if which jot >/dev/null 2>&1; then
+	if _prog_exists jot; then
 		hashed_seq="$(jot ${#hashed_host} 0)"
-	elif which seq >/dev/null 2>&1; then
+	elif _prog_exists seq; then
 		hashed_seq="$(seq 0 $((${#hashed_host} - 1)))"
 	fi
 	if [ ! -z "$hashed_host" -a ! -z "$hashed_seq" ]; then
@@ -83,7 +83,7 @@ _configure_less_colors() {
 }
 
 get_term_colors() {
-	if [ -z $TERM_COLORS ] && which infocmp >/dev/null 2>&1; then
+	if [ -z $TERM_COLORS ] && _prog_exists infocmp; then
 		TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
 		TERM_COLORS=${TERM_COLORS#*colors#}
 		TERM_COLORS=${TERM_COLORS%,}
