@@ -39,19 +39,12 @@ _configure_host_color() {
 		hashed_host=$(printf $name | md5)
 	elif _prog_exists md5sum; then
 		hashed_host=$(printf $name | md5sum)
-		hashed_host=${hashed_host:0:32}
 	fi
-	# BSD has jot for generating sequences, GNU has seq, and Solaris has both.
-	if _prog_exists jot; then
-		hashed_seq="$(jot ${#hashed_host} 0)"
-	elif _prog_exists seq; then
-		hashed_seq="$(seq 0 $((${#hashed_host} - 1)))"
-	fi
-	if [ ! -z "$hashed_host" -a ! -z "$hashed_seq" ]; then
+	if [ ! -z "$hashed_host" ]; then
 		# Sum all the digits modulo 9 (ANSI colors 31-37 normal, and 31 and 35
 		# bright. Solarized only has those two bright colors as actual colors)
 		sum=0
-		for i in $hashed_seq; do
+		for ((i=0;i<32;++i)); do
 			sum=$(($sum + 0x${hashed_host:$i:1}))
 		done
 		sum=$((sum % 9))
