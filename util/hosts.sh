@@ -26,9 +26,10 @@ _configure_cmf() {
 			mkdir -p $VAGRANT_HOME
 		fi
 	fi
+	# Don't put caches on AFS if we can help it
 	if [ -z "$SCRATCH_VOLUME" -a -d /scratch -a -w /scratch ]; then
 		export CCACHE_DIR=/scratch/ccache
-
+		export PIP_DOWNLOAD_CACHE=/scratch/pip-cache
 	fi
 	# AFS Resources
 	if [ -d "/afs/cmf.nrl.navy.mil/@sys/bin" ]; then
