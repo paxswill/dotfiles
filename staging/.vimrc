@@ -52,6 +52,9 @@ set background=dark
 let g:solarized_visibility='low'	" Desaturate special characters
 colorscheme solarized
 
+""" Load the manpage plugin for :Man
+runtime ftplugin/man.vim
+
 """ Whitespace
 " Tabs are four spaces
 set tabstop=4
