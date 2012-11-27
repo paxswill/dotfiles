@@ -79,9 +79,8 @@ else
 	" Have all text past column 80 be marked as an error message (red)
 	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
-" Don't wrap lines, just display them past the edge to the screen
-set nowrap
-set sidescroll=20
+" Soft-wrap lines by default
+set wrap
 "Force line wrapping at 80 characters
 set textwidth=79
 " Enable folding by default
