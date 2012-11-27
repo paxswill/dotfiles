@@ -82,6 +82,8 @@ endif
 " Don't wrap lines, just display them past the edge to the screen
 set nowrap
 set sidescroll=20
+"Force line wrapping at 80 characters
+set textwidth=79
 " Enable folding by default
 set foldenable
 " Line numbers in the gutter
