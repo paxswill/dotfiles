@@ -127,10 +127,8 @@ let g:is_bash = 1
 """ GUI Customizations
 if has("gui_running")
 	" Bunch of guioptions flags here
-	set guioptions-=r
 	set guioptions-=R
 	set guioptions-=l
-	set guioptions-=L
 	set guioptions-=b
 	set guioptions-=t
 	" Always show tabs in the GUI
