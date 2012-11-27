@@ -122,6 +122,8 @@ set autoread
 set hidden
 " ~ (tilde) acts as an operator
 set tildeop
+" Default to Bash for shell scripts
+let g:is_bash = 1
 
 """ GUI Customizations
 if has("gui_running")
