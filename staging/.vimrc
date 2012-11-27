@@ -134,6 +134,10 @@ if has("gui_running")
 	set guioptions-=t
 	" Always show tabs in the GUI
 	set showtabline=2
+	" Set the font
+	if has("mac")
+		set guifont=Source\ Code\ Pro\ Light:h11,Menlo\ Regular:h11
+	endif
 endif
 
 " Reenable filetype stuff that Vundle needed turned off
