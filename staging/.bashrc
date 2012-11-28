@@ -39,6 +39,10 @@ if [ -d $HOME/.dotfiles ]; then
 fi
 
 if [ ! -z $SSH_TTY ] && [ $SHLVL = 1 ] && _prog_exists tmux; then
-	tmux
+	if tmux has &>/dev/null; then
+		tmux attach
+	else
+		tmux
+	fi
 fi
 
