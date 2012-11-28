@@ -59,7 +59,9 @@ _configure_bash_completion() {
 
 _configure_bash_PS1() {
 	# Set PS1 (prompt)
-	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W\$(__vcs_ps1 \" (%s)\")]\\$ "
+	local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
+	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1\
+	\" (%s)\")${COLOR_RESET}]\\$ "
 }
 
 _configure_ccache() {
