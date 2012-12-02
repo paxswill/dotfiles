@@ -14,6 +14,7 @@ _load_util() {
 	source $HOME/.dotfiles/util/aliases.sh
 }
 
+source $HOME/.dotfiles/util/common.sh
 # Set up paths
 if [ -d "$HOME/local/bin" ]; then
 	_append_to_path "$HOME/local/bin"
