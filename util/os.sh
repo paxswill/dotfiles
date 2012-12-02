@@ -1,4 +1,5 @@
 # OS based configuration
+source ~/.dotfiles/util/common.sh
 
 _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
