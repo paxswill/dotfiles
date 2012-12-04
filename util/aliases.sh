@@ -13,7 +13,7 @@ _alias_grep() {
 
 _alias_ls() {
 	# BSD ls uses -G for color, GNU ls uses --color=auto
-	if strings "$(type -p ls)" | grep 'GNU' &>/dev/null; then
+	if strings "$(type -P ls)" | grep 'GNU' &>/dev/null; then
 		alias ls='ls --color=auto -F'
 	elif ls -G &>/dev/null; then
 		alias ls='ls -GF'
