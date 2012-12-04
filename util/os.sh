@@ -53,7 +53,12 @@ _configure_darwin() {
 
 _configure_debian() {
 	# Set PATH to include system directories
-	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+	prepend_to_path /usr/local/sbin
+	prepend_to_path /usr/local/bin
+	prepend_to_path /usr/sbin
+	prepend_to_path /usr/bin
+	prepend_to_path /sbin
+	prepend_to_path /bin
 	append_to_path /usr/local/games
 	append_to_path /usr/games
 	export JAVA_HOME=/usr/lib/jvm/default_java

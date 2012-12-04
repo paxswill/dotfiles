@@ -1,4 +1,5 @@
 # Host specific customizations
+source ~/.dotfiles/util/common.sh
 
 _configure_cmf() {
 	if [ "$SYSTYPE" = "Darwin" ]; then
