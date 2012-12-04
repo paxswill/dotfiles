@@ -6,29 +6,29 @@ _configure_darwin() {
 		# Homebrew setup
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
-		_prepend_to_path "${BREW_PREFIX}/sbin"
-		_prepend_to_path "${BREW_PREFIX}/bin"
+		prepend_to_path "${BREW_PREFIX}/sbin"
+		prepend_to_path "${BREW_PREFIX}/bin"
 		if brew list ruby &>/dev/null; then
-			_append_to_path "$(brew --prefix ruby)/bin"
+			append_to_path "$(brew --prefix ruby)/bin"
 		fi
 		# Use brewed pythons if we have them
 		for temp_python in python3 pypy python; do
-			_append_to_path "$BREW_PREFIX/share/$temp_python"
+			append_to_path "$BREW_PREFIX/share/$temp_python"
 		done
 		# Add Node.js modules to PATH
-		_append_to_path "$(brew --prefix)/lib/node_modules"
+		append_to_path "$(brew --prefix)/lib/node_modules"
 	elif [ -d /opt ]; then
 		# MacPorts
-		_append_to_path "/opt/local/bin"
-		_append_to_path "/opt/local/sbin"
+		append_to_path "/opt/local/bin"
+		append_to_path "/opt/local/sbin"
 	fi
 	# Add the OpenCL offline compiler if available
 	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
-		_append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
+		append_to_path "/System/Library/Frameworks/OpenCL.framework/Libraries"
 	fi
 	# Add the "hidden" airport command
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
-		_append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
+		append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
 	# Man page to Preview
 	if [ ! -z "$PS1" ]; then
@@ -54,8 +54,8 @@ _configure_darwin() {
 _configure_debian() {
 	# Set PATH to include system directories
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-	_append_to_path /usr/local/games
-	_append_to_path /usr/games
+	append_to_path /usr/local/games
+	append_to_path /usr/games
 	export JAVA_HOME=/usr/lib/jvm/default_java
 }
 

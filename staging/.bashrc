@@ -16,7 +16,7 @@ _load_util() {
 
 # Set up paths
 if [ -d "$HOME/local/bin" ]; then
-	_append_to_path "$HOME/local/bin"
+	append_to_path "$HOME/local/bin"
 fi
 
 _configure_all() {

@@ -34,35 +34,35 @@ _common_append() {
 	fi
 }
 
-_prepend_to_path() {
+prepend_to_path() {
 	_common_prepend PATH "$1"
 }
 
-_append_to_path() {
+append_to_path() {
 	_common_append PATH "$1"
 }
 
-_prepend_to_manpath() {
+prepend_to_manpath() {
 	_common_prepend MANPATH "$1"
 }
 
-_append_to_manpath() {
+append_to_manpath() {
 	_common_append MANPATH "$1"
 }
 
-_prepend_to_libpath() {
+prepend_to_libpath() {
 	_common_prepend LD_LIBRARY_PATH "$1"
 }
 
-_append_to_libpath() {
+append_to_libpath() {
 	_common_append LD_LIBRARY_PATH "$1"
 }
 
-_prepend_to_pkgconfpath() {
+prepend_to_pkgconfpath() {
 	_common_prepend PKG_CONFIG_PATH "$1"
 }
 
-_append_to_pkgconfpath() {
+append_to_pkgconfpath() {
 	_common_append PKG_CONFIG_PATH "$1"
 }
 

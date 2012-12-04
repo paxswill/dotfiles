@@ -5,8 +5,8 @@ _configure_android() {
 	# Android SDK (non-OS X)
 	if [ -d /opt/android-sdk ]; then
 		export ANDROID_SDK_ROOT="/opt/android-sdk"
-		_append_to_path "${ANDROID_SDK_ROOT}/tools"
-		_append_to_path "${ANDROID_SDK_ROOT}/platform-tools"
+		append_to_path "${ANDROID_SDK_ROOT}/tools"
+		append_to_path "${ANDROID_SDK_ROOT}/platform-tools"
 	fi
 }
 
@@ -81,11 +81,11 @@ _configure_ccache() {
 
 _configure_cmf_krb5() {
 	if [ -d /usr/krb5 ]; then
-		_prepend_to_path "/usr/krb5/bin"
-		_prepend_to_path "/usr/krb5/sbin"
+		prepend_to_path "/usr/krb5/bin"
+		prepend_to_path "/usr/krb5/sbin"
 	elif [ -d /usr/local/krb5 ]; then
-		_prepend_to_path "/usr/local/krb5/bin"
-		_prepend_to_path "/usr/local/krb5/sbin"
+		prepend_to_path "/usr/local/krb5/bin"
+		prepend_to_path "/usr/local/krb5/sbin"
 	fi
 }
 
@@ -147,7 +147,7 @@ _configure_pip() {
 
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app ]; then
-		_prepend_to_path "/Applications/Postgres.app/Contents/MacOS/bin"
+		prepend_to_path "/Applications/Postgres.app/Contents/MacOS/bin"
 	fi
 }
 
