@@ -1,4 +1,5 @@
 links.txt
 dirs.txt
 staging/.gitconfig
+staging/.hgrc
 staging/.ssh/config
