@@ -37,12 +37,3 @@ load_bashrc
 if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/setup.sh
 fi
-
-if [ ! -z $SSH_TTY ] && [ $SHLVL = 1 ] && _prog_exists tmux; then
-	if tmux has &>/dev/null; then
-		tmux attach
-	else
-		tmux
-	fi
-fi
-
