@@ -3,5 +3,3 @@
 # Pull in .bashrc
 source $HOME/.bashrc
 
-# Spell check for paths for cd
-shopt -s cdspell

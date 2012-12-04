@@ -29,6 +29,8 @@ _configure_bash() {
 	# check the window size after each command and, if necessary,
 	# update the values of LINES and COLUMNS.
 	shopt -s checkwinsize
+	# Spell check for paths for cd
+	shopt -s cdspell
 	# Bash-related configuration
 	_configure_bash_completion
 	_configure_bash_PS1
