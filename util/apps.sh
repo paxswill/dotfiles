@@ -1,5 +1,4 @@
-source $HOME/.dotfiles/util/common.sh
-source $HOME/.dotfiles/util/vcs.sh
+# Application or program specific configuration
 
 _configure_android() {
 	# Android SDK (non-OS X)

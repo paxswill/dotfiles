@@ -14,12 +14,12 @@ _load_util() {
 	source $HOME/.dotfiles/util/aliases.sh
 }
 
-# Set up paths
-if [ -d "$HOME/local/bin" ]; then
-	append_to_path "$HOME/local/bin"
-fi
-
 _configure_all() {
+	# Set up personal paths
+	if [ -d "$HOME/local/bin" ]; then
+		append_to_path "$HOME/local/bin"
+	fi
+	# Configure everything
 	configure_os
 	configure_hosts
 	configure_aliases

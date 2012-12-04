@@ -1,7 +1,5 @@
 # Common color functions
 
-source $HOME/.dotfiles/util/hosts.sh
-
 # Define common control sequences
 CSI_START="\[\033["
 CSI_END="\]"

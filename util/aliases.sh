@@ -1,5 +1,4 @@
 # Shell aliases
-source $HOME/.dotfiles/util/color.sh
 
 _alias_grep() {
 	get_term_colors
