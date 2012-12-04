@@ -1,5 +1,5 @@
 __hg_ps1() {
-	if [ -d .hg ]; then
+	if [ -f .hg/branch ]; then
 		printf "$1" $(<.hg/branch tr -d [:blank:])
 	fi
 }
