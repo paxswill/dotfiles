@@ -164,6 +164,13 @@ _configure_vagrant() {
 	fi
 }
 
+_configure_videocore() {
+	# Configure Broadcom Videocore files
+	append_to_path /opt/vc/sbin
+	append_to_path /opt/vc/bin
+	append_to_libpath /opt/vc/lib
+}
+
 _configure_vim() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -224,6 +231,7 @@ configure_apps() {
 	_configure_postgres_app
 	_configure_rvm
 	_configure_vagrant
+	_configure_videocore
 	_configure_vim
 	_configure_virtualenv_wrapper
 	# And now for tiny enironmental configurtion that doesn't fit elsewhere
