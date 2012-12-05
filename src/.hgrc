@@ -10,5 +10,11 @@ from = "Will Ross" <EMAIL>
 [extensions]
 hgext.mq =
 hgext.patchbomb =
+[merge-tools]
+opendiff.priority = 1
+opendiff.executable = opendiff
+opendiff.args = $local $base -merge output
+opendiff.gui = True
 [ui]
+editor = $GIT_EDITOR
 username = Will Ross <EMAIL>
