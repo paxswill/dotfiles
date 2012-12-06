@@ -19,6 +19,9 @@ Bundle 'smerrill/vagrant-vim'
 Bundle 'tpope/vim-surround'
 Bundle 'jmcantrell/vim-virtualenv'
 Bundle 'nginx.vim'
+if has('python')
+	Bundle 'davidhalter/jedi-vim'
+endif
 
 " Show incomplete commands
 set showcmd
