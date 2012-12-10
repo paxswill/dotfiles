@@ -79,7 +79,7 @@ get_term_colors() {
 		TERM_COLORS=${TERM_COLORS#*colors#}
 		TERM_COLORS=${TERM_COLORS%,}
 	fi
-	if [ -z $TERM_COLORS ] || ! [[ "$TERM_COLORS" =~ ^[0-9]$ ]]; then
+	if [ -z $TERM_COLORS ] || ! [[ "$TERM_COLORS" =~ ^[0-9]+$ ]]; then
 		TERM_COLORS=0
 	fi
 }
