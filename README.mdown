@@ -1,36 +1,28 @@
 # Installation
 
-	curl "https://raw.github.com/paxswill/dotfiles/master/setup.sh" | bash -s
+I usually clone to `~/.dotfiles`, source `~/.dotfiles/setup.sh`, and then run
+the `setup_dotfiles` function. It should be simplified, but I'm not doing this
+enough to streamline it.
 
-Real simple. The above command should be run in $HOME, but it works outside of
-there for testing purposes.
+# Details
 
-# Goals
+I use these dotfiles identically on multiple OSs running on varied hardware:
 
-One of the major goals I have for my shared dotfiles is that they can be usable
-on any of the hosts I may be working on. These include Mac OS X 10.5, 10.6 and
-10.7; Redhat, SuSE, Debian and Ubuntu Linux; and Solaris, running on top of
-32 and 64 bit PowerPC, Intel and Sparc architechtures. This leads to some
-difficulties. Mac OS X prefers to use a BSD userland, while the Linux machines
-use GNU utlities. This occasionally causes differences in how some flags are
-interpreted, with a good example being `ls` (see `.bashrc`).
+* OS X 10.5-10.8 (ppc, ppc64, x86, x86_64)
 
-Another source of inconsistencies is in versions of software. There are some
-very cool features available in new versions of OpenSSH, but I regularly
-encounter older versions, or in the case of Solaris hosts, non-OpenSSH SSH
-clients.
+* Solaris (sparc)
 
-Because of this, I try to make allowances as much as possible for older
-versions of software I may encounter. I also try degrading gracefulyl when I
-can.
+* Linux (x86, x86_64, ppc, arm)
 
-Another goal is to allow customizations based on the worksite I'm at. Because
-I work in a \*nix environment at my job, I try to keep as many of my
-customizations the same. Occasionally though, I have to have a work-specific
-customization (ex: git author email).
+* FreeBSD (x86, x86_64, arm)
 
-# Implementation
+I try to detect various differences between systems at runtime, as in a couple
+of cases $HOME is a shared file system (NFS, AFS) and may be used on different
+hosts at once. For those options that are not configurable at runtime, [M4][m4]
+is used to process template files in [`src`][src] and stage into
+[`staging`][staging].
 
-To satisfy those goals, I try degrading gracefully as much as possible when I
-can, but when I can't I fall back to setup-time checking. I use the M4 macro
-processor and bash to do the actual setup and customization.
+[m4]: http://www.gnu.org/software/m4/
+[src]: https://github.com/paxswill/dotfiles/tree/master/src
+[staging]: https://github.com/paxswill/dotfiles/tree/master/staging
+
