@@ -24,7 +24,7 @@ setup_dotfiles(){
 
 	# Get the domain this is being run on right now
 	if ! type parse_fqdn &>/dev/null ; then
-		source "$DEST/util.common.sh"
+		source "$DEST/util/common.sh"
 		source "$DEST/util/hosts.sh"
 	fi
 	# Set up macro definitions
