@@ -1,0 +1,4 @@
+#!/bin/bash
+# This hook is run after every virtualenv is activated.
+local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
+PS1="${BGCOLOR}($(basename "${VIRTUAL_ENV}"))${COLOR_RESET}${_OLD_VIRTUAL_PS1}"
