@@ -19,7 +19,7 @@ Bundle 'smerrill/vagrant-vim'
 Bundle 'tpope/vim-surround'
 Bundle 'jmcantrell/vim-virtualenv'
 Bundle 'nginx.vim'
-Bundle 'Jinja'
+Bundle 'uggedal/jinja-vim'
 if has('python')
 	Bundle 'davidhalter/jedi-vim'
 endif
