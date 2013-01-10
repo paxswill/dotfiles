@@ -215,6 +215,13 @@ _configure_virtualenv_wrapper() {
 		# Use Distribute instead of Setuptools by default
 		export VIRTUALENV_DISTRIBUTE=1
 		source $wrapper_source
+		# Provide an alias for creating Python3 and Python2 virtualenvs
+		if _prog_exists python3; then
+			alias mkvirtualenv3="mkvirtualenv -p \"$(type -p python3)\""
+		fi
+		if _prog_exists python2; then
+			alias mkvirtualenv2="mkvirtualenv -p \"$(type -p python2)\""
+		fi
 	fi
 }
 
