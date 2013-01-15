@@ -33,7 +33,8 @@ filetype plugin indent on	" Enable format based highlighting and indenting
 " Set up some sort of completion
 set completeopt=menu,preview
 set ofu=syntaxcomplete#Complete
-" Set up clang_completion
+
+""" clang-completion
 " Do not show the pop up automatically
 let g:clang_complete_auto = 0
 " Show quickfix for errors
@@ -46,10 +47,17 @@ let g:clang_complete_macros = 1
 let g:clang_complete_patterns = 1
 " Use the clang shared library
 "let g:clang_use_library = 1
-"Set up SuperTab
+
+""" SuperTab
 " Detect the context for completion
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-p>"
+"
+""" Jedi-Vim
+" Don't autocomplete on dot
+let g:jedi#popup_on_dot = 0
+" Don't show the function definition
+let g:jedi#show_function_definition = "0"
 
 """ Configure the colors (and fonts)
 set background=dark
