@@ -124,6 +124,16 @@ _configure_lesspipe() {
 	fi
 }
 
+_configure_npm() {
+	if _prog_exists npm; then
+		append_to_path "$(npm bin -g 2>/dev/null)"
+		# This isn't really portable
+		if [ -e "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh" ]; then
+			. "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh"
+		fi
+	fi
+}
+
 _configure_perlbrew() {
 	if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 		. $HOME/perl5/perlbrew/etc/bashrc
@@ -233,6 +243,7 @@ configure_apps() {
 	_configure_ec2
 	_configure_git_hub
 	_configure_lesspipe
+	_configure_npm
 	_configure_perlbrew
 	_configure_pip
 	_configure_postgres_app

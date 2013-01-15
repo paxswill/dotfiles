@@ -15,8 +15,6 @@ _configure_darwin() {
 		for temp_python in python3 pypy python; do
 			append_to_path "$BREW_PREFIX/share/$temp_python"
 		done
-		# Add Node.js modules to PATH
-		append_to_path "$(brew --prefix)/lib/node_modules"
 	elif [ -d /opt ]; then
 		# MacPorts
 		append_to_path "/opt/local/bin"
