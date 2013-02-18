@@ -227,10 +227,14 @@ _configure_virtualenv_wrapper() {
 		source $wrapper_source
 		# Provide an alias for creating Python3 and Python2 virtualenvs
 		if _prog_exists python3; then
-			alias mkvirtualenv3="mkvirtualenv -p \"$(type -p python3)\""
+			local PYOPT='-p \"type -p python3)\"'
+			alias mkvirtualenv3="mkvirtualenv \"${PYOPT}\""
+			alias mkproject3="mkproject \"${PYOPT}\""
 		fi
 		if _prog_exists python2; then
-			alias mkvirtualenv2="mkvirtualenv -p \"$(type -p python2)\""
+			local PYOPT='-p \"type -p python)\"'
+			alias mkvirtualenv2="mkvirtualenv \"${PYOPT}\""
+			alias mkproject2="mkproject \"${PYOPT}\""
 		fi
 	fi
 }
