@@ -236,6 +236,9 @@ _configure_virtualenv_wrapper() {
 			alias mkvirtualenv2="mkvirtualenv \"${PYOPT}\""
 			alias mkproject2="mkproject \"${PYOPT}\""
 		fi
+		# Configure usernames for Bitbucket and GitHub extensions
+		export VIRTUALENVWRAPPER_BITBUCKET_USER="paxswill"
+		export VIRTUALENVWRAPPER_GITHUB_USER="paxswill"
 	fi
 }
 
