@@ -1,11 +1,3 @@
 #!/bin/bash
 # This hook is run after every virtualenv is activated.
-# For an explanation of this madness, see the _configure_bash_ps1 function
-local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
-local OFFSET=$((${#HOST_COLOR}-5 + 2*(${#BGCOLOR}-5) + 3*(${#COLOR_RESET}-5)))
-# This is close to my default PS1, with the current virtualenv surrounded by
-# parentheses prefixing everything.
-PS1="\$(printf \"%-\$((\$(tput cols)-9+${OFFSET}))s%9s\\\n%s\" \
-\"${BGCOLOR}($(basename "${VIRTUAL_ENV}"))${COLOR_RESET}\
-[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1 \
-' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
+_configure_bash_PS1 "$(basename "${VIRTUAL_ENV}")"

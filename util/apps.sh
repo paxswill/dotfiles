@@ -59,20 +59,33 @@ _configure_bash_completion() {
 }
 
 _configure_bash_PS1() {
-	# Set PS1 (prompt)
+	# Usage: _configure_bash_PS1 [environment]
+	#
+	# Sets PS1 to the following:
+	#
+	# (environment)[user@host:work_dir (branch)]                HH:MM:SS
+	# $ 
+	#
+	# The current time is aligned to the right edge of the terminal. If there
+	# is no argument given, the "(environment)" portion is ommitted. If the
+	# current working directory is not a Git or Mercurial repository,
+	# " (branch)" is ommitted. If supported, the hostname is colored in a
+	# host-specific color. The environment and branch portions are colored
+	# bright green, which is mapped to the secondary content color for
+	# Solarized-Dark.
 	local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
-	# The '-5's below are to make up for differing escaping rules for PS1 and
-	# shells.
-	local OFFSET=$((${#HOST_COLOR}-5 + ${#BGCOLOR}-5 + 2*(${#COLOR_RESET}-5)))
-	# Sets PS1 to "[user@host:work_dir]" left aligned with the current time
-	# following that in HH:MM:SS, right aligned followed by a newline and then
-	# "$ " for normal users or "# " for the super user. If the current
-	# directory is a Git or Mercurial repository, the current branch is listed
-	# in the first part in a subdued color, like so:
-	# "[user@host:work_dir (branch)]". In both cases, the hostname is displayed
-	# with a host-specific color.
-	PS1="\$(printf \"%-\$((\$(tput cols)-9+${OFFSET}))s%9s\\\n%s\" \
-	\"[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1 \
+	# Because of the interactions of the different escape codes for PS1 and
+	# bash in general, colors codes are 5 characters longer than they are to
+	# printf.
+	local OFFSET=$((${#BGCOLOR}-5 + ${#COLOR_RESET}-5))
+	local ENVIRONMENT=""
+	if [ ! -z "$1" ]; then
+		OFFSET=$((${OFFSET} * 2))
+		ENVIRONMENT="${BGCOLOR}(${1})${COLOR_RESET}"
+	fi
+	OFFSET=$((${OFFSET} + ${#HOST_COLOR}-5 + ${#COLOR_RESET}-5))
+	PS1="\$(printf \"%-\$((\${COLUMNS}-9+${OFFSET}))s%9s\\\n%s\" \
+	\"${ENVIRONMENT}[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1\
 	' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
 }
 
