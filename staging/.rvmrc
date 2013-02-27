@@ -1,0 +1,2 @@
+export rvm_make_flags="-j8"
+export rvm_archflags="-arch x86_64"
