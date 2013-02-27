@@ -187,8 +187,10 @@ _configure_postgres_app() {
 }
 
 _configure_rvm() {
-	if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-		source "$HOME/.rvm/scripts/rvm"
+	if [ -d "$HOME/.rvm/scripts/" ]; then
+		for dir in "rvm" "completion"; do
+			source "${HOME}/.rvm/scripts/${dir}"
+		done
 	fi
 }
 
