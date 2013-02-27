@@ -61,8 +61,19 @@ _configure_bash_completion() {
 _configure_bash_PS1() {
 	# Set PS1 (prompt)
 	local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
-	PS1="[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1\
-	\" (%s)\")${COLOR_RESET}]\\$ "
+	# The '-5's below are to make up for differing escaping rules for PS1 and
+	# shells.
+	local OFFSET=$((${#HOST_COLOR}-5 + ${#BGCOLOR}-5 + 2*(${#COLOR_RESET}-5)))
+	# Sets PS1 to "[user@host:work_dir]" left aligned with the current time
+	# following that in HH:MM:SS, right aligned followed by a newline and then
+	# "$ " for normal users or "# " for the super user. If the current
+	# directory is a Git or Mercurial repository, the current branch is listed
+	# in the first part in a subdued color, like so:
+	# "[user@host:work_dir (branch)]". In both cases, the hostname is displayed
+	# with a host-specific color.
+	PS1="\$(printf \"%-\$((\$(tput cols)-9+${OFFSET}))s%9s\\\n%s\" \
+	\"[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1 \
+	' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
 }
 
 _configure_ccache() {
