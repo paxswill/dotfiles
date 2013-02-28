@@ -239,7 +239,7 @@ _configure_virtualenv_wrapper() {
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(type -p virtualenvwrapper.sh)
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
-		# Set up the working directories
+		# Set up the project directory
 		if [ -d "$HOME/Development/Python" ]; then
 			export PROJECT_HOME="$HOME/Development/Python"
 		else
@@ -251,17 +251,18 @@ _configure_virtualenv_wrapper() {
 		# Use Distribute instead of Setuptools by default
 		export VIRTUALENV_DISTRIBUTE=1
 		source $wrapper_source
+		# Have pip play nice with virtualenv
+		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
+		export PIP_RESPECT_VIRTUALENV=true
 		# Provide an alias for creating Python3 and Python2 virtualenvs
-		if _prog_exists python3; then
-			local PYOPT='-p \"type -p python3)\"'
-			alias mkvirtualenv3="mkvirtualenv \"${PYOPT}\""
-			alias mkproject3="mkproject \"${PYOPT}\""
-		fi
-		if _prog_exists python2; then
-			local PYOPT='-p \"type -p python)\"'
-			alias mkvirtualenv2="mkvirtualenv \"${PYOPT}\""
-			alias mkproject2="mkproject \"${PYOPT}\""
-		fi
+		for PYVER in 2 3; do
+			for VENV_CMD in "mkvirtualenv" "mkproject" "mktmpenv"; do
+				local PYOPT="-p $(type -p python${PYVER})"
+				alias "${VENV_CMD}${PYVER}"="\
+					VIRTUALENVWRAPPER_VIRTUALENV_ARGS=\"${PYOPT}\"\
+					${VENV_CMD}"
+			done
+		done
 		# Configure usernames for Bitbucket and GitHub extensions
 		export VIRTUALENVWRAPPER_BITBUCKET_USER="paxswill"
 		export VIRTUALENVWRAPPER_GITHUB_USER="paxswill"
