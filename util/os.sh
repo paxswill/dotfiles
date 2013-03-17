@@ -72,9 +72,9 @@ _configure_linux() {
 		DISTRO=${DISTRO##*:}
 	fi
 	export DISTRO
-	if [ $DISTRO = "Debian" ]; then
+	if [ "$DISTRO" = "Debian" ]; then
 		_configure_debian
-	elif [ $DISTRO = "Ubuntu" ]; then
+	elif [ "$DISTRO" = "Ubuntu" ]; then
 		_configure_ubuntu
 	fi
 }
