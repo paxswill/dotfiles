@@ -7,8 +7,8 @@ source $HOME/.bashrc
 if [ ! -z $SSH_TTY ] && [ $SHLVL = 1 ] && _prog_exists tmux; then
 	# Try to attach to a running session before starting a new one
 	if tmux has &>/dev/null; then
-		tmux attach
+		tmux attach; exit
 	else
-		tmux
+		tmux; exit
 	fi
 fi
