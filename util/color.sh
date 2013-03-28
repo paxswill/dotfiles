@@ -1,30 +1,9 @@
 # Common color functions
 
 # Define common control sequences
-CSI_START="\[\033["
-CSI_END="\]"
-SGR_END="m$CSI_END"
-SGR_RESET=0
-SGR_BOLD=1
-SGR_ITALIC=3
-SGR_UNDERLINE=4
-FG_BLACK="30"
-FG_RED="31"
-FG_GREEN="32"
-FG_YELLOW="33"
-FG_BLUE="34"
-FG_MAGENTA="35"
-FG_CYAN="36"
-FG_WHITE="37"
-BG_BLACK="40"
-BG_RED="41"
-BG_GREEN="42"
-BG_YELLOW="43"
-BG_BLUE="44"
-BG_MAGENTA="45"
-BG_CYAN="46"
-BG_WHITE="47"
-COLOR_RESET="${CSI_START}${SGR_RESET}${SGR_END}"
+COLOR_RESET="$(tput sgr0)"
+# This is the muted color
+MUTED_COLOR="$(tput bold)$(tput setaf 2)"
 
 _configure_host_color() {
 	# Generate a color that is semi-unique for this host
@@ -33,30 +12,42 @@ _configure_host_color() {
 	# i.e. proper hostnames
 	local name="$(printf $HOST | tr [:upper:] [:lower:] | tr -d -c "a-z0-9-")"
 	# BSD includes md5, GNU and Solaris include md5sum
-	if _prog_exists md5; then
-		hashed_host=$(printf $name | md5)
-	elif _prog_exists md5sum; then
-		hashed_host=$(printf $name | md5sum)
-	fi
-	if [ ! -z "$hashed_host" ]; then
-		# Sum all the digits modulo 9 (ANSI colors 31-37 normal, and 31 and 35
-		# bright. Solarized only has those two bright colors as actual colors)
-		sum=0
-		for ((i=0;i<32;++i)); do
-			sum=$(($sum + 0x${hashed_host:$i:1}))
-		done
-		sum=$((sum % 9))
-		if [ $sum -eq 7 ]; then
-			HOST_COLOR="${CSI_START}${SGR_BOLD};${FG_RED}${SGR_END}"
-		elif [ $sum -eq 8 ]; then
-			HOST_COLOR="${CSI_START}${SGR_BOLD};${FG_MAGENTA}${SGR_END}"
-		else
-			HOST_COLOR="${CSI_START}$((31 + $sum))${SGR_END}"
-		fi
-	else
-		# Default to no color
-		HOST_COLOR=""
-	fi
+	case "$name" in
+		thor)
+			HOST_COLOR="$(tput setab 0)$(tput setaf 3)";;
+		odin)
+			HOST_COLOR="$(tput setab 0)$(tput setaf 2)";;
+		venus)
+			HOST_COLOR="$(tput setab 0)$(tput setaf 1)";;
+		tyr)
+			HOST_COLOR="$(tput setab 0)$(tput bold)$(tput setaf 1)";;
+		*)
+			if _prog_exists md5; then
+				hashed_host=$(printf $name | md5)
+			elif _prog_exists md5sum; then
+				hashed_host=$(printf $name | md5sum)
+			fi
+			if [ ! -z "$hashed_host" ]; then
+				# Sum all the digits modulo 9 (ANSI colors 31-37 normal, and 31 and 35
+				# bright. Solarized only has those two bright colors as actual colors)
+				sum=0
+				for ((i=0;i<32;++i)); do
+					sum=$(($sum + 0x${hashed_host:$i:1}))
+				done
+				sum=$((sum % 9))
+				if [ $sum -eq 7 ]; then
+					# Orange in Solarized
+					HOST_COLOR="$(tput bold)$(tput setaf 1)"
+				elif [ $sum -eq 8 ]; then
+					HOST_COLOR="$(tput bold)$(tput setaf 5)"
+				else
+					HOST_COLOR="$(tput setaf $((1 + $sum)))"
+				fi
+			else
+				# Default to no color
+				HOST_COLOR=""
+			fi
+	esac
 }
 
 _configure_less_colors() {

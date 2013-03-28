@@ -73,20 +73,16 @@ _configure_bash_PS1() {
 	# host-specific color. The environment and branch portions are colored
 	# bright green, which is mapped to the secondary content color for
 	# Solarized-Dark.
-	local BGCOLOR="${CSI_START}${SGR_BOLD};${FG_GREEN}${SGR_END}"
-	# Because of the interactions of the different escape codes for PS1 and
-	# bash in general, colors codes are 5 characters longer than they are to
-	# printf.
-	local OFFSET=$((${#BGCOLOR}-5 + ${#COLOR_RESET}-5))
+	local OFFSET=$((${#MUTED_COLOR} + ${#COLOR_RESET}))
 	local ENVIRONMENT=""
 	if [ ! -z "$1" ]; then
 		OFFSET=$((${OFFSET} * 2))
-		ENVIRONMENT="${BGCOLOR}(${1})${COLOR_RESET}"
+		ENVIRONMENT="${MUTED_COLOR}(${1})${COLOR_RESET}"
 	fi
-	OFFSET=$((${OFFSET} + ${#HOST_COLOR}-5 + ${#COLOR_RESET}-5))
+	OFFSET=$((${OFFSET} + ${#HOST_COLOR} + ${#COLOR_RESET}))
 	PS1="\$(printf \"%-\$((\${COLUMNS}-9+${OFFSET}))s%9s\\\n%s\" \
-	\"${ENVIRONMENT}[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${BGCOLOR}\$(__vcs_ps1\
-	' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
+	\"${ENVIRONMENT}[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${MUTED_COLOR}\
+\$(__vcs_ps1 ' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
 }
 
 _configure_ccache() {
