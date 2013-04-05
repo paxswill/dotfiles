@@ -24,6 +24,13 @@ if has('python')
 	Bundle 'davidhalter/jedi-vim'
 endif
 
+"" go (as in golang) includes support for Vim in its root. Otherwise use Vundle
+if empty($GOROOT)
+	Bundle 'jnwhiteh/vim-golang'
+else
+	set rtp+=$GOROOT/misc/vim
+endif
+
 " Show incomplete commands
 set showcmd
 

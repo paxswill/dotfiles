@@ -125,6 +125,12 @@ _configure_ec2() {
 	fi
 }
 
+_configure_golang() {
+	if _prog_exists go; then
+		export GOROOT="$(go env GOROOT)"
+	fi
+}
+
 _configure_git_hub(){
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -272,6 +278,7 @@ configure_apps() {
 	_configure_cmf_krb5
 	_configure_ec2
 	_configure_git_hub
+	_configure_golang
 	_configure_lesspipe
 	_configure_npm
 	_configure_perlbrew
