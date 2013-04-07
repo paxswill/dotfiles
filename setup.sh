@@ -129,6 +129,8 @@ update_dotfiles(){
 		return 1
 	fi
 	git pull
+	# Update git submodules
+	git submodule update -i
 	popd &>/dev/null
 	OLDPWD="$oldpwd"
 	setup_dotfiles
