@@ -12,6 +12,9 @@ _configure_android() {
 _configure_bash() {
 	# Run only for interactive terminals
 	[ -z "$PS1" ] && return
+	# Use a larger history file
+	HISTSIZE=10000
+	HISTFILESIZE=30000
 	# don't put duplicate lines in the history. See bash(1) for more options
 	# ... or force ignoredups and ignorespace
 	HISTCONTROL=ignoreboth
