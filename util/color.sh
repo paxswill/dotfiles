@@ -21,6 +21,8 @@ _configure_host_color() {
 			HOST_COLOR="$(tput setab 0)$(tput setaf 1)";;
 		tyr)
 			HOST_COLOR="$(tput setab 0)$(tput bold)$(tput setaf 1)";;
+		heimdall)
+			HOST_COLOR="$(tput setab 0)$(tput bold)$(tput setaf 5)";;
 		*)
 			if _prog_exists md5; then
 				hashed_host=$(printf $name | md5)
