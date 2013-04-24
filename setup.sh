@@ -63,7 +63,7 @@ clean_dotfiles(){
 	pushd "$HOME" &>/dev/null
 	# Clean up any old links
 	if [ -f "${DOTFILES}/links.txt" ]; then
-		local FILES=$(cat "${DOTFILES}/links.txt")
+		local FILES=$(< "${DOTFILES}/links.txt")
 		for F in $FILES; do
 			if [ -h "$F" ]; then
 				unlink "$F"
@@ -72,7 +72,7 @@ clean_dotfiles(){
 	fi
 	# Remove extraneous directories
 	if [ -f "${DOTFILES}/dirs.txt" ]; then
-		local DIRS=$(cat "${DOTFILES}/dirs.txt")
+		local DIRS=$(< "${DOTFILES}/dirs.txt")
 		for D in $DIRS; do
 			rmdir -p "$D" &>/dev/null
 		done
