@@ -53,7 +53,7 @@ process_source_files(){
 	pushd "${DOTFILES}" &>/dev/null
 	for F in $M4FILES; do
 		mkdir -p "${DOTFILES}/staging/$(dirname $F)"
-		m4 "$M4_DEFS" "${DOTFILES}/src/${F}" > "${DOTFILES}/staging/${F}"
+		m4 $M4_DEFS "${DOTFILES}/src/${F}" > "${DOTFILES}/staging/${F}"
 	done
 	popd &>/dev/null # $DOTFILES
 	popd &>/dev/null # $DOTFILES/src
