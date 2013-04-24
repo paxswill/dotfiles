@@ -10,7 +10,7 @@ _check_ssh_option() {
 	fi
 }
 
-_process_source_files(){
+process_source_files(){
 	# Find the domain of this host
 	if ! type parse_fqdn &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
@@ -94,12 +94,7 @@ setup_dotfiles(){
 		popd &>/dev/null
 	fi
 
-	_process_source_files
-
-	# Clean up any old files and directories
-	local FILES
-	local DIRS
-	clean_dotfiles
+	process_source_files
 
 	# Link everything up
 	pushd "$DEST/staging" &>/dev/null
