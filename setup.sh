@@ -59,6 +59,27 @@ _process_source_files(){
 	popd &>/dev/null # $DOTFILES/src
 }
 
+clean_dotfiles(){
+	pushd "$HOME" &>/dev/null
+	# Clean up any old links
+	if [ -f "${DOTFILES}/links.txt" ]; then
+		local FILES=$(cat "${DOTFILES}/links.txt")
+		for F in $FILES; do
+			if [ -h "$F" ]; then
+				unlink "$F"
+			fi
+		done
+	fi
+	# Remove extraneous directories
+	if [ -f "${DOTFILES}/dirs.txt" ]; then
+		local DIRS=$(cat "${DOTFILES}/dirs.txt")
+		for D in $DIRS; do
+			rmdir -p "$D" &>/dev/null
+		done
+	fi
+	popd &>/dev/null # $HOME
+}
+
 setup_dotfiles(){
 	local oldpwd="$OLDPWD"
 	local DEST="$HOME/.dotfiles"
@@ -78,24 +99,7 @@ setup_dotfiles(){
 	# Clean up any old files and directories
 	local FILES
 	local DIRS
-	pushd "$HOME" &>/dev/null
-	if [ -f $DEST/links.txt ]; then
-		FILES=$(cat $DEST/links.txt)
-		for F in $FILES; do
-			if [ -h $F ]; then
-				unlink $F
-			fi
-		done
-		rm "${DEST}/links.txt"
-	fi
-	if [ -f $DEST/dirs.txt ]; then
-		DIRS=$(cat $DEST/dirs.txt)
-		for D in $DIRS; do
-			rmdir $DIRS &>/dev/null
-		done
-		rm "${DEST}/dirs.txt"
-	fi
-	popd &>/dev/null
+	clean_dotfiles
 
 	# Link everything up
 	pushd "$DEST/staging" &>/dev/null
