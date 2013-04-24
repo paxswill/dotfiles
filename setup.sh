@@ -59,25 +59,56 @@ process_source_files(){
 	popd &>/dev/null # $DOTFILES/src
 }
 
-clean_dotfiles(){
-	pushd "$HOME" &>/dev/null
-	# Clean up any old links
-	if [ -f "${DOTFILES}/links.txt" ]; then
-		local FILES=$(< "${DOTFILES}/links.txt")
-		for F in $FILES; do
-			if [ -h "$F" ]; then
-				unlink "$F"
+link_dotfiles(){
+	local STAGING="${DOTFILES}/staging"
+	# Save the special IFS value
+	local OLDIFS="$IFS"
+	IFS="\n"
+	# Move the list of old links and directories out of the way
+	mv "${DOTFILES}/dirs.txt" "${DOTFILES}/dirs_old.txt"
+	mv "${DOTFILES}/links.txt" "${DOTFILES}/links_old.txt"
+	# Get a list of directories and files to link/create
+	local DIRS="$(find "$STAGING" \
+		-type d \
+		-not -path "$STAGING" \
+		-not -path "*/.git*")"
+	local FILES="$(find "$STAGING" \
+		-type f \
+		-not -name "*.sw?" \
+		-not -path "$STAGING" \
+		-not -path "*/.git*")"
+	# Create directories
+	for D in "$DIR"; do
+		local TARGET_DIR="${D/\/.dotfiles\/staging}"
+		if mkdir -p "$TARGET_DIR" &>/dev/null; then
+			echo "$TARGET_DIR" >> "${DOTFILES}/dirs.txt"
+		fi
+	done
+	# Link files
+	for LINK_TARGET in "$FILES"; do
+		local LINK="${F/\/.dotfiles\/staging}"
+		if [ -L "$LINK" ]; then
+			if [ ! "$LINK" -ef "$LINK_TARGET" ]; then
+				ln -sf "$LINK_TARGET" "$LINK"
 			fi
-		done
-	fi
-	# Remove extraneous directories
-	if [ -f "${DOTFILES}/dirs.txt" ]; then
-		local DIRS=$(< "${DOTFILES}/dirs.txt")
-		for D in $DIRS; do
-			rmdir -p "$D" &>/dev/null
-		done
-	fi
-	popd &>/dev/null # $HOME
+			echo "$LINK" >> "${DOTFILES}/links.txt"
+		fi
+	done
+	# Cleanup links
+	for OLDLINK in "$(< "${DOTFILES}/links_old.txt")"; do
+		if [ -L "$OLDLINK" -a ! -e "$OLDLINK" ]; then
+			unlink "$OLDLINK"
+		fi
+	done
+	# for each link: if link.is_broken?: remove link
+	# Cleanup dirs
+	for OLDDIR in "$(< "${DOTFILES}/dirs_old.txt")"; do
+		rmdir -p "$OLDDIR"
+	done
+	# Finish Cleanup
+	rm "${DOTFILES}/dirs_old.txt" "${DOTFILES}/links_old.txt"
+	# Put IFS back
+	IFS="$OLDIFS"
 }
 
 setup_dotfiles(){
@@ -95,32 +126,7 @@ setup_dotfiles(){
 	fi
 
 	process_source_files
-
-	# Link everything up
-	pushd "$DEST/staging" &>/dev/null
-	DIRS=$(find . -type d ! -name . -prune)
-	FILES=$(find . ! -name . -prune -type f ! -name '*.sw*')
-	for D in $DIRS; do
-		pushd "$D" &>/dev/null
-		local tmp_files=$(find . ! -name . -prune ! -name '*.sw*')
-		for f in $tmp_files; do
-			FILES="$FILES $D/$f"
-		done
-		popd &>/dev/null
-	done
-	popd &>/dev/null
-	pushd "$HOME" &>/dev/null
-	for D in $DIRS; do
-		mkdir $D &>/dev/null
-	done
-	for F in $FILES; do
-		ln -s $DEST/staging/$F $F
-	done
-	popd &>/dev/null
-
-	# Save record of links and directories for future upgrades
-	echo "$FILES" > $DEST/links.txt
-	echo "$DIRS" > $DEST/dirs.txt
+	link_dotfiles
 	OLDPWD="$oldpwd"
 }
 
