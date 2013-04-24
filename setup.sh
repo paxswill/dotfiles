@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOTFILES="${HOME}/.dotfiles"
+
 _check_ssh_option() {
 	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' &>/dev/null; then
 		return 0
@@ -8,26 +10,12 @@ _check_ssh_option() {
 	fi
 }
 
-setup_dotfiles(){
-	local oldpwd="$OLDPWD"
-	local DEST="$HOME/.dotfiles"
-	# Get the dotfiles directory if needed
-	if [ ! -d "$DEST" ]; then
-		if ! git clone git@github.com:paxswill/dotfiles.git "$DEST"; then
-			echo "Cloning public URL"
-			git clone git://github.com/paxswill/dotfiles.git "$DEST"
-		fi
-		pushd "$DEST" &>/dev/null
-		git submodule update -i
-		popd &>/dev/null
+_process_source_files(){
+	# Find the domain of this host
+	if ! type parse_fqdn &>/dev/null; then
+		source "${DOTFILES}/util/hosts.sh"
 	fi
-
-	# Get the domain this is being run on right now
-	if ! type parse_fqdn &>/dev/null ; then
-		source "$DEST/util/common.sh"
-		source "$DEST/util/hosts.sh"
-	fi
-	# Set up macro definitions
+	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
 	if [[ "$DOMAIN" =~ "nrl\.navy\.mil" ]]; then
@@ -59,6 +47,34 @@ setup_dotfiles(){
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
 	fi
 
+	# Process source files with M4
+	pushd "${DOTFILES}/src" &>/dev/null
+	local M4FILES=$(find . -type f ! -name '*.sw*')
+	pushd "${DOTFILES}" &>/dev/null
+	for F in $M4FILES; do
+		mkdir -p "${DOTFILES}/staging/$(dirname $F)"
+		m4 "$M4_DEFS" "${DOTFILES}/src/${F}" > "${DOTFILES}/staging/${F}"
+	done
+	popd &>/dev/null # $DOTFILES
+	popd &>/dev/null # $DOTFILES/src
+}
+
+setup_dotfiles(){
+	local oldpwd="$OLDPWD"
+	local DEST="$HOME/.dotfiles"
+	# Get the dotfiles directory if needed
+	if [ ! -d "$DEST" ]; then
+		if ! git clone git@github.com:paxswill/dotfiles.git "$DEST"; then
+			echo "Cloning public URL"
+			git clone git://github.com/paxswill/dotfiles.git "$DEST"
+		fi
+		pushd "$DEST" &>/dev/null
+		git submodule update -i
+		popd &>/dev/null
+	fi
+
+	_process_source_files
+
 	# Clean up any old files and directories
 	local FILES
 	local DIRS
@@ -79,17 +95,6 @@ setup_dotfiles(){
 		done
 		rm "${DEST}/dirs.txt"
 	fi
-	popd &>/dev/null
-
-	# Process source files with M4
-	pushd "$DEST/src" &>/dev/null
-	local M4FILES=$(find . -type f ! -name '*.sw*')
-	pushd "$DEST" &>/dev/null
-	for F in $M4FILES; do
-		mkdir -p $DEST/staging/$(dirname $F)
-		m4 $M4_DEFS $DEST/src/$F > $DEST/staging/$F
-	done
-	popd &>/dev/null
 	popd &>/dev/null
 
 	# Link everything up
