@@ -63,10 +63,12 @@ link_dotfiles(){
 	local STAGING="${DOTFILES}/staging"
 	# Save the special IFS value
 	local OLDIFS="$IFS"
-	IFS="\n"
+	IFS=$'\n'
 	# Move the list of old links and directories out of the way
-	mv "${DOTFILES}/dirs.txt" "${DOTFILES}/dirs_old.txt"
-	mv "${DOTFILES}/links.txt" "${DOTFILES}/links_old.txt"
+	local DIRLOG="${DOTFILES}/dirs.txt"
+	local LINKLOG="${DOTFILES}/links.txt"
+	[ -e "$DIRLOG" ] && mv "$DIRLOG" "${DIRLOG}.old"
+	[ -e "$LINKLOG" ] && mv "$LINKLOG" "${LINKLOG}.old"
 	# Get a list of directories and files to link/create
 	local DIRS="$(find "$STAGING" \
 		-type d \
@@ -78,35 +80,46 @@ link_dotfiles(){
 		-not -path "$STAGING" \
 		-not -path "*/.git*")"
 	# Create directories
-	for D in "$DIR"; do
+	for D in $DIRS; do
 		local TARGET_DIR="${D/\/.dotfiles\/staging}"
 		if mkdir -p "$TARGET_DIR" &>/dev/null; then
-			echo "$TARGET_DIR" >> "${DOTFILES}/dirs.txt"
+			echo "$TARGET_DIR" >> "$DIRLOG"
 		fi
 	done
 	# Link files
-	for LINK_TARGET in "$FILES"; do
+	for LINK_TARGET in $FILES; do
 		local LINK="${F/\/.dotfiles\/staging}"
 		if [ -L "$LINK" ]; then
 			if [ ! "$LINK" -ef "$LINK_TARGET" ]; then
 				ln -sf "$LINK_TARGET" "$LINK"
 			fi
-			echo "$LINK" >> "${DOTFILES}/links.txt"
+			echo "$LINK" >> "$LINKLOG"
 		fi
 	done
 	# Cleanup links
-	for OLDLINK in "$(< "${DOTFILES}/links_old.txt")"; do
-		if [ -L "$OLDLINK" -a ! -e "$OLDLINK" ]; then
-			unlink "$OLDLINK"
-		fi
-	done
-	# for each link: if link.is_broken?: remove link
+	if [ -e "${LINKLOG}.old" ]; then
+		for OLDLINK in $(< "${LINKLOG}.old"); do
+			if [ -L "$OLDLINK" -a ! -e "$OLDLINK" ]; then
+				unlink "$OLDLINK"
+			fi
+		done
+		rm "${LINKLOG}.old"
+	fi
 	# Cleanup dirs
-	for OLDDIR in "$(< "${DOTFILES}/dirs_old.txt")"; do
-		rmdir -p "$OLDDIR"
-	done
-	# Finish Cleanup
-	rm "${DOTFILES}/dirs_old.txt" "${DOTFILES}/links_old.txt"
+	if [ -e "${DIRLOG}.old" ]; then
+		# This odd loop is so the directories are removed in reverse order.
+		# For example, dirs.txt.old is:
+		# ./a
+		# ./a/b/c
+		# ./a/d
+		# ./a/d/e
+		# If is done first, it fails as there's still stuff in it
+		local OLDDIRS="$(< "${DIRLOG}.old")"
+		for (( i=${#OLDDIRS}; i > 0; i-- )); do
+			[ ! -z "${OLDDIRS[i]}" ] && rmdir "${OLDDIRS[i]}" &>/dev/null
+		done
+		rm "${DIRLOG}.old"
+	fi
 	# Put IFS back
 	IFS="$OLDIFS"
 }
