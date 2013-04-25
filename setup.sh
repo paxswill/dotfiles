@@ -11,6 +11,7 @@ _check_ssh_option() {
 }
 
 process_source_files(){
+	local oldpwd="$OLDPWD"
 	# Find the domain of this host
 	if ! type parse_fqdn &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
@@ -57,6 +58,7 @@ process_source_files(){
 	done
 	popd &>/dev/null # $DOTFILES
 	popd &>/dev/null # $DOTFILES/src
+	OLDPWD="$oldpwd"
 }
 
 link_dotfiles(){
