@@ -72,15 +72,19 @@ link_dotfiles(){
 	[ -e "$DIRLOG" ] && mv "$DIRLOG" "${DIRLOG}.old"
 	[ -e "$LINKLOG" ] && mv "$LINKLOG" "${LINKLOG}.old"
 	# Get a list of directories and files to link/create
+	# The lines containing ".git" exclude git directories fomr being linked
 	local DIRS="$(find "$STAGING" \
 		-type d \
 		-not -path "$STAGING" \
-		-not -path "*/.git*")"
+		-not -name ".git" \
+		-o -type d -name ".git" -not -prune)"
+	# The first expression for find makes it so git directories are linked,
+	# but nothing else. These are needed for Vundle to work nicely
 	local FILES="$(find "$STAGING" \
+		\( -type d -name ".git" -prune \) -o \
 		-type f \
 		-not -name "*.sw?" \
-		-not -path "$STAGING" \
-		-not -path "*/.git*")"
+		-not -path "$STAGING")"
 	# Create directories
 	for D in $DIRS; do
 		local TARGET_DIR="${D/\/.dotfiles\/staging}"
@@ -90,8 +94,8 @@ link_dotfiles(){
 	done
 	# Link files
 	for LINK_TARGET in $FILES; do
-		local LINK="${F/\/.dotfiles\/staging}"
-		if [ -L "$LINK" ]; then
+		local LINK="${LINK_TARGET/\/.dotfiles\/staging}"
+		if [ ! -e "$LINK" -o -L "$LINK" ]; then
 			if [ ! "$LINK" -ef "$LINK_TARGET" ]; then
 				ln -sf "$LINK_TARGET" "$LINK"
 			fi
