@@ -24,6 +24,8 @@ _alias_ls() {
 }
 
 configure_aliases() {
-	_alias_grep
-	_alias_ls
+	if [ ! -z "$PS1" ]; then
+		_alias_grep
+		_alias_ls
+	fi
 }

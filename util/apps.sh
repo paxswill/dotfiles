@@ -10,8 +10,6 @@ _configure_android() {
 }
 
 _configure_bash() {
-	# Run only for interactive terminals
-	[ -z "$PS1" ] && return
 	# Use a larger history file
 	HISTSIZE=10000
 	HISTFILESIZE=30000
@@ -27,8 +25,6 @@ _configure_bash() {
 	shopt -s lithist
 	# Files beginning with '.' are included in globbing
 	shopt -s dotglob
-	# Autocomplete for hostnames
-	shopt -s hostcomplete
 	# check the window size after each command and, if necessary,
 	# update the values of LINES and COLUMNS.
 	shopt -s checkwinsize
@@ -40,6 +36,9 @@ _configure_bash() {
 }
 
 _configure_bash_completion() {
+	[ -z "$PS1" ] && return
+	# Autocomplete for hostnames
+	shopt -s hostcomplete
 	if ! shopt -oq posix; then
 		# Enable programmable shell completion features
 		if [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -76,6 +75,7 @@ _configure_bash_PS1() {
 	# host-specific color. The environment and branch portions are colored
 	# bright green, which is mapped to the secondary content color for
 	# Solarized-Dark.
+	[ -z "$PS1" ] && return
 	local OFFSET=$((${#MUTED_COLOR} + ${#COLOR_RESET}))
 	local ENVIRONMENT=""
 	if [ ! -z "$1" ]; then
@@ -135,8 +135,6 @@ _configure_golang() {
 }
 
 _configure_git_hub(){
-	# Only for interactive sessions
-	[ -z "$PS1" ] && return
 	if _prog_exists hub; then
 		alias git="hub"
 	fi
@@ -174,10 +172,8 @@ _configure_perlbrew() {
 }
 
 _configure_pip() {
-	# Only for interactive sessions
-	[ -z "$PS1" ] && return
 	# Add command completion for pip
-	if _prog_exists pip; then
+	if _prog_exists pip && [ -z "$PS1" ]; then
 		eval "$(pip completion --bash)"
 	fi
 	# Use a package cache
@@ -192,7 +188,7 @@ _configure_postgres_app() {
 }
 
 _configure_rvm() {
-	if [ -d "$HOME/.rvm/scripts/" ]; then
+	if [ -d "$HOME/.rvm/scripts/" -a -z "$PS1" ]; then
 		for dir in "rvm" "completion"; do
 			source "${HOME}/.rvm/scripts/${dir}"
 		done
@@ -200,7 +196,7 @@ _configure_rvm() {
 }
 
 _configure_vagrant() {
-	if _prog_exists vagrant; then
+	if _prog_exists vagrant && [ -z "$PS1" ]; then
 		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
 	fi
 }
@@ -239,8 +235,6 @@ _configure_vim() {
 }
 
 _configure_virtualenv_wrapper() {
-	# Only for interactive sessions
-	[ -z "$PS1" ] && return
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(type -p virtualenvwrapper.sh)
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then

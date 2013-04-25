@@ -1,9 +1,11 @@
 # Common color functions
 
-# Define common control sequences
-COLOR_RESET="$(tput sgr0)"
-# This is the muted color
-MUTED_COLOR="$(tput bold)$(tput setaf 2)"
+if [ ! -z "$PS1" ]; then
+	# Define common control sequences
+	COLOR_RESET="$(tput sgr0)"
+	# This is the muted color
+	MUTED_COLOR="$(tput bold)$(tput setaf 2)"
+fi
 
 _configure_host_color() {
 	# Generate a color that is semi-unique for this host
