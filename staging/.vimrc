@@ -5,30 +5,45 @@ call vundle#rc()
 
 set nocompatible
 
-" Manage Vundle with Vundle
-Bundle 'gmarix/vundle'
+if exists(":Bundle")
+	" Manage Vundle with Vundle
+	Bundle 'gmarix/vundle'
 
-""" Bundle vim plugins
-Bundle 'tpope/vim-fugitive'
-Bundle 'Rip-Rip/clang_complete'
-Bundle 'ervandew/supertab'
-Bundle 'paxswill/vim-opencl'
-Bundle 'tangledhelix/vim-octopress'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'smerrill/vagrant-vim'
-Bundle 'tpope/vim-surround'
-Bundle 'jmcantrell/vim-virtualenv'
-Bundle 'nginx.vim'
-Bundle 'uggedal/jinja-vim'
-if has('python')
-	Bundle 'davidhalter/jedi-vim'
-endif
-
-"" go (as in golang) includes support for Vim in its root. Otherwise use Vundle
-if empty($GOROOT)
-	Bundle 'jnwhiteh/vim-golang'
-else
-	set rtp+=$GOROOT/misc/vim
+	""" Bundle vim plugins
+	" Git plugin
+	Bundle 'tpope/vim-fugitive'
+	" C/C++/Obj-C completion with clang
+	Bundle 'Rip-Rip/clang_complete'
+	" use tab for completions
+	Bundle 'ervandew/supertab'
+	" OpenCL syntax
+	Bundle 'paxswill/vim-opencl'
+	" Octopress syntax
+	Bundle 'tangledhelix/vim-octopress'
+	" Solarized colorscheme
+	Bundle 'altercation/vim-colors-solarized'
+	" Vagrantfile syntax
+	Bundle 'smerrill/vagrant-vim'
+	" Helpers for editing HTML and other opening/closing tags
+	Bundle 'tpope/vim-surround'
+	" Virtualenv support in vim
+	Bundle 'jmcantrell/vim-virtualenv'
+	" nginx config file syntax
+	Bundle 'nginx.vim'
+	" Jinja template syntax
+	Bundle 'uggedal/jinja-vim'
+	" jedi-vim requires python support in vim
+	if has('python')
+		" Python completion with Jedi
+		Bundle 'davidhalter/jedi-vim'
+	endif
+	" Use Vim syntax files included with Go, oterwise use Vundle
+	if empty($GOROOT)
+		" Repackaged Go syntax files
+		Bundle 'jnwhiteh/vim-golang'
+	else
+		set rtp+=$GOROOT/misc/vim
+	endif
 endif
 
 " Show incomplete commands
@@ -68,8 +83,12 @@ let g:jedi#show_function_definition = "0"
 
 """ Configure the colors (and fonts)
 set background=dark
-let g:solarized_visibility='low'	" Desaturate special characters
-colorscheme solarized
+try
+	colorscheme solarized
+	let g:solarized_visibility='low'	" Desaturate special characters
+catch /^Vim\%((\a\+)\)\=:E185/
+	colorscheme desert
+endtry
 
 """ Load the manpage plugin for :Man
 runtime ftplugin/man.vim
