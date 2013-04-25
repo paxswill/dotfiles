@@ -28,5 +28,5 @@ load_bashrc
 
 # Pull in dotfiles management functions
 if [ -d $HOME/.dotfiles ]; then
-	source $HOME/.dotfiles/setup.sh
+	source $HOME/.dotfiles/common.sh
 fi

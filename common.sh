@@ -1,5 +1,3 @@
-#!/bin/bash
-
 DOTFILES="${HOME}/.dotfiles"
 
 _check_ssh_option() {
@@ -130,29 +128,9 @@ link_dotfiles(){
 	IFS="$OLDIFS"
 }
 
-setup_dotfiles(){
-	local oldpwd="$OLDPWD"
-	local DEST="$HOME/.dotfiles"
-	# Get the dotfiles directory if needed
-	if [ ! -d "$DEST" ]; then
-		if ! git clone git@github.com:paxswill/dotfiles.git "$DEST"; then
-			echo "Cloning public URL"
-			git clone git://github.com/paxswill/dotfiles.git "$DEST"
-		fi
-		pushd "$DEST" &>/dev/null
-		git submodule update -i
-		popd &>/dev/null
-	fi
-
-	process_source_files
-	link_dotfiles
-	OLDPWD="$oldpwd"
-}
-
 # Update the dotfiles repo and relink it
 update_dotfiles(){
-	local oldpwd="$OLDPWD"
-	pushd "$HOME/.dotfiles" &>/dev/null
+	GIT_WORK_TREE="$DOTFILES"
 	if [ "$(git status --porcelain)" != "" ]; then
 		echo "The dotfile repo is dirty. Aborting"
 		return 1
@@ -160,14 +138,5 @@ update_dotfiles(){
 	git pull
 	# Update git submodules
 	git submodule update -i
-	popd &>/dev/null
-	OLDPWD="$oldpwd"
-	setup_dotfiles
-	load_bashrc
 }
 
-if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-	# We're running as a script within a shell
-	# This is the case if this is during bootstrap, or during a manual setup
-	setup_dotfiles
-fi
