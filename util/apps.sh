@@ -1,4 +1,5 @@
 # Application or program specific configuration
+source ~/.dotfiles/util/color.sh
 
 _configure_android() {
 	# Android SDK (non-OS X)

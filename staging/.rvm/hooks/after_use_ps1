@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source ~/.dotfiles/util/apps.sh
+
+_configure_bash_PS1 "$("${rvm_bin_path}/rvm-prompt")"
