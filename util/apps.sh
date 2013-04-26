@@ -173,7 +173,7 @@ _configure_perlbrew() {
 
 _configure_pip() {
 	# Add command completion for pip
-	if _prog_exists pip && [ -z "$PS1" ]; then
+	if _prog_exists pip && [ ! -z "$PS1" ]; then
 		eval "$(pip completion --bash)"
 	fi
 	# Use a package cache
@@ -188,7 +188,7 @@ _configure_postgres_app() {
 }
 
 _configure_rvm() {
-	if [ -d "$HOME/.rvm/scripts/" -a -z "$PS1" ]; then
+	if [ -d "$HOME/.rvm/scripts/" -a ! -z "$PS1" ]; then
 		for dir in "rvm" "completion"; do
 			source "${HOME}/.rvm/scripts/${dir}"
 		done
@@ -196,7 +196,7 @@ _configure_rvm() {
 }
 
 _configure_vagrant() {
-	if _prog_exists vagrant && [ -z "$PS1" ]; then
+	if _prog_exists vagrant && [ ! -z "$PS1" ]; then
 		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
 	fi
 }
