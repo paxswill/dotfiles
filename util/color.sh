@@ -16,15 +16,19 @@ _configure_host_color() {
 	# BSD includes md5, GNU and Solaris include md5sum
 	case "$name" in
 		thor)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 3)";;
+			HOST_COLOR="$(tput setab 0)$(tput setaf 1)";;
 		odin)
 			HOST_COLOR="$(tput setab 0)$(tput setaf 2)";;
 		venus)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 1)";;
+			HOST_COLOR="$(tput setab 0)$(tput setaf 3)";;
 		tyr)
-			HOST_COLOR="$(tput setab 0)$(tput bold)$(tput setaf 1)";;
+			HOST_COLOR="$(tput setab 0)$(tput setaf 4)";;
 		heimdall)
-			HOST_COLOR="$(tput setab 0)$(tput bold)$(tput setaf 5)";;
+			HOST_COLOR="$(tput setab 0)$(tput setaf 5)";;
+		baldur)
+			HOST_COLOR="$(tput setab 0)$(tput setaf 6)";;
+		freya)
+			HOST_COLOR="$(tput setab 0)$(tput setaf 7)";;
 		*)
 			if _prog_exists md5; then
 				hashed_host=$(printf $name | md5)
