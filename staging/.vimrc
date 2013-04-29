@@ -84,8 +84,8 @@ let g:jedi#show_function_definition = "0"
 """ Configure the colors (and fonts)
 set background=dark
 try
-	colorscheme solarized
 	let g:solarized_visibility='low'	" Desaturate special characters
+	colorscheme solarized
 catch /^Vim\%((\a\+)\)\=:E185/
 	colorscheme desert
 endtry
