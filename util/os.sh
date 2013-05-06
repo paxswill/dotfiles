@@ -69,7 +69,7 @@ _configure_debian() {
 _configure_linux() {
 	if _prog_exists lsb_release; then
 		DISTRO=$(lsb_release -i)
-		DISTRO=${DISTRO##*:}
+		DISTRO=${DISTRO##*:?}
 	fi
 	export DISTRO
 	if [ "$DISTRO" = "Debian" ]; then
