@@ -30,6 +30,8 @@ if exists(":Bundle")
 	Bundle 'nginx.vim'
 	" Jinja template syntax
 	Bundle 'uggedal/jinja-vim'
+	" automatically add end tokens in some languages
+	Bundle 'tpope/vim-endwise'
 	" jedi-vim requires python support in vim
 	if has('python')
 		" Python completion with Jedi
