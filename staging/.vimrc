@@ -163,6 +163,8 @@ set tildeop
 let g:is_bash = 1
 " Use the system clipboard
 set clipboard=unnamed
+" Keep some context for lines at the edge of the screen
+set scrolloff=3
 
 """ GUI Customizations
 if has("gui_running")
