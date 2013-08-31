@@ -18,8 +18,6 @@ if exists(":Bundle")
 	Bundle 'ervandew/supertab'
 	" OpenCL syntax
 	Bundle 'paxswill/vim-opencl'
-	" Octopress syntax
-	Bundle 'tangledhelix/vim-octopress'
 	" Solarized colorscheme
 	Bundle 'altercation/vim-colors-solarized'
 	" Vagrantfile syntax
