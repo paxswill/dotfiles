@@ -201,6 +201,13 @@ _configure_rvm() {
 	fi
 }
 
+_configure_travis() {
+	# Config info for Travis-CI command line tool
+	if [ -d "${HOME}/.travis/travis.sh" ]; then
+		source "${HOME}/.travis/travis.sh"
+	fi
+}
+
 _configure_vagrant() {
 	if _prog_exists vagrant && [ ! -z "$PS1" ]; then
 		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
@@ -289,6 +296,7 @@ configure_apps() {
 	_configure_pip
 	_configure_postgres_app
 	_configure_rvm
+	_configure_travis
 	_configure_vagrant
 	_configure_videocore
 	_configure_vim
