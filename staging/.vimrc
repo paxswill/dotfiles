@@ -32,6 +32,8 @@ if exists(":Bundle")
 	Bundle 'uggedal/jinja-vim'
 	" automatically add end tokens in some languages
 	Bundle 'tpope/vim-endwise'
+	" Syntax for LESS (CSS metalanguage)
+	Bundle 'groenewege/vim-less'
 	" jedi-vim requires python support in vim
 	if has('python')
 		" Python completion with Jedi

@@ -89,6 +89,11 @@ _configure_bash_PS1() {
 \$(__vcs_ps1 ' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
 }
 
+_configure_cabal() {
+	# Add cabal (Haskell package manager) executables to PATH
+	append_to_path "${HOME}/.cabal/bin"
+}
+
 _configure_ccache() {
 	# Enable ccache in Android if we have it, and set it up
 	if _prog_exists ccache; then
@@ -196,6 +201,13 @@ _configure_rvm() {
 	fi
 }
 
+_configure_travis() {
+	# Config info for Travis-CI command line tool
+	if [ -d "${HOME}/.travis/travis.sh" ]; then
+		source "${HOME}/.travis/travis.sh"
+	fi
+}
+
 _configure_vagrant() {
 	if _prog_exists vagrant && [ ! -z "$PS1" ]; then
 		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
@@ -272,6 +284,7 @@ _configure_virtualenv_wrapper() {
 configure_apps() {
 	_configure_android
 	_configure_bash
+	_configure_cabal
 	_configure_ccache
 	_configure_cmf_krb5
 	_configure_ec2
@@ -283,6 +296,7 @@ configure_apps() {
 	_configure_pip
 	_configure_postgres_app
 	_configure_rvm
+	_configure_travis
 	_configure_vagrant
 	_configure_videocore
 	_configure_vim

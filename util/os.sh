@@ -11,10 +11,6 @@ _configure_darwin() {
 		if brew list ruby &>/dev/null; then
 			append_to_path "$(brew --prefix ruby)/bin"
 		fi
-		# Use brewed pythons if we have them
-		for temp_python in python3 pypy python; do
-			append_to_path "$BREW_PREFIX/share/$temp_python"
-		done
 	elif [ -d /opt ]; then
 		# MacPorts
 		append_to_path "/opt/local/bin"
