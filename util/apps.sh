@@ -189,7 +189,8 @@ _configure_pip() {
 
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app ]; then
-		prepend_to_path "/Applications/Postgres.app/Contents/MacOS/bin"
+		prepend_to_path "$(find /Applications/Postgres.app/Contents -name bin \
+			-type d)"
 	fi
 }
 
