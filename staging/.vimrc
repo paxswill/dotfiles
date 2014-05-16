@@ -81,7 +81,7 @@ let g:SuperTabContextDefaultCompletionType = "<c-p>"
 " Don't autocomplete on dot
 let g:jedi#popup_on_dot = 0
 " Don't show the function definition
-let g:jedi#show_function_definition = "0"
+let g:jedi#show_call_signatures = 0
 
 """ Configure the colors (and fonts)
 set background=dark
