@@ -8,9 +8,6 @@ _configure_darwin() {
 		local BREW_PREFIX=$(brew --prefix)
 		prepend_to_path "${BREW_PREFIX}/sbin"
 		prepend_to_path "${BREW_PREFIX}/bin"
-		if brew list ruby &>/dev/null; then
-			append_to_path "$(brew --prefix ruby)/bin"
-		fi
 	elif [ -d /opt ]; then
 		# MacPorts
 		append_to_path "/opt/local/bin"

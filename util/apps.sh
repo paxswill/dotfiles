@@ -159,7 +159,10 @@ _configure_lesspipe() {
 
 _configure_npm() {
 	if _prog_exists npm; then
-		append_to_path "$(npm bin -g 2>/dev/null)"
+		# Don't add an extra path (or move the position of an existing path)
+		if [[ ! $PATH =~ (:/usr/local/bin:|^/usr/local/bin:|:/usr/local/bin$) ]]; then
+			append_to_path "$(npm bin -g 2>/dev/null)"
+		fi
 		# This isn't really portable
 		if [ -e "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh" ]; then
 			. "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh"
