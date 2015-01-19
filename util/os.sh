@@ -39,10 +39,10 @@ _configure_darwin() {
 		ulimit -S -n 1024
 	fi
 	# Define JAVA_HOME on OS X
-	if [ -d \
-		/System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers ];
-	then
-		export JAVA_HOME=$(/usr/libexec/java_home)
+	if [ -x /usr/libexec/java_home ]; then
+		if /usr/libexec/java_home &>/dev/null; then
+			export JAVA_HOME=$(/usr/libexec/java_home)
+		fi
 	fi
 }
 
