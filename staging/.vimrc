@@ -29,7 +29,7 @@ if exists(":Bundle")
 	" nginx config file syntax
 	Bundle 'nginx.vim'
 	" Jinja template syntax
-	Bundle 'uggedal/jinja-vim'
+	Bundle 'lepture/vim-jinja'
 	" automatically add end tokens in some languages
 	Bundle 'tpope/vim-endwise'
 	" Syntax for LESS (CSS metalanguage)
