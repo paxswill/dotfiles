@@ -73,10 +73,21 @@ _configure_less_colors() {
 }
 
 get_term_colors() {
-	if [ -z $TERM_COLORS ] && _prog_exists infocmp; then
-		TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
-		TERM_COLORS=${TERM_COLORS#*colors#}
-		TERM_COLORS=${TERM_COLORS%,}
+	if [ -z $TERM_COLORS ]; then
+		if _prog_exists infocmp; then
+			TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
+			TERM_COLORS=${TERM_COLORS#*colors#}
+			TERM_COLORS=${TERM_COLORS%,}
+		else
+			case "$TERM" in
+				xterm|screen)
+					TERM_COLORS=8
+					;;
+				*-256colors)
+					TERM_COLORS=256
+					;;
+			esac
+		fi
 	fi
 	if [ -z $TERM_COLORS ] || ! [[ "$TERM_COLORS" =~ ^[0-9]+$ ]]; then
 		TERM_COLORS=0
