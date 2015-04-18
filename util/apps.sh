@@ -164,8 +164,8 @@ _configure_npm() {
 			append_to_path "$(npm bin -g 2>/dev/null)"
 		fi
 		# This isn't really portable
-		if [ -e "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh" ]; then
-			. "$(brew --prefix)/lib/node_modules/npm/lib/utils/completion.sh"
+		if [ -e "$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh" ]; then
+			. "$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
 		fi
 	fi
 }
