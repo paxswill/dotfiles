@@ -8,6 +8,7 @@
 	log = 20
 [user]
 	name = Will Ross
+	signingkey = 54D4E94D
 [core]
 	excludesfile = ~/.cvsignore
 [color]
