@@ -17,11 +17,9 @@ process_source_files(){
 	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
-	if [[ "$DOMAIN" =~ "nrl\.navy\.mil" ]]; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=wross@cmf.nrl.navy.mil"
-	else
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@gmail.com"
-	fi
+	# Right now I just use one, but previously I switched on the host's
+	# domain and used a different email.
+	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@paxswill.com"
 	# Check SSH configuration options. Basically, Solaris SSH is old and likes
 	# being different and OpenSSH likes adding useful new features. Also, OS X
 	# can sometimes use an old version of OpenSSH.
