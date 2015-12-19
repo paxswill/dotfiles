@@ -46,6 +46,10 @@ if exists(":Bundle")
 	else
 		set rtp+=$GOROOT/misc/vim
 	endif
+	" Syntax for Rust lang
+	Bundle 'rust-lang/rust.vim'
+	" Syntax and other goodies for CoffeeScript
+	Bundle 'kchmck/vim-coffee-script'
 endif
 
 " Show incomplete commands
