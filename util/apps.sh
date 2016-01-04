@@ -185,9 +185,6 @@ _configure_pip() {
 	if _prog_exists pip && [ ! -z "$PS1" ]; then
 		eval "$(pip completion --bash)"
 	fi
-	# Use a package cache
-	mkdir -p "${PIP_DOWNLOAD_CACHE:=${HOME}/.pip_cache}"
-	export PIP_DOWNLOAD_CACHE
 }
 
 _configure_postgres_app() {
