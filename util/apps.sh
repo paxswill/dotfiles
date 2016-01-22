@@ -182,8 +182,18 @@ _configure_perlbrew() {
 
 _configure_pip() {
 	# Add command completion for pip
-	if _prog_exists pip && [ ! -z "$PS1" ]; then
-		eval "$(pip completion --bash)"
+	if [ ! -z "$PS1" ]; then
+		if _prog_exists pip; then
+			eval "$(pip completion --bash)"
+			# Make the completion for pip available for the suffixed variants
+			local VERSION=(2 2.7 3 3.3 3.4 3.5)
+			local PIP_COMPLETE="$(complete -p pip)"
+			for V in ${VERSION[@]}; do
+				if _prog_exists "pip${V}"; then
+					eval "${PIP_COMPLETE}${V}"
+				fi
+			done
+		fi
 	fi
 }
 
