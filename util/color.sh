@@ -74,10 +74,8 @@ _configure_less_colors() {
 
 get_term_colors() {
 	if [ -z $TERM_COLORS ]; then
-		if _prog_exists infocmp; then
-			TERM_COLORS=$(infocmp -I -1 $TERM | grep 'colors')
-			TERM_COLORS=${TERM_COLORS#*colors#}
-			TERM_COLORS=${TERM_COLORS%,}
+		if _prog_exists tput; then
+			TERM_COLORS=$(tput colors)
 		else
 			case "$TERM" in
 				xterm|screen)
