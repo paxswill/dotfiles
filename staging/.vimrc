@@ -50,6 +50,8 @@ if exists(":Bundle")
 	Bundle 'rust-lang/rust.vim'
 	" Syntax and other goodies for CoffeeScript
 	Bundle 'kchmck/vim-coffee-script'
+	" Syntax for Handlebars and Mustache
+	Bundle 'mustache/vim-mustache-handlebars'
 endif
 
 " Show incomplete commands
