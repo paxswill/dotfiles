@@ -1,3 +1,3 @@
 [submodule "staging/.vim/bundle/vundle"]
-	path = staging/.vim/bundle/vundle
-	url = https://github.com/gmarik/vundle.git
+	path = staging/.vim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git

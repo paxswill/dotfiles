@@ -1,58 +1,55 @@
 " Enable Vundle
-filetype off
-set rtp +=~/.vim/bundle/vundle/
-call vundle#rc()
-
 set nocompatible
+filetype off
+set rtp +=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" Manage Vundle with Vundle
+Plugin 'VundleVim/Vundle.vim'
 
-if exists(":Bundle")
-	" Manage Vundle with Vundle
-	Bundle 'gmarix/vundle'
-
-	""" Bundle vim plugins
-	" Git plugin
-	Bundle 'tpope/vim-fugitive'
-	" C/C++/Obj-C completion with clang
-	Bundle 'Rip-Rip/clang_complete'
-	" use tab for completions
-	Bundle 'ervandew/supertab'
-	" OpenCL syntax
-	Bundle 'paxswill/vim-opencl'
-	" Solarized colorscheme
-	Bundle 'altercation/vim-colors-solarized'
-	" Vagrantfile syntax
-	Bundle 'smerrill/vagrant-vim'
-	" Helpers for editing HTML and other opening/closing tags
-	Bundle 'tpope/vim-surround'
-	" Virtualenv support in vim
-	Bundle 'jmcantrell/vim-virtualenv'
-	" nginx config file syntax
-	Bundle 'nginx.vim'
-	" Jinja template syntax
-	Bundle 'lepture/vim-jinja'
-	" automatically add end tokens in some languages
-	Bundle 'tpope/vim-endwise'
-	" Syntax for LESS (CSS metalanguage)
-	Bundle 'groenewege/vim-less'
-	" jedi-vim requires python support in vim
-	if has('python')
-		" Python completion with Jedi
-		Bundle 'davidhalter/jedi-vim'
-	endif
-	" Use Vim syntax files included with Go, oterwise use Vundle
-	if empty($GOROOT)
-		" Repackaged Go syntax files
-		Bundle 'jnwhiteh/vim-golang'
-	else
-		set rtp+=$GOROOT/misc/vim
-	endif
-	" Syntax for Rust lang
-	Bundle 'rust-lang/rust.vim'
-	" Syntax and other goodies for CoffeeScript
-	Bundle 'kchmck/vim-coffee-script'
-	" Syntax for Handlebars and Mustache
-	Bundle 'mustache/vim-mustache-handlebars'
+""" Plugin vim plugins
+" Git plugin
+Plugin 'tpope/vim-fugitive'
+" C/C++/Obj-C completion with clang
+Plugin 'Rip-Rip/clang_complete'
+" use tab for completions
+Plugin 'ervandew/supertab'
+" OpenCL syntax
+Plugin 'paxswill/vim-opencl'
+" Solarized colorscheme
+Plugin 'altercation/vim-colors-solarized'
+" Vagrantfile syntax
+Plugin 'smerrill/vagrant-vim'
+" Helpers for editing HTML and other opening/closing tags
+Plugin 'tpope/vim-surround'
+" Virtualenv support in vim
+Plugin 'jmcantrell/vim-virtualenv'
+" nginx config file syntax
+Plugin 'nginx.vim'
+" Jinja template syntax
+Plugin 'lepture/vim-jinja'
+" automatically add end tokens in some languages
+Plugin 'tpope/vim-endwise'
+" Syntax for LESS (CSS metalanguage)
+Plugin 'groenewege/vim-less'
+" jedi-vim requires python support in vim
+if has('python')
+    " Python completion with Jedi
+    Plugin 'davidhalter/jedi-vim'
 endif
+" Use Vim syntax files included with Go, oterwise use Vundle
+if empty($GOROOT)
+    " Repackaged Go syntax files
+    Plugin 'jnwhiteh/vim-golang'
+else
+    set rtp+=$GOROOT/misc/vim
+endif
+" Syntax for Rust lang
+Plugin 'rust-lang/rust.vim'
+" Syntax and other goodies for CoffeeScript
+Plugin 'kchmck/vim-coffee-script'
+" Syntax for Handlebars and Mustache
+Plugin 'mustache/vim-mustache-handlebars'
+call vundle#end()
 
 " Show incomplete commands
 set showcmd
