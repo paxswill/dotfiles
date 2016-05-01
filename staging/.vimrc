@@ -6,7 +6,6 @@ call vundle#begin()
 " Manage Vundle with Vundle
 Plugin 'VundleVim/Vundle.vim'
 
-""" Plugin vim plugins
 " Git plugin
 Plugin 'tpope/vim-fugitive'
 " C/C++/Obj-C completion with clang
@@ -21,8 +20,6 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'smerrill/vagrant-vim'
 " Helpers for editing HTML and other opening/closing tags
 Plugin 'tpope/vim-surround'
-" Virtualenv support in vim
-Plugin 'jmcantrell/vim-virtualenv'
 " nginx config file syntax
 Plugin 'nginx.vim'
 " Jinja template syntax
@@ -35,6 +32,8 @@ Plugin 'groenewege/vim-less'
 if has('python')
     " Python completion with Jedi
     Plugin 'davidhalter/jedi-vim'
+	" Virtualenv support in vim
+	Plugin 'jmcantrell/vim-virtualenv'
 endif
 " Use Vim syntax files included with Go, oterwise use Vundle
 if empty($GOROOT)
@@ -49,6 +48,8 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'kchmck/vim-coffee-script'
 " Syntax for Handlebars and Mustache
 Plugin 'mustache/vim-mustache-handlebars'
+" Better Python indenting
+Plugin 'hynek/vim-python-pep8-indent'
 call vundle#end()
 
 " Show incomplete commands
