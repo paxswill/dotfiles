@@ -204,11 +204,9 @@ _configure_postgres_app() {
 	fi
 }
 
-_configure_rvm() {
-	if [ -d "$HOME/.rvm/scripts/" -a ! -z "$PS1" ]; then
-		for dir in "rvm" "completion"; do
-			source "${HOME}/.rvm/scripts/${dir}"
-		done
+_configure_rbenv() {
+	if _prog_exists rbenv; then
+		eval "$(rbenv init -)"
 	fi
 }
 
@@ -306,7 +304,7 @@ configure_apps() {
 	_configure_perlbrew
 	_configure_pip
 	_configure_postgres_app
-	_configure_rvm
+	_configure_rbenv
 	_configure_travis
 	_configure_vagrant
 	_configure_videocore
