@@ -20,7 +20,7 @@ _configure_bash() {
 	# append to the history file, don't overwrite it
 	shopt -s histappend
 	# All shells share a history
-	PROMPT_COMMAND='history -a; history -n'
+	PROMPT_COMMAND='history -a'
 	# Multi-line commands in the same history entry
 	shopt -s cmdhist
 	shopt -s lithist
