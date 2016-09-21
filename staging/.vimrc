@@ -29,7 +29,7 @@ Plugin 'tpope/vim-endwise'
 " Syntax for LESS (CSS metalanguage)
 Plugin 'groenewege/vim-less'
 " jedi-vim requires python support in vim
-if has('python')
+if has('python') || has('python3')
     " Python completion with Jedi
     Plugin 'davidhalter/jedi-vim'
 	" Virtualenv support in vim
