@@ -192,7 +192,7 @@ _configure_pip() {
 	# Add command completion for pip
 	if [ ! -z "$PS1" ]; then
 		if _prog_exists pip; then
-			eval "$(pip completion --bash)"
+			eval "$(pip completion --bash 2>/dev/null)"
 			# Make the completion for pip available for the suffixed variants
 			local VERSION=(2 2.7 3 3.3 3.4 3.5)
 			local PIP_COMPLETE="$(complete -p pip)"
