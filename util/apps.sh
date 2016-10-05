@@ -57,6 +57,9 @@ _configure_bash_completion() {
 		elif [ -f /opt/local/etc/bash_completion ]; then
 			# Macports
 			. /opt/local/etc/bash_completion
+		elif [ -f /usr/local/share/bash-completion/bash-completion.sh ]; then
+			# FreeBSD
+			. /usr/local/share/bash-completion/bash-completion.sh
 		fi
 	fi
 }
