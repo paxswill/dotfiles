@@ -150,6 +150,7 @@ _configure_git_hub(){
 }
 
 _configure_iterm2_integration(){
+	[ "$SYSTYPE" = "FreeBSD" ] && [ -z "$SSH_CLIENT" ] && return
 	source "${HOME}/.dotfiles/util/iterm_integration.sh"
 }
 
