@@ -42,25 +42,27 @@ _configure_bash_completion() {
 	shopt -s hostcomplete
 	if ! shopt -oq posix; then
 		# Enable programmable shell completion features
-		if [ -f /usr/share/bash-completion/bash_completion ]; then
-			. /usr/share/bash-completion/bash_completion
-		elif [ -f /etc/bash_completion ]; then
-			. /etc/bash_completion
-		elif [ -f /usr/local/etc/bash_completion ]; then
-			. /usr/local/etc/bash_completion
-		elif [ -f $HOME/local/common/share/bash-completion/bash_completion ]; then
-			# Systems that need customized help (fast.cs.odu.edu Solaris machines)
-			. $HOME/local/common/share/bash-completion/bash_completion
-		elif [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew && [ -f $(brew --prefix)/etc/bash_completion ]; then
-			# Homebrew
-			. $(brew --prefix)/etc/bash_completion
-		elif [ -f /opt/local/etc/bash_completion ]; then
-			# Macports
-			. /opt/local/etc/bash_completion
-		elif [ -f /usr/local/share/bash-completion/bash-completion.sh ]; then
-			# FreeBSD
-			. /usr/local/share/bash-completion/bash-completion.sh
+		local COMPLETION_FILES=(
+			# Standard-ish locations form Linux
+			[1]="/usr/share/bash-completion/bash_completion"
+			[2]="/etc/bash_completion"
+			[3]="/usr/local/etc/bash_completion"
+			# ODU Solaris Machines
+			[4]="${HOME}/local/common/share/bash-completion/bash_completion"
+			# MacPorts
+			[5]="/opt/local/etc/bash_completion"
+			# FreeBSD Ports
+			[6]="/usr/local/share/bash-completion/bash-completion.sh"
+		)
+		if [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew; then
+			COMPLETION_FILES[0]="$(brew --prefix)/etc/bash_completion"
 		fi
+		for COMPLETE_PATH in ${COMPLETION_FILES[@]}; do
+			if [ -f "$COMPLETE_PATH" ]; then
+				source "$COMPLETE_PATH"
+				break
+			fi
+		done
 	fi
 }
 
