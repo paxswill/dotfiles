@@ -8,6 +8,8 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Git plugin
 Plugin 'tpope/vim-fugitive'
+" GitHub integration with fugitive
+Plugin 'tpope/vim-rhubarb'
 " C/C++/Obj-C completion with clang
 Plugin 'Rip-Rip/clang_complete'
 " use tab for completions
