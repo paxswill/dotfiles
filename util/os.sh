@@ -21,18 +21,6 @@ _configure_darwin() {
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
 		append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
-	# Man page to Preview
-	if [ ! -z "$PS1" ]; then
-		if _prog_exists ps2pdf; then
-			_vercmp "$(sw_vers -productVersion)" "10.7"
-			if [[ $? == 2 ]]; then
-				pman_open_bg="-g"
-			fi
-			pman () {
-				man -t "${@}" | ps2pdf - - | open ${pman_open_bg} -f -a /Applications/Preview.app
-			}
-		fi
-	fi
 	# Increase the maximum number of open file descriptors
 	# This is primarily for the Android build process
 	if [ $(ulimit -n) -lt 1024 ]; then
