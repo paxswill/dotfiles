@@ -208,9 +208,8 @@ _configure_pip() {
 }
 
 _configure_postgres_app() {
-	if [ -d /Applications/Postgres.app ]; then
-		prepend_to_path "$(find /Applications/Postgres.app/Contents -name bin \
-			-type d)"
+	if [ -d /Applications/Postgres.app/Contents/Versions/latest/bin ]; then
+		prepend_to_path "/Applications/Postgres.app/Contents/Versions/latest/bin"
 	fi
 }
 
