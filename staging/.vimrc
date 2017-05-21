@@ -54,6 +54,8 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'kchmck/vim-coffee-script'
 " Syntax for Handlebars and Mustache
 Plugin 'mustache/vim-mustache-handlebars'
+" Dash integration
+Plugin 'rizzatti/dash.vim'
 call vundle#end()
 
 " Show incomplete commands
