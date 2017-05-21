@@ -32,6 +32,8 @@ Plugin 'lepture/vim-jinja'
 Plugin 'tpope/vim-endwise'
 " Syntax for LESS (CSS metalanguage)
 Plugin 'groenewege/vim-less'
+" Better Python indenting
+Plugin 'hynek/vim-python-pep8-indent'
 " jedi-vim requires python support in vim
 if has('python') || has('python3')
     " Python completion with Jedi
@@ -52,8 +54,6 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'kchmck/vim-coffee-script'
 " Syntax for Handlebars and Mustache
 Plugin 'mustache/vim-mustache-handlebars'
-" Better Python indenting
-Plugin 'hynek/vim-python-pep8-indent'
 call vundle#end()
 
 " Show incomplete commands
