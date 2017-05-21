@@ -21,6 +21,12 @@ _configure_darwin() {
 	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
 		append_to_path "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
 	fi
+	if [ ! -z "$PS1" ]; then
+		# Add function for locking the screen
+		lock () {
+			/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
+		}
+	fi
 	# Increase the maximum number of open file descriptors
 	# This is primarily for the Android build process
 	if [ $(ulimit -n) -lt 1024 ]; then
@@ -57,6 +63,12 @@ _configure_linux() {
 		_configure_debian
 	elif [ "$DISTRO" = "Ubuntu" ]; then
 		_configure_ubuntu
+	fi
+	# Add function for locking the screen
+	if [ ! -z "$PS1"]; then
+		lock () {
+			xscreensaver -lock
+		}
 	fi
 }
 
