@@ -10,6 +10,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 " GitHub integration with fugitive
 Plugin 'tpope/vim-rhubarb'
+" Nicer swapfile recovery
+Plugin 'chrisbra/Recover.vim'
 " C/C++/Obj-C completion with clang
 Plugin 'Rip-Rip/clang_complete'
 " use tab for completions
