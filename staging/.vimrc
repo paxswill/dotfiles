@@ -177,6 +177,8 @@ let g:is_bash = 1
 set clipboard=unnamed
 " Keep some context for lines at the edge of the screen
 set scrolloff=3
+" Customize which things are saved in a session
+set sessionoptions="blank,buffers,curdir,folds,globals,localoptions,options,resize,tabpages,winpos,winsize"
 
 """ GUI Customizations
 if has("gui_running")
