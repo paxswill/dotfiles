@@ -280,6 +280,13 @@ _configure_virtualenv_wrapper() {
 		fi
 		# Use Distribute instead of Setuptools by default
 		export VIRTUALENV_DISTRIBUTE=1
+		# Homebrew Python is no longer on the default path, and we should be
+		# using Python 3 anyways
+		if _prog_exists python3; then
+			export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+		elif _prog_exists python2; then
+			export VIRTUALENVWRAPPER_PYTHON="$(which python2)"
+		fi
 		source $wrapper_source
 		# Have pip play nice with virtualenv
 		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
