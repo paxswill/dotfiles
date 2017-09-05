@@ -99,6 +99,10 @@ _configure_cabal() {
 	append_to_path "${HOME}/.cabal/bin"
 }
 
+_configure_cargo() {
+	append_to_path "${HOME}/.cargo/bin"
+}
+
 _configure_ccache() {
 	# Enable ccache in Android if we have it, and set it up
 	if _prog_exists ccache; then
@@ -310,6 +314,7 @@ configure_apps() {
 	_configure_android
 	_configure_bash
 	_configure_cabal
+	_configure_cargo
 	_configure_ccache
 	_configure_cmf_krb5
 	_configure_ec2
