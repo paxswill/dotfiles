@@ -65,7 +65,7 @@ _configure_linux() {
 		_configure_ubuntu
 	fi
 	# Add function for locking the screen
-	if [ ! -z "$PS1"]; then
+	if [ ! -z "$PS1" ]; then
 		lock () {
 			xscreensaver -lock
 		}
