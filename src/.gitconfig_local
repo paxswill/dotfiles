@@ -1,5 +1,7 @@
 [user]
 	email = EMAIL
 [credential]
-ifdef(`OSX',`	helper = osxkeychain',`dnl')
-	helper = cache --socket /tmp/USER/git-credential-cache-socket
+ifdef(`OSX',
+`	helper = osxkeychain',
+`	helper = cache --socket /tmp/USER/git-credential-cache-socket'
+)
