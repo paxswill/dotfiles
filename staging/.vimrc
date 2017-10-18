@@ -10,6 +10,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 " GitHub integration with fugitive
 Plugin 'tpope/vim-rhubarb'
+" Easy Session updating
+Plugin 'tpope/vim-obsession'
 " Nicer swapfile recovery
 Plugin 'chrisbra/Recover.vim'
 " C/C++/Obj-C completion with clang
