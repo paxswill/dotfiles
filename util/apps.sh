@@ -156,7 +156,12 @@ _configure_git_hub(){
 }
 
 _configure_iterm2_integration(){
-	[ "$SYSTYPE" = "FreeBSD" ] && [ -z "$SSH_CLIENT" ] && return
+	# Some systems don't work with iTerm integration locally
+	if [ -z "$SSH_CLIENT" ]; then
+		[ "$SYSTYPE" = "FreeBSD" ] && return
+		[[ "$(uname -r)" =~ .*[Mm]icrosoft.* ]] && return
+
+	fi
 	source "${HOME}/.dotfiles/util/iterm_integration.sh"
 }
 
