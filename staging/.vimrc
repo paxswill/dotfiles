@@ -52,6 +52,8 @@ else
 endif
 " Syntax for Rust lang
 Plugin 'rust-lang/rust.vim'
+" Syntax for TOML files
+Plugin 'cespare/vim-toml'
 " Syntax and other goodies for CoffeeScript
 Plugin 'kchmck/vim-coffee-script'
 " Syntax for Handlebars and Mustache
