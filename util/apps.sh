@@ -156,7 +156,12 @@ _configure_git_hub(){
 }
 
 _configure_iterm2_integration(){
-	[ "$SYSTYPE" = "FreeBSD" ] && [ -z "$SSH_CLIENT" ] && return
+	# Some systems don't work with iTerm integration locally
+	if [ -z "$SSH_CLIENT" ]; then
+		[ "$SYSTYPE" = "FreeBSD" ] && return
+		[[ "$(uname -r)" =~ .*[Mm]icrosoft.* ]] && return
+
+	fi
 	source "${HOME}/.dotfiles/util/iterm_integration.sh"
 }
 
@@ -284,13 +289,14 @@ _configure_virtualenv_wrapper() {
 		fi
 		# Use Distribute instead of Setuptools by default
 		export VIRTUALENV_DISTRIBUTE=1
-		# Homebrew Python is no longer on the default path, and we should be
-		# using Python 3 anyways
-		if _prog_exists python3; then
-			export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
-		elif _prog_exists python2; then
-			export VIRTUALENVWRAPPER_PYTHON="$(which python2)"
-		fi
+		# Find the python distribution that has virtualenvwrapper installed.
+		# PRefer Py3 over Py2
+		for PY in python3 python2 python; do
+			if _prog_exists $PY && $PY -c "import virtualenvwrapper" 2>/dev/null; then
+				export VIRTUALENVWRAPPER_PYTHON="$(which $PY)"
+				break
+			fi
+		done
 		source $wrapper_source
 		# Have pip play nice with virtualenv
 		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
