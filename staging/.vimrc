@@ -60,6 +60,8 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'mustache/vim-mustache-handlebars'
 " Dash integration
 Plugin 'rizzatti/dash.vim'
+" Swift syntax
+Plugin 'kballard/vim-swift'
 call vundle#end()
 
 " Show incomplete commands
