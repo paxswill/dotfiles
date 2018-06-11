@@ -38,42 +38,6 @@ _configure_cmf() {
 	fi
 }
 
-_configure_oducs() {
-	local LOCALNAME
-	if [ "$HOST" = "procyon" ] || [ "$HOST" = "capella" ] || [ "$HOST" = "antares" ] || [ "$HOST" = "vega" ]; then
-		LOCALNAME="fast-sparc"
-		PATH=/usr/local/bin:/usr/local/ssl/bin:/usr/local/sunstudio/bin:/usr/local/sunstudio/netbeans/bin:/usr/sfw/bin:/usr/java/bin:/usr/bin:/bin:/usr/ccs/bin:/usr/ucb:/usr/dt/bin:/usr/X11/bin:/usr/X/bin:/usr/lib/lp/postscript
-		LD_LIBRARY_PATH=/usr/local/lib/mysql:/usr/local/lib:/usr/local/ssl/lib:/usr/local/sunstudio/lib:/usr/sfw/lib:/usr/java/lib:/usr/lib:/lib:/usr/ccs/lib:/usr/ucblib:/usr/dt/lib:/usr/X11/lib:/usr/X/lib:/opt/local/oracle_instant_client/
-		MANPATH=/usr/local/man:/usr/local/ssl/ssl/man:/usr/local/sunstudio/man:/usr/sfw/man:/usr/java/man:/usr/man:/usr/dt/man:/usr/X11/man:/usr/X/man
-		PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/sfw/lib/pkgconfig:/usr/X/lib/pkgconfig
-		JAVA_HOME=/usr/java
-	elif [ "$HOST" = "atria" ] || [ "$HOST" = "sirius" ]; then
-		LOCALNAME="fast-ubuntu"
-	elif [ "$HOST" = "nvidia" ]; then
-		LOCALNAME="nv-s1070"
-	elif [ "$HOST" = "cuda" ] || [ "$HOST" = "tesla" ] || [ "$HOST" = "stream" ]; then
-		LOCALNAME="nv-c870"
-	elif [ "$HOST" = "smp" ]; then
-		LOCALNAME="smp"
-	fi
-    export LOCAL_PREFIX="$HOME/local/$LOCALNAME"
-	# CUDA paths
-	if [ -d /usr/local/cuda ]; then
-		append_to_path "/usr/local/cuda/computeprof/bin"
-		append_to_path "/usr/local/cuda/bin"
-		append_to_libpath "/usr/local/cuda/lib"
-		append_to_libpath "/usr/local/cuda/lib64"
-	fi
-	prepend_to_path "${LOCAL_PREFIX}/bin"
-	prepend_to_path "${LOCAL_PREFIX}/sbin"
-	prepend_to_libpath "${LOCAL_PREFIX}/lib"
-	prepend_to_libpath "${LOCAL_PREFIX}/lib64"
-	prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib/pkgconfig"
-	prepend_to_pkgconfpath "${LOCAL_PREFIX}/lib64/pkgconfig"
-	# Autoconf Site configuration
-	export CONFIG_SITE=$HOME/local/config.site
-}
-
 parse_fqdn() {
 	if [ -z $HOST ] && [ -z $DOMAIN ]; then
 		# Get some information to base later decisions on
@@ -106,8 +70,6 @@ configure_hosts() {
 	parse_fqdn
 	# Configure for host
 	case $HOST.$DOMAIN in
-		*.cs.odu.edu)
-			_configure_oducs;;
 		*.cmf.nrl.navy.mil)
 			_configure_cmf;;
 	esac
