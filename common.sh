@@ -20,30 +20,6 @@ process_source_files(){
 	# Right now I just use one, but previously I switched on the host's
 	# domain and used a different email.
 	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@paxswill.com"
-	# Check SSH configuration options. Basically, Solaris SSH is old and likes
-	# being different and OpenSSH likes adding useful new features. Also, OS X
-	# can sometimes use an old version of OpenSSH.
-	if ! _check_ssh_option "ControlMaster=auto"; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_MASTER"
-		if ! _check_ssh_option "ControlPersist=15m"; then
-			M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_CONTROL_PERSIST"
-		fi
-	fi
-	if ! _check_ssh_option "ExitOnForwardFailure=yes"; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_EXIT_ON_FORWARD_FAILURE"
-	fi
-	if ! _check_ssh_option "HashKnownHosts=yes"; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_HASH_KNOWN_HOSTS"
-	fi
-	if ! _check_ssh_option "GSSAPIAuthentication" && \
-		! _check_ssh_option "GSSAPIKeyExchange"; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSSH_HAS_GSSAPI"
-	fi
-	# Check for OS X (for the git keychain connector)
-	if [ "$SYSTYPE" = "Darwin" ]; then
-		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
-	fi
-
 	# Process source files with M4
 	pushd "${DOTFILES}/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')
