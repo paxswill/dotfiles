@@ -118,16 +118,6 @@ _configure_ccache() {
 	fi
 }
 
-_configure_cmf_krb5() {
-	if [ -d /usr/krb5 ]; then
-		prepend_to_path "/usr/krb5/bin"
-		prepend_to_path "/usr/krb5/sbin"
-	elif [ -d /usr/local/krb5 ]; then
-		prepend_to_path "/usr/local/krb5/bin"
-		prepend_to_path "/usr/local/krb5/sbin"
-	fi
-}
-
 _configure_ec2() {
 	# Set up Amazon EC2 keys
 	if [ -d "$HOME/.ec2" ] && _prog_exists ec2-cmd; then

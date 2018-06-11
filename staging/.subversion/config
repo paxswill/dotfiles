@@ -85,9 +85,6 @@
 ### path separator.  A single backslash will be treated as an
 ### escape for the following character.
 
-# This is an rsh wrapper for use at NRL
-krsh = /usr/krb5/bin/rsh -l wross
-
 ### Section for configuring miscelleneous Subversion options.
 [miscellany]
 ### Set global-ignores to a set of whitespace-delimited globs
