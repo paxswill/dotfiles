@@ -312,7 +312,6 @@ configure_apps() {
 	_configure_cabal
 	_configure_cargo
 	_configure_ccache
-	_configure_cmf_krb5
 	_configure_ec2
 	# This MUST be done after _configure_bash is done, as PROMPT_COMMAND is set
 	# there and that value gets modified for iTerm's use.
