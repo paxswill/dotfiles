@@ -40,8 +40,6 @@ Plugin 'hynek/vim-python-pep8-indent'
 if has('python') || has('python3')
     " Python completion with Jedi
     Plugin 'davidhalter/jedi-vim'
-	" Virtualenv support in vim
-	Plugin 'jmcantrell/vim-virtualenv'
 endif
 " Use Vim syntax files included with Go, oterwise use Vundle
 if empty($GOROOT)
@@ -98,6 +96,8 @@ let g:SuperTabContextDefaultCompletionType = "<c-p>"
 let g:jedi#popup_on_dot = 0
 " Don't show the function definition
 let g:jedi#show_call_signatures = 0
+" Don't add the 'import ' when typing 'from foo '
+let g:jedi#smart_auto_mappings = 0
 
 """ Configure the colors (and fonts)
 set background=dark
