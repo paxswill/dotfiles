@@ -122,6 +122,16 @@ _configure_ccache() {
 	fi
 }
 
+_configure_docker() {
+	# Add bash completion for docker and docker associated commands
+	local DOCKER_APP="/Applications/Docker.app/Contents/Resources/etc"
+	if [ -d "${DOCKER_APP}" ]; then
+		for F in ${DOCKER_APP}/*.bash-completion; do
+			[ -f "$F" ] && . $F
+		done
+	fi
+}
+
 _configure_ec2() {
 	# Set up Amazon EC2 keys
 	if [ -d "$HOME/.ec2" ] && _prog_exists ec2-cmd; then
@@ -316,6 +326,7 @@ configure_apps() {
 	_configure_cabal
 	_configure_cargo
 	_configure_ccache
+	_configure_docker
 	_configure_ec2
 	# This MUST be done after _configure_bash is done, as PROMPT_COMMAND is set
 	# there and that value gets modified for iTerm's use.
