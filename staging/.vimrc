@@ -125,7 +125,7 @@ set backspace=indent,eol,start
 set laststatus=2
 " Make that status line pretty (line, col nums, file name)
 if has('statusline')
-	let &stl="%f\ %([%R%M]%)%=%l-%c\ \ \ \ "
+	let &stl="%f\ %([%R%M]%)%=%l-%c\ %{ObsessionStatus()}\ \ \ \ "
 endif
 " Highlight lines past 80 some way
 if exists('+colorcolumn')
