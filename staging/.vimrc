@@ -27,7 +27,7 @@ Plugin 'smerrill/vagrant-vim'
 " Helpers for editing HTML and other opening/closing tags
 Plugin 'tpope/vim-surround'
 " nginx config file syntax
-Plugin 'nginx.vim'
+Plugin 'chr4/nginx.vim'
 " Jinja template syntax
 Plugin 'lepture/vim-jinja'
 " automatically add end tokens in some languages
