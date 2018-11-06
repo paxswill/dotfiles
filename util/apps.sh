@@ -193,6 +193,21 @@ _configure_npm() {
 	fi
 }
 
+_configure_nvm() {
+	local nvm_dir_path=""
+	local nvm_path
+	if _prog_exists brew; then
+		nvm_dir_path="$(brew --prefix nvm)"
+	fi
+	nvm_path="${nvm_dir_path}/nvm.sh"
+	if [ ! -z "$nvm_dir_path" ] && [ -r "$nvm_path" ] && [ ! -d "$nvm_path" ]; then
+		export NVM_DIR="${HOME}/.nvm"
+		mkdir -p "$NVM_DIR"
+		. "$nvm_path"
+
+	fi
+}
+
 _configure_perlbrew() {
 	if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 		. $HOME/perl5/perlbrew/etc/bashrc
@@ -335,6 +350,7 @@ configure_apps() {
 	_configure_golang
 	_configure_lesspipe
 	_configure_npm
+	_configure_nvm
 	_configure_perlbrew
 	_configure_pip
 	_configure_postgres_app
