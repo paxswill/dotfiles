@@ -21,7 +21,7 @@ Plugin 'ervandew/supertab'
 " OpenCL syntax
 Plugin 'paxswill/vim-opencl'
 " Solarized colorscheme
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'icymind/NeoSolarized'
 " Vagrantfile syntax
 Plugin 'smerrill/vagrant-vim'
 " Helpers for editing HTML and other opening/closing tags
@@ -100,10 +100,11 @@ let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
 
 """ Configure the colors (and fonts)
+set termguicolors
 set background=dark
 try
-	let g:solarized_visibility='low'	" Desaturate special characters
-	colorscheme solarized
+	let g:neosolarized_visibility='low'	" Desaturate special characters
+	colorscheme NeoSolarized
 catch /^Vim\%((\a\+)\)\=:E185/
 	colorscheme desert
 endtry
