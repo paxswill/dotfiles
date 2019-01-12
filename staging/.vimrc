@@ -14,8 +14,6 @@ Plugin 'tpope/vim-rhubarb'
 Plugin 'tpope/vim-obsession'
 " Nicer swapfile recovery
 Plugin 'chrisbra/Recover.vim'
-" C/C++/Obj-C completion with clang
-Plugin 'Rip-Rip/clang_complete'
 " use tab for completions
 Plugin 'ervandew/supertab'
 " OpenCL syntax
@@ -60,6 +58,10 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'rizzatti/dash.vim'
 " Swift syntax
 Plugin 'kballard/vim-swift'
+" ALE and Language Server Protocol
+" This setting must be set before ALE is loaded
+let g:ale_completion_enabled = 1
+Plugin 'w0rp/ale'
 call vundle#end()
 
 " Show incomplete commands
