@@ -202,7 +202,7 @@ if has("gui_running")
 	if has("mac")
 		set guifont=Source\ Code\ Pro\ Light:h11,Menlo\ Regular:h11
 	elseif has("gui_gtk2")
-		set guifont=Source\ Code\ Pro\ Medium\ 9
+		set guifont=Source\ Code\ Variable\ 10
 	endif
 endif
 

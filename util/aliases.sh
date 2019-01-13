@@ -13,10 +13,10 @@ _alias_grep() {
 
 _alias_ls() {
 	# BSD ls uses -G for color, GNU ls uses --color=auto
-	if ls -G -d . &>/dev/null; then
-		alias ls='ls -GF'
-	elif ls --color=auto -d . &>/dev/null; then
+	if ls --color=auto -d . &>/dev/null; then
 		alias ls='ls --color=auto -F'
+	elif ls -G -d . &>/dev/null; then
+		alias ls='ls -GF'
 	fi
 	alias ll='ls -lh'
 	alias la='ls -A'
