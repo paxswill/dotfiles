@@ -14,14 +14,12 @@ Plugin 'tpope/vim-rhubarb'
 Plugin 'tpope/vim-obsession'
 " Nicer swapfile recovery
 Plugin 'chrisbra/Recover.vim'
-" C/C++/Obj-C completion with clang
-Plugin 'Rip-Rip/clang_complete'
 " use tab for completions
 Plugin 'ervandew/supertab'
 " OpenCL syntax
 Plugin 'paxswill/vim-opencl'
 " Solarized colorscheme
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'icymind/NeoSolarized'
 " Vagrantfile syntax
 Plugin 'smerrill/vagrant-vim'
 " Helpers for editing HTML and other opening/closing tags
@@ -60,6 +58,10 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'rizzatti/dash.vim'
 " Swift syntax
 Plugin 'kballard/vim-swift'
+" ALE and Language Server Protocol
+" This setting must be set before ALE is loaded
+let g:ale_completion_enabled = 1
+Plugin 'w0rp/ale'
 call vundle#end()
 
 " Show incomplete commands
@@ -100,10 +102,11 @@ let g:jedi#show_call_signatures = 0
 let g:jedi#smart_auto_mappings = 0
 
 """ Configure the colors (and fonts)
+set termguicolors
 set background=dark
 try
-	let g:solarized_visibility='low'	" Desaturate special characters
-	colorscheme solarized
+	let g:neosolarized_visibility='low'	" Desaturate special characters
+	colorscheme NeoSolarized
 catch /^Vim\%((\a\+)\)\=:E185/
 	colorscheme desert
 endtry
@@ -199,7 +202,7 @@ if has("gui_running")
 	if has("mac")
 		set guifont=Source\ Code\ Pro\ Light:h11,Menlo\ Regular:h11
 	elseif has("gui_gtk2")
-		set guifont=Source\ Code\ Pro\ Medium\ 9
+		set guifont=Source\ Code\ Variable\ 10
 	endif
 endif
 
