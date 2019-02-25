@@ -1,3 +1,0 @@
-#!/bin/bash
-# This hook is run after every virtualenv is activated.
-_configure_bash_PS1 "$(basename "${VIRTUAL_ENV}")"

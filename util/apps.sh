@@ -20,7 +20,7 @@ _configure_bash() {
 	# append to the history file, don't overwrite it
 	shopt -s histappend
 	# All shells share a history
-	PROMPT_COMMAND='history -a'
+	PROMPT_COMMAND='_bash_prompt'
 	# Multi-line commands in the same history entry
 	shopt -s cmdhist
 	shopt -s lithist
@@ -33,7 +33,6 @@ _configure_bash() {
 	shopt -s cdspell
 	# Bash-related configuration
 	_configure_bash_completion
-	_configure_bash_PS1
 }
 
 _configure_bash_completion() {
@@ -70,32 +69,51 @@ _configure_bash_completion() {
 	fi
 }
 
-_configure_bash_PS1() {
-	# Usage: _configure_bash_PS1 [environment]
-	#
-	# Sets PS1 to the following:
-	#
-	# (environment)[user@host:work_dir (branch)]                HH:MM:SS
-	# $ 
-	#
-	# The current time is aligned to the right edge of the terminal. If there
-	# is no argument given, the "(environment)" portion is ommitted. If the
-	# current working directory is not a Git or Mercurial repository,
-	# " (branch)" is ommitted. If supported, the hostname is colored in a
-	# host-specific color. The environment and branch portions are colored
-	# bright green, which is mapped to the secondary content color for
-	# Solarized-Dark.
-	[ -z "$PS1" ] && return
-	local OFFSET=$((${#MUTED_COLOR} + ${#COLOR_RESET}))
+_bash_prompt() {
+	# All shells share a history
+	history -a
+	# This variable will keep track of the correction to apply for non-printed
+	# characters (like color control codes)
+	local -i OFFSET=0
+	# Figure out if we're in a Python virtualenv or a Ruby env
 	local ENVIRONMENT=""
-	if [ ! -z "$1" ]; then
-		OFFSET=$((${OFFSET} * 2))
-		ENVIRONMENT="${MUTED_COLOR}(${1})${COLOR_RESET}"
+	if [ ! -z "$VIRTUAL_ENV" ]; then
+		ENVIRONMENT="$(basename ${VIRTUAL_ENV})"
+	elif [ ! -z "$rvm_bin_path" ]; then
+		ENVIRONMENT="$(rvm_bin_path)/rvm-prompt"
 	fi
-	OFFSET=$((${OFFSET} + ${#HOST_COLOR} + ${#COLOR_RESET}))
-	PS1="\$(printf \"%-\$((\${COLUMNS}-9+${OFFSET}))s%9s\\\n%s\" \
-	\"${ENVIRONMENT}[\u@${HOST_COLOR}\h${COLOR_RESET}:\W${MUTED_COLOR}\
-\$(__vcs_ps1 ' (%s)')${COLOR_RESET}]\" '\t' '\$ ')"
+	fi
+	# Display the environment in muted colors
+	if [ ! -z "$ENVIRONMENT" ]; then
+		ENVIRONMENT="$(printf "%s(%s)%s" "$MUTED_COLOR" "$ENVIRONMENT" "$COLOR_RESET")"
+		OFFSET+=${#MUTED_COLOR}
+		OFFSET+=${#COLOR_RESET}
+	fi
+	# The 'context' is a combination of hostname, current directory and VCS
+	# branch name
+	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}"
+	OFFSET+=${#HOST_COLOR}
+	OFFSET+=${#COLOR_RESET}
+	LOCATION+="${MUTED_COLOR}$(__vcs_ps1 ' (%s)')${COLOR_RESET}"
+	OFFSET+=${#MUTED_COLOR}
+	OFFSET+=${#COLOR_RESET}
+	# $COLUMNS is provided by bash, and is the width of the terminal in
+	# characters.
+	# Strategy taken from https://superuser.com/a/517110
+	# Basically, print the right side first, then use \r (carriage return) to
+	# then overwrite starting from the left.
+	# The %*s syntax is used to specify the width of the first (right) field as
+	# another agument to printf.
+	# The wierdness in the second argument to printf is because printf only 
+	# counts `\t` as two characters, but it's expanded to 8. So we add an
+	# offset to ate into account that `\t` is expanded to HH:MM:ss
+	PS1="$(printf \
+		"%*s\r%s[\\\\u@%s]\n\\$ " \
+		"$((${COLUMNS}+${COLUMNS}-6))" \
+		'\t' \
+		"${ENVIRONMENT}" \
+		"${LOCATION}" \
+	)"
 }
 
 _configure_cabal() {
