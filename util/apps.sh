@@ -33,6 +33,11 @@ _configure_bash() {
 	shopt -s cdspell
 	# Bash-related configuration
 	_configure_bash_completion
+	# Add PS0 for pre-command execution. This is only available on bash >= 4.4,
+	# so we need to check against that first.
+	if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)); then
+		PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
+	fi
 }
 
 _configure_bash_completion() {
