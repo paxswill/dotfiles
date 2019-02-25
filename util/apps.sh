@@ -87,7 +87,6 @@ _bash_prompt() {
 	elif [ ! -z "$rvm_bin_path" ]; then
 		ENVIRONMENT="$(rvm_bin_path)/rvm-prompt"
 	fi
-	fi
 	# Display the environment in muted colors
 	if [ ! -z "$ENVIRONMENT" ]; then
 		ENVIRONMENT="$(printf "%s(%s)%s" "$MUTED_COLOR" "$ENVIRONMENT" "$COLOR_RESET")"
