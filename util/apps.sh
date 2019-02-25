@@ -95,7 +95,7 @@ _bash_prompt() {
 	fi
 	# The 'context' is a combination of hostname, current directory and VCS
 	# branch name
-	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}"
+	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}:\W"
 	OFFSET+=${#HOST_COLOR}
 	OFFSET+=${#COLOR_RESET}
 	LOCATION+="${MUTED_COLOR}$(__vcs_ps1 ' (%s)')${COLOR_RESET}"
