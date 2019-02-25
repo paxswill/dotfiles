@@ -101,20 +101,18 @@ _bash_prompt() {
 	LOCATION+="${MUTED_COLOR}$(__vcs_ps1 ' (%s)')${COLOR_RESET}"
 	OFFSET+=${#MUTED_COLOR}
 	OFFSET+=${#COLOR_RESET}
+	# Save the cursor position before we go mucking around with it
+	tput sc
+	# First we write the current time on the right-hand side. We're going back
+	# 8 characters to make room for HH:MM:SS
 	# $COLUMNS is provided by bash, and is the width of the terminal in
 	# characters.
-	# Strategy taken from https://superuser.com/a/517110
-	# Basically, print the right side first, then use \r (carriage return) to
-	# then overwrite starting from the left.
-	# The %*s syntax is used to specify the width of the first (right) field as
-	# another agument to printf.
-	# The wierdness in the second argument to printf is because printf only 
-	# counts `\t` as two characters, but it's expanded to 8. So we add an
-	# offset to ate into account that `\t` is expanded to HH:MM:ss
+	tput cuf $((${COLUMNS}-8))
+	date "+%H:%M:%S"
+	# Now bounce back for our regularly scheduled prompt writing
+	tput rc
 	PS1="$(printf \
-		"%*s\r%s[\\\\u@%s]\n\\$ " \
-		"$((${COLUMNS}+${COLUMNS}-6))" \
-		'\t' \
+		"%s[\\\\u@%s]\n\\$ " \
 		"${ENVIRONMENT}" \
 		"${LOCATION}" \
 	)"
