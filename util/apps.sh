@@ -407,30 +407,41 @@ _configure_virtualenv_wrapper() {
 }
 
 configure_apps() {
-	_configure_android
-	_configure_bash
-	_configure_cabal
-	_configure_cargo
-	_configure_ccache
-	_configure_docker
-	_configure_ec2
-	# This MUST be done after _configure_bash is done, as PROMPT_COMMAND is set
-	# there and that value gets modified for iTerm's use.
-	_configure_iterm2_integration
-	_configure_git_hub
-	_configure_golang
-	_configure_lesspipe
-	_configure_npm
-	_configure_nvm
-	_configure_perlbrew
-	_configure_pip
-	_configure_postgres_app
-	_configure_rbenv
-	_configure_travis
-	_configure_vagrant
-	_configure_videocore
-	_configure_vim
-	_configure_virtualenv_wrapper
+	local CONFIG_FUNCTIONS=(
+		"_configure_android"
+		"_configure_bash"
+		"_configure_cabal"
+		"_configure_cargo"
+		"_configure_ccache"
+		"_configure_docker"
+		"_configure_ec2"
+		# This MUST be done after _configure_bash is done, as PROMPT_COMMAND
+		# is set there and that value gets modified for iTerm's use.
+		"_configure_iterm2_integration"
+		"_configure_git_hub"
+		"_configure_golang"
+		"_configure_lesspipe"
+		"_configure_npm"
+		"_configure_nvm"
+		"_configure_perlbrew"
+		"_configure_pip"
+		"_configure_postgres_app"
+		"_configure_rbenv"
+		"_configure_travis"
+		"_configure_vagrant"
+		"_configure_videocore"
+		"_configure_vim"
+		"_configure_virtualenv_wrapper"
+	)
+	# AS a debugging facility, set this variable to "y" to print the current
+	# time for each config function to help figure out what is taking so long.
+	local PRINT_TIMES="n"
+	for CONFIG_FUNCTION in ${CONFIG_FUNCTIONS[@]}; do
+		if [ $PRINT_TIMES = "y" ]; then
+			printf '%s: %(%H:%M:%S)T\n' "$CONFIG_FUNCTION" '-1'
+		fi
+		eval $CONFIG_FUNCTION
+	done
 	# And now for tiny enironmental configurtion that doesn't fit elsewhere
 	# AKA, Misc.
 	export BLOCKSIZE=K
