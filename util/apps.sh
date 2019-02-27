@@ -312,6 +312,13 @@ _configure_postgres_app() {
 	fi
 }
 
+_configure_python() {
+	local PYTHON_VERSIONS=($(_list_installed_python))
+	if (( ${#PYTHON_VERSIONS[@]} > 0 )); then
+		export PYTHONSTARTUP="$HOME/.pythonrc"
+	fi
+}
+
 _configure_rbenv() {
 	if _prog_exists rbenv; then
 		eval "$(rbenv init -)"
@@ -425,6 +432,7 @@ configure_apps() {
 		"_configure_nvm"
 		"_configure_perlbrew"
 		"_configure_pip"
+		"_configure_python"
 		"_configure_postgres_app"
 		"_configure_rbenv"
 		"_configure_travis"
