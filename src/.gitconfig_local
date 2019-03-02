@@ -3,5 +3,7 @@
 [credential]
 ifdef(`OSX',
 `	helper = osxkeychain',
+ifdef(`LINUX',
+`	helper = git-credential-libsecret',
 `	helper = cache --socket /tmp/USER/git-credential-cache-socket'
-)
+))

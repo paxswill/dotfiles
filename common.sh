@@ -20,6 +20,12 @@ process_source_files(){
 	# Right now I just use one, but previously I switched on the host's
 	# domain and used a different email.
 	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@paxswill.com"
+	# Check for OS X (for the git keychain connector)
+	if [ "$SYSTYPE" = "Darwin" ]; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
+	elif [ "$SYSTYPE" = "Linux" ]; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DLINUX"
+	fi
 	# Process source files with M4
 	pushd "${DOTFILES}/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')
