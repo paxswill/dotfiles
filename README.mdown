@@ -1,28 +1,47 @@
+These are my dotfiles, almost exclusively for my work on the command line. Most
+of the configuration is for [bash][bash], with some other extensive changes
+made for Vim (and associated GUIs such as [MacVim][macvim] and GVim. There's
+also basic support for [NeoVim][neovim]) and Git.
+
+[bash]: https://www.gnu.org/software/bash/
+[macvim]: https://macvim-dev.github.io/macvim/
+[neovim]: https://neovim.io/
+
 # Installation
 
 I usually clone to `~/.dotfiles`, source `~/.dotfiles/setup.sh`, and then run
 the `setup_dotfiles` function. It should be simplified, but I'm not doing this
 enough to streamline it.
 
-# Details
+# Design Goals/Features
 
-I use these dotfiles identically on multiple OSs running on varied hardware:
+Differences in the environment are detected at runtime as much as possible. The
+one area right now) this isn't possible is for identity; the email used for
+commits in Git must be configured at setup. Other than that, the shell
+configures itself at startup. This does lead to a bit of a delay when starting
+a new shell, but in practice it's not too much of an issue as some of the
+really lengthy steps only happen for interactive shells.
 
-* OS X 10.5-10.8 (ppc, ppc64, x86, x86_64)
+# Supported (heh) Platforms
+
+I use these dotfiles day to day on the following platforms (not that I'm really
+supporting them in a real sense, I just use these platforms).
+
+* macOS (x86_64)
+
+* Linux (arm, x86_64)
+
+* FreeBSD (arm, x86_64)
+
+* Linux on Windows (x86_64)
+
+In the past I used these files on these platforms, and they should stil work on
+them without much (if any) modification:
+
+* macOS (ppc, ppc64, x86, x86_64)
 
 * Solaris (sparc)
 
 * Linux (x86, x86_64, ppc, arm)
 
-* FreeBSD (x86, x86_64, arm)
-
-I try to detect various differences between systems at runtime, as in a couple
-of cases $HOME is a shared file system (NFS, AFS) and may be used on different
-hosts at once. For those options that are not configurable at runtime, [M4][m4]
-is used to process template files in [`src`][src] and stage into
-[`staging`][staging].
-
-[m4]: http://www.gnu.org/software/m4/
-[src]: https://github.com/paxswill/dotfiles/tree/master/src
-[staging]: https://github.com/paxswill/dotfiles/tree/master/staging
-
+* FreeBSD (x86)
