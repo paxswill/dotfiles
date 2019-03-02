@@ -1,6 +1,49 @@
 # Application or program specific configuration
 source ~/.dotfiles/util/color.sh
 
+_list_installed_python() {
+	# Unlike all of the other functions in this file, this function does *not*
+	# configure an application. Instead it's used to find out which versions of
+	# Python are installed.
+
+	# If an argument is given, that string is used as the base for testing the
+	# existance of things (ex: given the name "pip", this function checks for
+	# versions of pip).
+	local PROG_NAME="python"
+	if [ ! -z "$1" ]; then
+		PROG_NAME="$1"
+	fi
+	# Generate a list of suffixes for the minor python versions
+	local PY_SUFFIXES=()
+	PY_SUFFIXES+=($(seq -f '%1.1f' 2.6 0.1 2.7))
+	# When we start going past Python 3.9 I'll update this :)
+	PY_SUFFIXES+=($(seq -f '%1.1f' 3.0 0.1 4))
+	# Add just major version suffixes
+	PY_SUFFIXES+=(2)
+	PY_SUFFIXES+=(3)
+	# If we're checking for actual python interpreters, the PyPy variants are
+	# just 'pypy' and 'pypy3', but if we're checking for something like pip,
+	# it's 'pip_pypy' and 'pip_pypy3'
+	local NAMES_TO_CHECK=("$PROG_NAME")
+	if [ "$PROG_NAME" = "python" ]; then
+		NAMES_TO_CHECK+=("pypy")
+		NAMES_TO_CHECK+=("pypy3")
+	else
+		PY_SUFFIXES+=("_pypy")
+		PY_SUFFIXES+=("_pypy3")
+	fi
+	for PY_SUFFIX in ${PY_SUFFIXES[@]}; do
+		NAMES_TO_CHECK+=("${PROG_NAME}${PY_SUFFIX}")
+	done
+	# Check everything
+	local FOUND=()
+	for NAME in ${NAMES_TO_CHECK[@]}; do
+		if _prog_exists "$NAME"; then
+			echo "$NAME"
+		fi
+	done
+}
+
 _configure_android() {
 	# Android SDK (non-OS X)
 	if [ -d /opt/android-sdk ]; then
@@ -241,16 +284,24 @@ _configure_perlbrew() {
 _configure_pip() {
 	# Add command completion for pip
 	if [ ! -z "$PS1" ]; then
-		if _prog_exists pip; then
-			eval "$(pip completion --bash 2>/dev/null)"
-			# Make the completion for pip available for the suffixed variants
-			local VERSION=(2 2.7 3 3.3 3.4 3.5)
-			local PIP_COMPLETE="$(complete -p pip)"
-			for V in ${VERSION[@]}; do
-				if _prog_exists "pip${V}"; then
-					eval "${PIP_COMPLETE}${V}"
-				fi
-			done
+		# Get the list of all versions of pip
+		local PIP_VERSIONS=($(_list_installed_python pip))
+		if (( ${#PIP_VERSIONS[@]} > 0 )); then
+			# Enable completion for the first version of pip
+			local FIRST_PIP="${PIP_VERSIONS[0]}"
+			eval "$(${FIRST_PIP} completion --bash 2>/dev/null)"
+			# Get a shorthand bash completion string for the first version of
+			# pip
+			local PIP_COMPLETE="$(complete -p ${FIRST_PIP})"
+			if (( ${#PIP_VERSIONS[@]} > 1 )); then
+				# For every version of pip besides the first, add completion
+				# for the new version by replacing the name of the first
+				# version of pip with whatever version of pip is being
+				# processed right now.
+				for PIP_NAME in ${PIP_VERSIONS[@]:1}; do
+					eval "${PIP_COMPLETE/%${FIRST_PIP}/${PIP_NAME}}"
+				done
+			fi
 		fi
 	fi
 }
@@ -258,6 +309,13 @@ _configure_pip() {
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app/Contents/Versions/latest/bin ]; then
 		prepend_to_path "/Applications/Postgres.app/Contents/Versions/latest/bin"
+	fi
+}
+
+_configure_python() {
+	local PYTHON_VERSIONS=($(_list_installed_python))
+	if (( ${#PYTHON_VERSIONS[@]} > 0 )); then
+		export PYTHONSTARTUP="$HOME/.pythonrc"
 	fi
 }
 
@@ -356,30 +414,42 @@ _configure_virtualenv_wrapper() {
 }
 
 configure_apps() {
-	_configure_android
-	_configure_bash
-	_configure_cabal
-	_configure_cargo
-	_configure_ccache
-	_configure_docker
-	_configure_ec2
-	# This MUST be done after _configure_bash is done, as PROMPT_COMMAND is set
-	# there and that value gets modified for iTerm's use.
-	_configure_iterm2_integration
-	_configure_git_hub
-	_configure_golang
-	_configure_lesspipe
-	_configure_npm
-	_configure_nvm
-	_configure_perlbrew
-	_configure_pip
-	_configure_postgres_app
-	_configure_rbenv
-	_configure_travis
-	_configure_vagrant
-	_configure_videocore
-	_configure_vim
-	_configure_virtualenv_wrapper
+	local CONFIG_FUNCTIONS=(
+		"_configure_android"
+		"_configure_bash"
+		"_configure_cabal"
+		"_configure_cargo"
+		"_configure_ccache"
+		"_configure_docker"
+		"_configure_ec2"
+		# This MUST be done after _configure_bash is done, as PROMPT_COMMAND
+		# is set there and that value gets modified for iTerm's use.
+		"_configure_iterm2_integration"
+		"_configure_git_hub"
+		"_configure_golang"
+		"_configure_lesspipe"
+		"_configure_npm"
+		"_configure_nvm"
+		"_configure_perlbrew"
+		"_configure_pip"
+		"_configure_python"
+		"_configure_postgres_app"
+		"_configure_rbenv"
+		"_configure_travis"
+		"_configure_vagrant"
+		"_configure_videocore"
+		"_configure_vim"
+		"_configure_virtualenv_wrapper"
+	)
+	# AS a debugging facility, set this variable to "y" to print the current
+	# time for each config function to help figure out what is taking so long.
+	local PRINT_TIMES="n"
+	for CONFIG_FUNCTION in ${CONFIG_FUNCTIONS[@]}; do
+		if [ $PRINT_TIMES = "y" ]; then
+			printf '%s: %(%H:%M:%S)T\n' "$CONFIG_FUNCTION" '-1'
+		fi
+		eval $CONFIG_FUNCTION
+	done
 	# And now for tiny enironmental configurtion that doesn't fit elsewhere
 	# AKA, Misc.
 	export BLOCKSIZE=K

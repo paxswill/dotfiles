@@ -1,0 +1,7 @@
+try:
+    import rlcompleter
+    import pdb
+except ImportError:
+    pass
+else:
+    pdb.Pdb.complete = rlcompleter.Completer(locals()).complete
