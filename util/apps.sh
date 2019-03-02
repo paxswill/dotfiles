@@ -108,7 +108,7 @@ _bash_prompt() {
 	# $COLUMNS is provided by bash, and is the width of the terminal in
 	# characters.
 	tput cuf $((${COLUMNS}-8))
-	date "+%H:%M:%S"
+	printf '%(%H:%M:%S)T' -1
 	# Now bounce back for our regularly scheduled prompt writing
 	tput rc
 	PS1="$(printf \
