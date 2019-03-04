@@ -232,6 +232,12 @@ _configure_iterm2_integration(){
 	source "${HOME}/.dotfiles/util/iterm_integration.sh"
 }
 
+_configure_kubectl_completion() {
+	if _prog_exists kubectl; then
+		eval "$(kubectl completion bash 2>/dev/null)"
+	fi
+}
+
 _configure_lesspipe() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -425,6 +431,7 @@ configure_apps() {
 		# This MUST be done after _configure_bash is done, as PROMPT_COMMAND
 		# is set there and that value gets modified for iTerm's use.
 		"_configure_iterm2_integration"
+		"_configure_kubectl_completion"
 		"_configure_git_hub"
 		"_configure_golang"
 		"_configure_lesspipe"
