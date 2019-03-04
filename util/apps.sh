@@ -249,6 +249,12 @@ _configure_lesspipe() {
 	fi
 }
 
+_configure_minikube_completion() {
+	if _prog_exists minikube; then
+		eval "$(minikube completion bash)"
+	fi
+}
+
 _configure_npm() {
 	if _prog_exists npm; then
 		# Don't add an extra path (or move the position of an existing path)
@@ -435,6 +441,7 @@ configure_apps() {
 		"_configure_git_hub"
 		"_configure_golang"
 		"_configure_lesspipe"
+		"_configure_minikube_completion"
 		"_configure_npm"
 		"_configure_nvm"
 		"_configure_perlbrew"
