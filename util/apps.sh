@@ -114,6 +114,12 @@ _configure_bash_completion() {
 				break
 			fi
 		done
+		# These programs all operate the same way for generating completion
+		for COMPLETION_CMD in kubectl minikube helm; do
+			if _prog_exists "$COMPLETION_CMD"; then
+				eval "$("${COMPLETION_CMD}" completion bash)"
+			fi
+		done
 	fi
 }
 
@@ -232,12 +238,6 @@ _configure_iterm2_integration(){
 	source "${HOME}/.dotfiles/util/iterm_integration.sh"
 }
 
-_configure_kubectl_completion() {
-	if _prog_exists kubectl; then
-		eval "$(kubectl completion bash 2>/dev/null)"
-	fi
-}
-
 _configure_lesspipe() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -246,12 +246,6 @@ _configure_lesspipe() {
 		export LESSOPEN="|lesspipe %s"
 	elif _prog_exists lesspipe.sh; then
 		export LESSOPEN="|lesspipe.sh %s"
-	fi
-}
-
-_configure_minikube_completion() {
-	if _prog_exists minikube; then
-		eval "$(minikube completion bash)"
 	fi
 }
 
@@ -437,11 +431,9 @@ configure_apps() {
 		# This MUST be done after _configure_bash is done, as PROMPT_COMMAND
 		# is set there and that value gets modified for iTerm's use.
 		"_configure_iterm2_integration"
-		"_configure_kubectl_completion"
 		"_configure_git_hub"
 		"_configure_golang"
 		"_configure_lesspipe"
-		"_configure_minikube_completion"
 		"_configure_npm"
 		"_configure_nvm"
 		"_configure_perlbrew"
