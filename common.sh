@@ -17,9 +17,12 @@ process_source_files(){
 	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
-	# Right now I just use one, but previously I switched on the host's
-	# domain and used a different email.
-	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=paxswill@paxswill.com"
+	if [ -f "${DOTFILES}/email" ]; then
+		EMAIL="$(cat "${DOTFILES}/email")"
+	else
+		EMAIL="paxswill@paxswill.com"
+	fi
+	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=${EMAIL}"
 	# Check for OS X (for the git keychain connector)
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
