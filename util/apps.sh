@@ -114,6 +114,12 @@ _configure_bash_completion() {
 				break
 			fi
 		done
+		# These programs all operate the same way for generating completion
+		for COMPLETION_CMD in kubectl minikube helm; do
+			if _prog_exists "$COMPLETION_CMD"; then
+				eval "$("${COMPLETION_CMD}" completion bash)"
+			fi
+		done
 	fi
 }
 

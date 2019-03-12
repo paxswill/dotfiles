@@ -58,6 +58,9 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'rizzatti/dash.vim'
 " Swift syntax
 Plugin 'kballard/vim-swift'
+" External JS syntax and JSX
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 " ALE and Language Server Protocol
 " This setting must be set before ALE is loaded
 let g:ale_completion_enabled = 1
