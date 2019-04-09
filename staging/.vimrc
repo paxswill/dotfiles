@@ -61,6 +61,8 @@ Plugin 'kballard/vim-swift'
 " External JS syntax and JSX
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
+" Jenkinsfile (Groovy) syntax
+Plugin 'martinda/Jenkinsfile-vim-syntax'
 " ALE and Language Server Protocol
 " This setting must be set before ALE is loaded
 let g:ale_completion_enabled = 1
