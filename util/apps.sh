@@ -72,8 +72,8 @@ _configure_bash() {
 	# check the window size after each command and, if necessary,
 	# update the values of LINES and COLUMNS.
 	shopt -s checkwinsize
-	# Spell check for paths for cd
-	shopt -s cdspell
+	# Correct spelling errors
+	shopt -s cdspell dirspell
 	# Bash-related configuration
 	_configure_bash_completion
 	# Add PS0 for pre-command execution. This is only available on bash >= 4.4,
