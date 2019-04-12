@@ -23,6 +23,14 @@ _alias_ls() {
 	alias lla='ls -lAh'
 }
 
+_alias_1password() {
+	if _prog_exists "op"; then
+		# Skipping a separator between 'op' and 'signin' because I'm lazy and
+		# don't want to reach my fingers over and type that.
+		alias opsignin='eval $(op signin my)'
+	fi
+}
+
 _alias_pasteboard() {
 	# macOS spoiled me with easy access to `pbcopy` and `pbpaste`. They're
 	# super simple commands, and basically the only flags they have are very
@@ -41,6 +49,7 @@ configure_aliases() {
 	if [ ! -z "$PS1" ]; then
 		_alias_grep
 		_alias_ls
+		_alias_1password
 		_alias_pasteboard
 	fi
 }
