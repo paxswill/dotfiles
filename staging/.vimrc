@@ -188,7 +188,13 @@ set tildeop
 " Default to Bash for shell scripts
 let g:is_bash = 1
 " Use the system clipboard
-set clipboard=unnamed
+if has("clipboard")
+    if has("gui_gtk2") || has("xterm_clipboard")
+        set clipboard=unnamedplus
+    else
+        set clipboard=unnamed
+    endif
+endif
 " Keep some context for lines at the edge of the screen
 set scrolloff=3
 " Customize which things are saved in a session
