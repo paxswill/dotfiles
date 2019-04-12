@@ -23,9 +23,24 @@ _alias_ls() {
 	alias lla='ls -lAh'
 }
 
+_alias_pasteboard() {
+	# macOS spoiled me with easy access to `pbcopy` and `pbpaste`. They're
+	# super simple commands, and basically the only flags they have are very
+	# rarely used. The linux alternatives on the other hand are not as simple
+	# to use. These aliases wrap the linux alternatives up so they're as simple
+	#to use as `pbcopy` and `pbpaste`.
+	if ! _prog_exists "pbcopy"; then
+		if _prog_exists "xclip"; then
+			alias pbcopy='xclip -i -selection clipboard'
+			alias pbpaste='xclip -o -selection clipboard'
+		fi
+	fi
+}
+
 configure_aliases() {
 	if [ ! -z "$PS1" ]; then
 		_alias_grep
 		_alias_ls
+		_alias_pasteboard
 	fi
 }
