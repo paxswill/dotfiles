@@ -70,6 +70,8 @@ _configure_linux() {
 			xscreensaver -lock
 		}
 	fi
+	# Append Snap bin directory to PATH (basically just Ubuntu)
+	append_to_path /snap/bin
 }
 
 _configure_ubuntu() {
