@@ -21,6 +21,29 @@ process_source_files(){
 	elif [ "$SYSTYPE" = "Linux" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DLINUX"
 	fi
+	# Try to find a PKCS11 Provider
+	local PKCS11_PROVIDER=""
+	if [ "$SYSTYPE" = "Darwin" ] && [ -f /Library/OpenSC/lib/opensc-pkcs11.so ]; then
+		PKCS11_PROVIDER=/Library/OpenSC/lib/opensc-pkcs11.so
+	elif [ "$SYSTYPE" = "Linux" ]; then
+		# Check a bunch of different paths for provider libraries
+		for LIB_DIR in /lib /lib64 /usr/lib /usr/lib64 /usr/lib/*-linux-gnu; do
+			# Note that p11-kit-client is before other provider libraries, as
+			# it *should* be able to proxy through to those other libraries (if
+			# configured properly).
+			# TODO add p11-kit-client back in/figure out how to configure it
+			# properly.
+			for PROVIDER in opensc-pkcs11.so; do
+				if [ -f "${LIB_DIR}/${PROVIDER}" ]; then
+					PKCS11_PROVIDER="${LIB_DIR}/${PROVIDER}"
+					break 2
+				fi
+			done
+		done
+	fi
+	if [ ! -z "$PKCS11_PROVIDER" ]; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DPKCS11=${PKCS11_PROVIDER}"
+	fi
 	# Process source files with M4
 	pushd "${DOTFILES}/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')

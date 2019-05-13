@@ -3,4 +3,5 @@ dirs.txt
 git-pointers.txt
 staging/.gitconfig_local
 staging/.hgrc
+staging/.ssh/config
 email
