@@ -102,6 +102,9 @@ link_dotfiles(){
 			echo "$LINK" >> "$LINKLOG"
 		fi
 	done
+	# Fix up permissions of SSH config files (OpenBSD doesn't allow group
+	# writeable config files, but most Linux distributions patch this).
+	chmod -R g-w "${STAGING}/.ssh"
 	# Create "pointer" git files
 	for GIT_POINTER in $GIT_FILES; do
 		# Read in the original git file and get the path it specifies
