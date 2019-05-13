@@ -1,13 +1,5 @@
 DOTFILES="${HOME}/.dotfiles"
 
-_check_ssh_option() {
-	if echo "$(ssh -o $1 2>&1)" | grep 'command-line: line 0:' &>/dev/null; then
-		return 0
-	else
-		return 1
-	fi
-}
-
 process_source_files(){
 	local oldpwd="$OLDPWD"
 	# Find the domain of this host
