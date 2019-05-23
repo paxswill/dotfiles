@@ -79,3 +79,9 @@ profile
 *.un~
 Session.vim
 .netrwhist
+
+# VS Code
+.vscode/
+
+# pytest caches
+.pytest_cache/
