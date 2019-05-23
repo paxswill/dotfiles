@@ -267,6 +267,10 @@ _configure_nvm() {
 	local nvm_path
 	if _prog_exists brew; then
 		nvm_dir_path="$(brew --prefix nvm)"
+	elif [ ! -z "$XDG_CONFIG_HOME" ]; then
+		nvm_dir_path="${XDG_CONFIG_HOME}/nvm"
+	else
+		nvm_dir_path="${HOME}/.nvm"
 	fi
 	nvm_path="${nvm_dir_path}/nvm.sh"
 	if [ ! -z "$nvm_dir_path" ] && [ -r "$nvm_path" ] && [ ! -d "$nvm_path" ]; then
