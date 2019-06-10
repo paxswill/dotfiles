@@ -157,7 +157,13 @@ _bash_prompt() {
 	# $COLUMNS is provided by bash, and is the width of the terminal in
 	# characters.
 	tput cuf $((${COLUMNS}-8))
-	printf '%(%H:%M:%S)T' -1
+	# Older versions of bash (read: GPL2 bash Apple still ships with macOS)
+	# don't understand the special time format argument to printf.
+	if (( ${BASH_VERSINFO[0]} < 4 )); then
+		printf "%s" "$(date -j +%H:%M:%S)"
+	else
+		printf '%(%H:%M:%S)T' -1
+	fi
 	# Now bounce back for our regularly scheduled prompt writing
 	tput rc
 	PS1="$(printf \
