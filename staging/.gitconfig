@@ -3,7 +3,6 @@
 [rerere]
 	enabled = 1
 [merge]
-	tool = opendiff
 	defaultToUpstream = true
 	log = 20
 [user]

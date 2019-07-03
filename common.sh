@@ -27,6 +27,12 @@ create_m4_macros(){
 	elif [ "$SYSTYPE" = "Linux" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DLINUX"
 	fi
+	# Pick a mergetool if we have one I like
+	if _prog_exists opendiff; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DMERGETOOL=opendiff"
+	elif _prog_exists meld; then
+		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DMERGETOOL=meld"
+	fi
 	# Try to find a PKCS11 Provider
 	local PKCS11_PROVIDER=""
 	if [ "$SYSTYPE" = "Darwin" ] && [ -f /Library/OpenSC/lib/opensc-pkcs11.so ]; then

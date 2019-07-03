@@ -8,3 +8,8 @@ ifdef(`LINUX',
 `	helper = libsecret',
 `	helper = cache --socket /tmp/USER/git-credential-cache-socket'
 ))
+ifdef(`MERGETOOL',
+[merge]
+`	tool = MERGETOOL',
+)
+
