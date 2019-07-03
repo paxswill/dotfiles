@@ -1,12 +1,17 @@
 DOTFILES="${HOME}/.dotfiles"
 
-process_source_files(){
-	local oldpwd="$OLDPWD"
+create_m4_macros(){
+	# Create the command-line aruments that define the M4 macros used to
+	# process the template configuration files.
 	# Set the type of system we're working on.
 	if ! type set_systype &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
 	fi
 	set_systype
+	# Make sure _prog_exists is present
+	if ! type _prog_exists &>/dev/null; then
+		source "${DOTFILES}/util/common.sh"
+	fi
 	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
@@ -16,7 +21,7 @@ process_source_files(){
 		EMAIL="paxswill@paxswill.com"
 	fi
 	M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DEMAIL=${EMAIL}"
-	# Check for OS X (for the git keychain connector)
+	# Check for OS X for the Git Keychain credential helper
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
 	elif [ "$SYSTYPE" = "Linux" ]; then
@@ -45,6 +50,15 @@ process_source_files(){
 	if [ ! -z "$PKCS11_PROVIDER" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DPKCS11=${PKCS11_PROVIDER}"
 	fi
+	# Using printf instead of echo, because I don't want to get into the habit
+	# of using `echo -n` and slip up and use it outside of bash.
+	printf "%s" "$M4_DEFS"
+}
+
+process_source_files(){
+	local oldpwd="$OLDPWD"
+	# Set up M4 macro definitions
+	local M4_DEFS="$(create_m4_macros)"
 	# Process source files with M4
 	pushd "${DOTFILES}/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')
