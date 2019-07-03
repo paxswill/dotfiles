@@ -67,7 +67,7 @@ _configure_linux() {
 	# Add function for locking the screen
 	if [ ! -z "$PS1" ]; then
 		lock () {
-			xscreensaver -lock
+			xscreensaver-command -lock
 		}
 	fi
 	# Append Snap bin directory to PATH (basically just Ubuntu)
