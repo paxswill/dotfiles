@@ -2,10 +2,11 @@ DOTFILES="${HOME}/.dotfiles"
 
 process_source_files(){
 	local oldpwd="$OLDPWD"
-	# Find the domain of this host
-	if ! type parse_fqdn &>/dev/null; then
+	# Set the type of system we're working on.
+	if ! type set_systype &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
 	fi
+	set_systype
 	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
