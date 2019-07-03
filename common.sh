@@ -10,7 +10,7 @@ process_source_files(){
 	local M4_DEFS="-DUSER=$USER"
 	# Choose an email for git
 	if [ -f "${DOTFILES}/email" ]; then
-		EMAIL="$(cat "${DOTFILES}/email")"
+		EMAIL=$(<"${DOTFILES}/email")
 	else
 		EMAIL="paxswill@paxswill.com"
 	fi
