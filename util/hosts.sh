@@ -7,9 +7,8 @@ set_systype() {
 	# the name of the current kernel. Typical values include Linux, Darwin, and
 	# SunOS.
 	if ! [ "$SYSTYPE" ]; then
-		${SYSTYPE:=$(uname -s)}
 		# Export SYSTYPE and declare it as readonly
-		declare -rx SYSTYPE
+		declare -rx SYSTYPE="$(uname -s)"
 	fi
 }
 
