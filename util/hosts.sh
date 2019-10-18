@@ -6,10 +6,9 @@ set_systype() {
 	# (roughly) on the current OS. This is the output from `uname -s`, which is
 	# the name of the current kernel. Typical values include Linux, Darwin, and
 	# SunOS.
-	if ! [ -v SYSTYPE ]; then
-		${SYSTYPE:=$(uname -s)}
+	if ! [ "$SYSTYPE" ]; then
 		# Export SYSTYPE and declare it as readonly
-		declare -rx SYSTYPE
+		declare -rx SYSTYPE="$(uname -s)"
 	fi
 }
 

@@ -35,8 +35,16 @@ create_m4_macros(){
 	fi
 	# Try to find a PKCS11 Provider
 	local PKCS11_PROVIDER=""
-	if [ "$SYSTYPE" = "Darwin" ] && [ -f /Library/OpenSC/lib/opensc-pkcs11.so ]; then
-		PKCS11_PROVIDER=/Library/OpenSC/lib/opensc-pkcs11.so
+	if [ "$SYSTYPE" = "Darwin" ]; then
+		local -a OPENSC_DIRS
+		OPENSC_DIRS+=("/Library/OpenSC")
+		OPENSC_DIRS+=("/usr/local/opt/opensc")
+		for OPENSC_DIR in ${OPENSC_DIRS[@]}; do
+			if [ -f "${OPENSC_DIR}/lib/opensc-pkcs11.so" ]; then
+				PKCS11_PROVIDER="${OPENSC_DIR}/lib/opensc-pkcs11.so"
+				break
+			fi
+		done
 	elif [ "$SYSTYPE" = "Linux" ]; then
 		# Check a bunch of different paths for provider libraries
 		for LIB_DIR in /lib /lib64 /usr/lib /usr/lib64 /usr/lib/*-linux-gnu; do
