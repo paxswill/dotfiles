@@ -35,32 +35,28 @@ create_m4_macros(){
 	fi
 	# Try to find a PKCS11 Provider
 	local PKCS11_PROVIDER=""
+	local -a PKCS11_LIB_DIRS
+	local -a PKCS11_PROVIDERS
 	if [ "$SYSTYPE" = "Darwin" ]; then
-		local -a OPENSC_DIRS
-		OPENSC_DIRS+=("/Library/OpenSC")
-		OPENSC_DIRS+=("/usr/local/opt/opensc")
-		for OPENSC_DIR in ${OPENSC_DIRS[@]}; do
-			if [ -f "${OPENSC_DIR}/lib/opensc-pkcs11.so" ]; then
-				PKCS11_PROVIDER="${OPENSC_DIR}/lib/opensc-pkcs11.so"
-				break
-			fi
-		done
+		PKCS11_PROVIDERS+=("libykcs11.dylib")
+		PKCS11_LIB_DIRS+=("/Library/OpenSC/lib")
+		PKCS11_LIB_DIRS+=("/usr/local/opt/opensc/lib")
+		PKCS11_LIB_DIRS+=("/usr/local/lib")
 	elif [ "$SYSTYPE" = "Linux" ]; then
-		# Check a bunch of different paths for provider libraries
-		for LIB_DIR in /lib /lib64 /usr/lib /usr/lib64 /usr/lib/*-linux-gnu; do
-			# Note that p11-kit-client is before other provider libraries, as
-			# it *should* be able to proxy through to those other libraries (if
-			# configured properly).
-			# TODO add p11-kit-client back in/figure out how to configure it
-			# properly.
-			for PROVIDER in opensc-pkcs11.so; do
-				if [ -f "${LIB_DIR}/${PROVIDER}" ]; then
-					PKCS11_PROVIDER="${LIB_DIR}/${PROVIDER}"
-					break 2
-				fi
-			done
-		done
+		PKCS11_PROVIDERS+=("libykcs11")
+		PKCS11_LIB_DIRS+=("/lib" "/lib64" "/usr/lib" "/usr/lib64")
+		PKCS11_LIB_DIRS+=("/usr/lib/*-linux-gnu")
 	fi
+	PKCS11_PROVIDERS+=("opensc-pkcs11.so")
+	for PROVIDER in "${PKCS11_PROVIDERS[@]}"; do
+		for LIB_DIR in "${PKCS11_LIB_DIRS[@]}"; do
+			if [ -f "${LIB_DIR}/${PROVIDER}" ]; then
+				PKCS11_PROVIDER="${LIB_DIR}/${PROVIDER}"
+				break 2
+			fi
+
+		done
+	done
 	if [ ! -z "$PKCS11_PROVIDER" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DPKCS11=${PKCS11_PROVIDER}"
 	fi
