@@ -46,7 +46,7 @@ create_m4_macros(){
 		PKCS11_PROVIDERS+=("libykcs11")
 		PKCS11_PROVIDERS+=("libykcs11.so")
 		PKCS11_LIB_DIRS+=("/lib" "/lib64" "/usr/lib" "/usr/lib64")
-		PKCS11_LIB_DIRS+=("/usr/lib/*-linux-gnu")
+		PKCS11_LIB_DIRS+=("/usr/lib/${HOSTTYPE}-linux-gnu")
 	fi
 	PKCS11_PROVIDERS+=("opensc-pkcs11.so")
 	for PROVIDER in "${PKCS11_PROVIDERS[@]}"; do
