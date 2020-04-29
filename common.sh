@@ -44,6 +44,7 @@ create_m4_macros(){
 		PKCS11_LIB_DIRS+=("/usr/local/lib")
 	elif [ "$SYSTYPE" = "Linux" ]; then
 		PKCS11_PROVIDERS+=("libykcs11")
+		PKCS11_PROVIDERS+=("libykcs11.so")
 		PKCS11_LIB_DIRS+=("/lib" "/lib64" "/usr/lib" "/usr/lib64")
 		PKCS11_LIB_DIRS+=("/usr/lib/*-linux-gnu")
 	fi
