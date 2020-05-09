@@ -390,6 +390,12 @@ _configure_vim() {
 _configure_virtualenv_wrapper() {
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(type -p virtualenvwrapper.sh)
+	# Debian and Ubuntu package virtualenvwrapper to it's own directory outside
+	# of $PATH.
+	local debian_source="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+	if [ -z $wrapper_source ] && [ -f $debian_source ]; then
+		wrapper_source="$debian_source"
+	fi
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 		# Set up the project directory
 		if [ -d "$HOME/Development/Python" ]; then
