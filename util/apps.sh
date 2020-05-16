@@ -62,24 +62,28 @@ _configure_bash() {
 	HISTCONTROL=ignoreboth
 	# append to the history file, don't overwrite it
 	shopt -s histappend
-	# All shells share a history
-	PROMPT_COMMAND='_bash_prompt'
 	# Multi-line commands in the same history entry
 	shopt -s cmdhist
 	shopt -s lithist
 	# Files beginning with '.' are included in globbing
 	shopt -s dotglob
-	# check the window size after each command and, if necessary,
-	# update the values of LINES and COLUMNS.
-	shopt -s checkwinsize
-	# Correct spelling errors
-	shopt -s cdspell dirspell
-	# Bash-related configuration
-	_configure_bash_completion
-	# Add PS0 for pre-command execution. This is only available on bash >= 4.4,
-	# so we need to check against that first.
-	if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)); then
-		PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
+	# The rest of this is only applicable to interactive shells
+	if [ ! -z "$PS1" ]; then
+		# Run some quick tasks after each command (and write out part of the
+		# prompt).
+		PROMPT_COMMAND='_bash_prompt'
+		# check the window size after each command and, if necessary,
+		# update the values of LINES and COLUMNS.
+		shopt -s checkwinsize
+		# Correct spelling errors
+		shopt -s cdspell dirspell
+		# Bash-related configuration
+		_configure_bash_completion
+		# Add PS0 for pre-command execution. This is only available on
+		# bash >= 4.4, so we need to check against that first.
+		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)); then
+			PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
+		fi
 	fi
 }
 
@@ -124,7 +128,9 @@ _configure_bash_completion() {
 }
 
 _bash_prompt() {
-	# All shells share a history
+	# All shells share a history (append the new history to the HISTFILE).
+	# n.b. the history is *not* reloaded automatically, that requires a manual
+	# invocation of `history -r`.
 	history -a
 	# This variable will keep track of the correction to apply for non-printed
 	# characters (like color control codes)
@@ -198,6 +204,7 @@ _configure_ccache() {
 }
 
 _configure_docker() {
+	[ -z "$PS1" ] && return
 	# Add bash completion for docker and docker associated commands
 	local DOCKER_APP="/Applications/Docker.app/Contents/Resources/etc"
 	if [ -d "${DOCKER_APP}" ]; then

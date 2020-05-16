@@ -73,7 +73,7 @@ _configure_less_colors() {
 }
 
 get_term_colors() {
-	if [ -z $TERM_COLORS ]; then
+	if [ -z $TERM_COLORS ] && [ ! -z "$PS1" ]; then
 		if _prog_exists tput; then
 			TERM_COLORS=$(tput colors)
 		else
