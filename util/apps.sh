@@ -1,5 +1,6 @@
 # Application or program specific configuration
 source ~/.dotfiles/util/color.sh
+source ~/.dotfiles/util/find_pkcs11.sh
 
 _list_installed_python() {
 	# Unlike all of the other functions in this file, this function does *not*
@@ -329,6 +330,14 @@ _configure_pip() {
 	fi
 }
 
+_configure_pkcs11() {
+	# Just use find_pkcs11 to export an envvar to make using PKCS11 easier for
+	# some things like ssh-add/ssh-agent (which require the path to the
+	# provider to be given).
+	[ -z "$PS1" ] && return
+	export PKCS11_PROVIDER="$(find_pkcs11)"
+}
+
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app/Contents/Versions/latest/bin ]; then
 		prepend_to_path "/Applications/Postgres.app/Contents/Versions/latest/bin"
@@ -461,6 +470,7 @@ configure_apps() {
 		"_configure_nvm"
 		"_configure_perlbrew"
 		"_configure_pip"
+		"_configure_pkcs11"
 		"_configure_python"
 		"_configure_postgres_app"
 		"_configure_rbenv"

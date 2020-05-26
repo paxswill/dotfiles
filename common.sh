@@ -1,5 +1,7 @@
 DOTFILES="${HOME}/.dotfiles"
 
+source "${DOTFILES}/util/find_pkcs11.sh"
+
 create_m4_macros(){
 	# Create the command-line aruments that define the M4 macros used to
 	# process the template configuration files.
@@ -34,30 +36,7 @@ create_m4_macros(){
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DMERGETOOL=meld"
 	fi
 	# Try to find a PKCS11 Provider
-	local PKCS11_PROVIDER=""
-	local -a PKCS11_LIB_DIRS
-	local -a PKCS11_PROVIDERS
-	if [ "$SYSTYPE" = "Darwin" ]; then
-		PKCS11_PROVIDERS+=("libykcs11.dylib")
-		PKCS11_LIB_DIRS+=("/Library/OpenSC/lib")
-		PKCS11_LIB_DIRS+=("/usr/local/opt/opensc/lib")
-		PKCS11_LIB_DIRS+=("/usr/local/lib")
-	elif [ "$SYSTYPE" = "Linux" ]; then
-		PKCS11_PROVIDERS+=("libykcs11")
-		PKCS11_PROVIDERS+=("libykcs11.so")
-		PKCS11_LIB_DIRS+=("/lib" "/lib64" "/usr/lib" "/usr/lib64")
-		PKCS11_LIB_DIRS+=("/usr/lib/${HOSTTYPE}-linux-gnu")
-	fi
-	PKCS11_PROVIDERS+=("opensc-pkcs11.so")
-	for PROVIDER in "${PKCS11_PROVIDERS[@]}"; do
-		for LIB_DIR in "${PKCS11_LIB_DIRS[@]}"; do
-			if [ -f "${LIB_DIR}/${PROVIDER}" ]; then
-				PKCS11_PROVIDER="${LIB_DIR}/${PROVIDER}"
-				break 2
-			fi
-
-		done
-	done
+	local PKCS11_PROVIDER="$(find_pkcs11)"
 	if [ ! -z "$PKCS11_PROVIDER" ]; then
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DPKCS11=${PKCS11_PROVIDER}"
 	fi
