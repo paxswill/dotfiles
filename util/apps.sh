@@ -92,7 +92,7 @@ _configure_bash() {
 		# modern terminal, but things get a little wonky over minicom.
 		# `tput os` checks the terminfo database for the overstrike setting.
 		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)) && ! tput os; then
-			PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
+			PS0="\$(_bash_ps0)"
 		fi
 	fi
 }
@@ -187,6 +187,57 @@ _bash_prompt() {
 		"${ENVIRONMENT}" \
 		"${LOCATION}" \
 	)"
+}
+
+_bash_ps0() {
+	# Save the cursor position
+	tput sc
+	# Find out how many lines to go up. We need to go up at least two: one for
+	# the newline from hitting "enter" (to run a command), and one for the
+	# newline in my PS1.
+	# Adapted from https://redandblack.io/blog/2020/bash-prompt-with-updating-time/
+	local last_history="$(history 1)"
+	# This dance with readarray and then getting the length of the array skips
+	# forking off a process for `wc -l`
+	local -i command_rows
+	local -a command_rows_array
+	if shopt lithist >/dev/null; then
+		readarray -t command_rows_array <<<${last_history}
+	else
+		# This branch isn't as well tested as the other, as my shell has
+		# lithist set normally.
+		readarray -td';' command_rows_array <<<${last_history//';'/$'\n'}
+	fi
+	command_rows=${#command_rows_array[@]}
+	local -i vertical_offset=0
+	if (( $command_rows > 1 )); then
+		vertical_offset=$command_rows
+	else
+		# Strip out the leading numbers from the history output.
+		# Using bash's regex matching with BASH_REMATCH lets us avoid forking
+		# out a call to sed.
+		if [[ $last_history =~ ^[[:space:]]+[[:digit:]]+[[:space:]]+ ]]; then
+			local last_command="${last_history:${#BASH_REMATCH[0]}}"
+		fi
+		# the effective length of PS1 is 2 characters for '$ ', so add that to
+		# the command length.
+		local -i total_length=${#last_command}+2
+		local -i lines=${total_length}/${COLUMNS}
+		vertical_offset=lines+1
+	fi
+	# Add one for the newline when running a command
+	vertical_offset+=1
+	# Move the cursor to where the old timestamp was
+	tput cuu $vertical_offset
+	# Moving back 8 characters for the timestamp (HH:MM:SS)
+	tput cuf $((${COLUMNS} - 8))
+	# I havent' been able to get the bash-specific escape sequences to work, so
+	# shelling out to `date` it is.
+	local timestamp="\t"
+	printf "%s" "${timestamp@P}"
+	#date '+%H:%M:%S'
+	# Restore the cursor position
+	tput rc
 }
 
 _configure_cabal() {
