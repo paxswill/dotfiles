@@ -86,7 +86,12 @@ _configure_bash() {
 		_configure_bash_completion
 		# Add PS0 for pre-command execution. This is only available on
 		# bash >= 4.4, so we need to check against that first.
-		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)); then
+		# This PS0 overwites the time along the right column to the time that
+		# the command starts. This rewuires that the terminal clears characters
+		# instead of overstriking them. This is unlikely to be encountered on a
+		# modern terminal, but things get a little wonky over minicom.
+		# `tput os` checks the terminfo database for the overstrike setting.
+		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)) && ! tput os; then
 			PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
 		fi
 	fi
