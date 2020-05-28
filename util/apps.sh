@@ -70,6 +70,10 @@ _configure_bash() {
 	shopt -s dotglob
 	# The rest of this is only applicable to interactive shells
 	if [ ! -z "$PS1" ]; then
+		# Ignore Vim swap files when completing
+		FIGNORE=".swp:.swo"
+		# ...but if they're the only completion, allow them
+		shopt -u force_fignore
 		# Run some quick tasks after each command (and write out part of the
 		# prompt).
 		PROMPT_COMMAND='_bash_prompt'
@@ -380,8 +384,6 @@ _configure_videocore() {
 _configure_vim() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
-	# Ignore Vim temporary files for file completion
-	FIGNORE=".swp:.swo"
 	# Set Vim as $EDITOR if it's available
 	if _prog_exists mvim; then
 		 GUI_VIM=mvim
