@@ -6,10 +6,10 @@ create_m4_macros(){
 	# Create the command-line aruments that define the M4 macros used to
 	# process the template configuration files.
 	# Set the type of system we're working on.
-	if ! type set_systype &>/dev/null; then
+	if ! type get_systype &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
 	fi
-	set_systype
+	local SYSTYPE=$(get_systype)
 	# Make sure _prog_exists is present
 	if ! type _prog_exists &>/dev/null; then
 		source "${DOTFILES}/util/common.sh"

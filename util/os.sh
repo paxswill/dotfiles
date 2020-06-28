@@ -1,4 +1,5 @@
 # OS based configuration
+source ~/.dotfiles/util/hosts.sh
 
 _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
@@ -89,7 +90,7 @@ _configure_ubuntu() {
 }
 
 configure_os() {
-	case ${SYSTYPE:=$(uname -s)} in
+	case $(get_systype) in
 		Darwin)
 			_configure_darwin;;
 		Linux)

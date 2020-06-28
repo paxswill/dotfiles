@@ -1,7 +1,7 @@
 # Host specific customizations
 source ~/.dotfiles/util/common.sh
 
-set_systype() {
+get_systype() {
 	# Set an exported SYSTYPE variable for configuring a the environment based
 	# (roughly) on the current OS. This is the output from `uname -s`, which is
 	# the name of the current kernel. Typical values include Linux, Darwin, and
@@ -10,6 +10,7 @@ set_systype() {
 		# Export SYSTYPE and declare it as readonly
 		declare -rx SYSTYPE="$(uname -s)"
 	fi
+	printf "%s" "$SYSTYPE"
 }
 
 parse_fqdn() {
@@ -17,7 +18,7 @@ parse_fqdn() {
 	# (FQDN) of the current system. These are then exported as the HOST and
 	# DOMAIN variables. The hostname is *not* exported as HOSTNAME as that
 	# variable is set by bash, and is usually just the output of `hostname`.
-	set_systype
+	local SYSTYPE=$(get_systype)
 	if [ -z $HOST ] && [ -z $DOMAIN ]; then
 		# Get some information to base later decisions on
 		# Obtain and normalize the host name and domain name
