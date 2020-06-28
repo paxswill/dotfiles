@@ -1,4 +1,4 @@
-# Common color functions
+# Common terminal functions
 
 if [ ! -z "$PS1" ]; then
 	# Define common control sequences

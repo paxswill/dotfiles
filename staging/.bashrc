@@ -10,7 +10,7 @@ load_bashrc() {
 	source $HOME/.dotfiles/util/apps.sh
 	source $HOME/.dotfiles/util/hosts.sh
 	source $HOME/.dotfiles/util/os.sh
-	source $HOME/.dotfiles/util/color.sh
+	source $HOME/.dotfiles/util/term.sh
 	source $HOME/.dotfiles/util/aliases.sh
 	source $HOME/.dotfiles/util/vcs.sh
 	# Set up personal paths

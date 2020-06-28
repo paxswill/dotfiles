@@ -1,5 +1,5 @@
 # Application or program specific configuration
-source ~/.dotfiles/util/color.sh
+source ~/.dotfiles/util/term.sh
 source ~/.dotfiles/util/find_pkcs11.sh
 
 _list_installed_python() {
