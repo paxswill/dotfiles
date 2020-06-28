@@ -51,6 +51,8 @@ _configure_debian() {
 	append_to_path /usr/local/games
 	append_to_path /usr/games
 	export JAVA_HOME=/usr/lib/jvm/default_java
+	# Debian/Ubuntu install virtualenvwrapper off on it's own
+	alias "virtualenvwrapper.sh"="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
 }
 
 _configure_linux() {
@@ -82,6 +84,8 @@ _configure_linux() {
 
 _configure_ubuntu() {
 	export JAVA_HOME=/usr/lib/jvm/default_java
+	# Debian/Ubuntu install virtualenvwrapper off on it's own
+	alias "virtualenvwrapper.sh"="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
 }
 
 configure_os() {
