@@ -221,9 +221,9 @@ _bash_ps0() {
 		fi
 		# the effective length of PS1 is 2 characters for '$ ', so add that to
 		# the command length.
-		local -i total_length=${#last_command}+2
-		local -i lines=${total_length}/${COLUMNS}
-		vertical_offset=lines+1
+		local -i total_length=$(( ${#last_command} + 2 ))
+		local -i lines=$(( ${total_length} / ${COLUMNS} ))
+		vertical_offset=$(( ${lines} + 1 ))
 	fi
 	# Add one for the newline when running a command
 	vertical_offset+=1
@@ -235,7 +235,6 @@ _bash_ps0() {
 	# shelling out to `date` it is.
 	local timestamp="\t"
 	printf "%s" "${timestamp@P}"
-	#date '+%H:%M:%S'
 	# Restore the cursor position
 	tput rc
 }
