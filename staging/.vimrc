@@ -198,7 +198,7 @@ endif
 " Keep some context for lines at the edge of the screen
 set scrolloff=3
 " Customize which things are saved in a session
-set sessionoptions="blank,buffers,curdir,folds,globals,localoptions,options,resize,tabpages,winpos,winsize"
+set sessionoptions=blank,buffers,folds,resize,sesdir,tabpages,winpos,winsize
 
 """ GUI Customizations
 if has("gui_running")

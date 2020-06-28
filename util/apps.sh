@@ -1,5 +1,6 @@
 # Application or program specific configuration
 source ~/.dotfiles/util/color.sh
+source ~/.dotfiles/util/find_pkcs11.sh
 
 _list_installed_python() {
 	# Unlike all of the other functions in this file, this function does *not*
@@ -62,24 +63,37 @@ _configure_bash() {
 	HISTCONTROL=ignoreboth
 	# append to the history file, don't overwrite it
 	shopt -s histappend
-	# All shells share a history
-	PROMPT_COMMAND='_bash_prompt'
 	# Multi-line commands in the same history entry
 	shopt -s cmdhist
 	shopt -s lithist
 	# Files beginning with '.' are included in globbing
 	shopt -s dotglob
-	# check the window size after each command and, if necessary,
-	# update the values of LINES and COLUMNS.
-	shopt -s checkwinsize
-	# Correct spelling errors
-	shopt -s cdspell dirspell
-	# Bash-related configuration
-	_configure_bash_completion
-	# Add PS0 for pre-command execution. This is only available on bash >= 4.4,
-	# so we need to check against that first.
-	if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)); then
-		PS0="\$(tput sc && tput cuu 2 && tput cuf \$((\$(tput cols)-8)) && date '+%H:%M:%S' && tput rc)"
+	# The rest of this is only applicable to interactive shells
+	if [ ! -z "$PS1" ]; then
+		# Ignore Vim swap files when completing
+		FIGNORE=".swp:.swo"
+		# ...but if they're the only completion, allow them
+		shopt -u force_fignore
+		# Run some quick tasks after each command (and write out part of the
+		# prompt).
+		PROMPT_COMMAND='_bash_prompt'
+		# check the window size after each command and, if necessary,
+		# update the values of LINES and COLUMNS.
+		shopt -s checkwinsize
+		# Correct spelling errors
+		shopt -s cdspell dirspell
+		# Bash-related configuration
+		_configure_bash_completion
+		# Add PS0 for pre-command execution. This is only available on
+		# bash >= 4.4, so we need to check against that first.
+		# This PS0 overwites the time along the right column to the time that
+		# the command starts. This rewuires that the terminal clears characters
+		# instead of overstriking them. This is unlikely to be encountered on a
+		# modern terminal, but things get a little wonky over minicom.
+		# `tput os` checks the terminfo database for the overstrike setting.
+		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)) && ! tput os; then
+			PS0="\$(_bash_ps0)"
+		fi
 	fi
 }
 
@@ -124,7 +138,9 @@ _configure_bash_completion() {
 }
 
 _bash_prompt() {
-	# All shells share a history
+	# All shells share a history (append the new history to the HISTFILE).
+	# n.b. the history is *not* reloaded automatically, that requires a manual
+	# invocation of `history -r`.
 	history -a
 	# This variable will keep track of the correction to apply for non-printed
 	# characters (like color control codes)
@@ -173,6 +189,57 @@ _bash_prompt() {
 	)"
 }
 
+_bash_ps0() {
+	# Save the cursor position
+	tput sc
+	# Find out how many lines to go up. We need to go up at least two: one for
+	# the newline from hitting "enter" (to run a command), and one for the
+	# newline in my PS1.
+	# Adapted from https://redandblack.io/blog/2020/bash-prompt-with-updating-time/
+	local last_history="$(history 1)"
+	# This dance with readarray and then getting the length of the array skips
+	# forking off a process for `wc -l`
+	local -i command_rows
+	local -a command_rows_array
+	if shopt lithist >/dev/null; then
+		readarray -t command_rows_array <<<${last_history}
+	else
+		# This branch isn't as well tested as the other, as my shell has
+		# lithist set normally.
+		readarray -td';' command_rows_array <<<${last_history//';'/$'\n'}
+	fi
+	command_rows=${#command_rows_array[@]}
+	local -i vertical_offset=0
+	if (( $command_rows > 1 )); then
+		vertical_offset=$command_rows
+	else
+		# Strip out the leading numbers from the history output.
+		# Using bash's regex matching with BASH_REMATCH lets us avoid forking
+		# out a call to sed.
+		if [[ $last_history =~ ^[[:space:]]+[[:digit:]]+[[:space:]]+ ]]; then
+			local last_command="${last_history:${#BASH_REMATCH[0]}}"
+		fi
+		# the effective length of PS1 is 2 characters for '$ ', so add that to
+		# the command length.
+		local -i total_length=${#last_command}+2
+		local -i lines=${total_length}/${COLUMNS}
+		vertical_offset=lines+1
+	fi
+	# Add one for the newline when running a command
+	vertical_offset+=1
+	# Move the cursor to where the old timestamp was
+	tput cuu $vertical_offset
+	# Moving back 8 characters for the timestamp (HH:MM:SS)
+	tput cuf $((${COLUMNS} - 8))
+	# I havent' been able to get the bash-specific escape sequences to work, so
+	# shelling out to `date` it is.
+	local timestamp="\t"
+	printf "%s" "${timestamp@P}"
+	#date '+%H:%M:%S'
+	# Restore the cursor position
+	tput rc
+}
+
 _configure_cabal() {
 	# Add cabal (Haskell package manager) executables to PATH
 	append_to_path "${HOME}/.cabal/bin"
@@ -198,6 +265,7 @@ _configure_ccache() {
 }
 
 _configure_docker() {
+	[ -z "$PS1" ] && return
 	# Add bash completion for docker and docker associated commands
 	local DOCKER_APP="/Applications/Docker.app/Contents/Resources/etc"
 	if [ -d "${DOCKER_APP}" ]; then
@@ -322,6 +390,14 @@ _configure_pip() {
 	fi
 }
 
+_configure_pkcs11() {
+	# Just use find_pkcs11 to export an envvar to make using PKCS11 easier for
+	# some things like ssh-add/ssh-agent (which require the path to the
+	# provider to be given).
+	[ -z "$PS1" ] && return
+	export PKCS11_PROVIDER="$(find_pkcs11)"
+}
+
 _configure_postgres_app() {
 	if [ -d /Applications/Postgres.app/Contents/Versions/latest/bin ]; then
 		prepend_to_path "/Applications/Postgres.app/Contents/Versions/latest/bin"
@@ -364,8 +440,6 @@ _configure_videocore() {
 _configure_vim() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
-	# Ignore Vim temporary files for file completion
-	FIGNORE=".swp:.swo"
 	# Set Vim as $EDITOR if it's available
 	if _prog_exists mvim; then
 		 GUI_VIM=mvim
@@ -390,6 +464,12 @@ _configure_vim() {
 _configure_virtualenv_wrapper() {
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(type -p virtualenvwrapper.sh)
+	# Debian and Ubuntu package virtualenvwrapper to it's own directory outside
+	# of $PATH.
+	local debian_source="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+	if [ -z $wrapper_source ] && [ -f $debian_source ]; then
+		wrapper_source="$debian_source"
+	fi
 	if ! [ -z $wrapper_source ] && [ -s $wrapper_source ]; then
 		# Set up the project directory
 		if [ -d "$HOME/Development/Python" ]; then
@@ -448,6 +528,7 @@ configure_apps() {
 		"_configure_nvm"
 		"_configure_perlbrew"
 		"_configure_pip"
+		"_configure_pkcs11"
 		"_configure_python"
 		"_configure_postgres_app"
 		"_configure_rbenv"

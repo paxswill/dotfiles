@@ -30,3 +30,11 @@ load_bashrc
 if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/common.sh
 fi
+
+# If this is the base shell over SSH, and there's a tmux session available,
+# attach to it.
+if [ -n "$SSH_CONNECTION" ]; then
+	if _prog_exists tmux && [ -z "$TMUX" ] && tmux has-session 2>/dev/null; then
+		tmux attach
+	fi
+fi
