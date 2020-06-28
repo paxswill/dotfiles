@@ -1,10 +1,55 @@
 # Common terminal functions
+source ~/.dotfiles/util/hosts.sh
+
+# FreeBSD's tput uses termcap names and not the basic capability names that
+# ncurses tput (which is used by seemingly everyone else). This might be
+# changing at some point, see
+# https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=214709
+# These functions will call tput with the appropriate name for the appropriate
+# platform when called using the capability name (i.e. like ncurses tput).
+
+_tput() {
+	# Ensure SYSTYPE is set
+	if [ $(get_systype) = "FreeBSD" ]; then
+		case $1 in
+			setab)
+				tput AB "${@[@]:1}";;
+			setaf)
+				tput AF "${@[@]:1}";;
+			sgr0)
+				tput me "${@[@]:1}";;
+			bold)
+				tput md "${@[@]:1}";;
+			dim)
+				tput mh "${@[@]:1}";;
+			colors)
+				tput Co "${@[@]:1}";;
+			cols)
+				tput co "${@[@]:1}";;
+			cuf)
+				tput RI "${@[@]:1}";;
+			cub)
+				tput LE "${@[@]:1}";;
+			cuu)
+				tput UP "${@[@]:1}";;
+			cud)
+				tput DO "${@[@]:1}";;
+			# For unhandled capabilities just pass them through. This is fine
+			# for those capabilites which have the same names in both databses
+			# (os, sc, rc).
+			*)
+				tput "${@}";;
+		esac
+	else
+		tput "${@}"
+	fi
+}
 
 if [ ! -z "$PS1" ]; then
 	# Define common control sequences
-	COLOR_RESET="$(tput sgr0)"
+	COLOR_RESET="$(_tput sgr0)"
 	# This is the muted color
-	MUTED_COLOR="$(tput bold)$(tput setaf 2)"
+	MUTED_COLOR="$(_tput bold)$(_tput setaf 2)"
 fi
 
 _configure_host_color() {
@@ -16,19 +61,19 @@ _configure_host_color() {
 	# BSD includes md5, GNU and Solaris include md5sum
 	case "$name" in
 		thor)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 1)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 1)";;
 		odin)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 2)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 2)";;
 		venus)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 3)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 3)";;
 		tyr)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 4)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 4)";;
 		heimdall)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 5)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 5)";;
 		baldur)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 6)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 6)";;
 		freya)
-			HOST_COLOR="$(tput setab 0)$(tput setaf 7)";;
+			HOST_COLOR="$(_tput setab 0)$(_tput setaf 7)";;
 		*)
 			if _prog_exists md5; then
 				hashed_host=$(printf $name | md5)
@@ -45,11 +90,11 @@ _configure_host_color() {
 				sum=$((sum % 9))
 				if [ $sum -eq 7 ]; then
 					# Orange in Solarized
-					HOST_COLOR="$(tput bold)$(tput setaf 1)"
+					HOST_COLOR="$(_tput bold)$(_tput setaf 1)"
 				elif [ $sum -eq 8 ]; then
-					HOST_COLOR="$(tput bold)$(tput setaf 5)"
+					HOST_COLOR="$(_tput bold)$(_tput setaf 5)"
 				else
-					HOST_COLOR="$(tput setaf $((1 + $sum)))"
+					HOST_COLOR="$(_tput setaf $((1 + $sum)))"
 				fi
 			else
 				# Default to no color
@@ -75,7 +120,7 @@ _configure_less_colors() {
 get_term_colors() {
 	if [ -z $TERM_COLORS ] && [ ! -z "$PS1" ]; then
 		if _prog_exists tput; then
-			TERM_COLORS=$(tput colors)
+			TERM_COLORS=$(_tput colors)
 		else
 			case "$TERM" in
 				xterm|screen)

@@ -91,7 +91,7 @@ _configure_bash() {
 		# instead of overstriking them. This is unlikely to be encountered on a
 		# modern terminal, but things get a little wonky over minicom.
 		# `tput os` checks the terminfo database for the overstrike setting.
-		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)) && ! tput os; then
+		if (( ${BASH_VERSINFO[0]} > 4 || ${BASH_VERSINFO[1]} == 4 && ${BASH_VERSINFO[1]} >= 4)) && ! _tput os; then
 			PS0="\$(_bash_ps0)"
 		fi
 	fi
@@ -167,12 +167,12 @@ _bash_prompt() {
 	OFFSET+=${#MUTED_COLOR}
 	OFFSET+=${#COLOR_RESET}
 	# Save the cursor position before we go mucking around with it
-	tput sc
+	_tput sc
 	# First we write the current time on the right-hand side. We're going back
 	# 8 characters to make room for HH:MM:SS
 	# $COLUMNS is provided by bash, and is the width of the terminal in
 	# characters.
-	tput cuf $((${COLUMNS}-8))
+	_tput cuf $((${COLUMNS}-8))
 	# Older versions of bash (read: GPL2 bash Apple still ships with macOS)
 	# don't understand the special time format argument to printf.
 	if (( ${BASH_VERSINFO[0]} < 4 )); then
@@ -181,7 +181,7 @@ _bash_prompt() {
 		printf '%(%H:%M:%S)T' -1
 	fi
 	# Now bounce back for our regularly scheduled prompt writing
-	tput rc
+	_tput rc
 	PS1="$(printf \
 		"%s[\\\\u@%s]\n\\$ " \
 		"${ENVIRONMENT}" \
@@ -191,7 +191,7 @@ _bash_prompt() {
 
 _bash_ps0() {
 	# Save the cursor position
-	tput sc
+	_tput sc
 	# Find out how many lines to go up. We need to go up at least two: one for
 	# the newline from hitting "enter" (to run a command), and one for the
 	# newline in my PS1.
@@ -228,15 +228,15 @@ _bash_ps0() {
 	# Add one for the newline when running a command
 	vertical_offset+=1
 	# Move the cursor to where the old timestamp was
-	tput cuu $vertical_offset
+	_tput cuu $vertical_offset
 	# Moving back 8 characters for the timestamp (HH:MM:SS)
-	tput cuf $((${COLUMNS} - 8))
+	_tput cuf $((${COLUMNS} - 8))
 	# I havent' been able to get the bash-specific escape sequences to work, so
 	# shelling out to `date` it is.
 	local timestamp="\t"
 	printf "%s" "${timestamp@P}"
 	# Restore the cursor position
-	tput rc
+	_tput rc
 }
 
 _configure_cabal() {
