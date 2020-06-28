@@ -13,27 +13,27 @@ _tput() {
 	if [ $(get_systype) = "FreeBSD" ]; then
 		case $1 in
 			setab)
-				tput AB "${@[@]:1}";;
+				tput AB "${@:2}";;
 			setaf)
-				tput AF "${@[@]:1}";;
+				tput AF "${@:2}";;
 			sgr0)
-				tput me "${@[@]:1}";;
+				tput me "${@:2}";;
 			bold)
-				tput md "${@[@]:1}";;
+				tput md "${@:2}";;
 			dim)
-				tput mh "${@[@]:1}";;
+				tput mh "${@:2}";;
 			colors)
-				tput Co "${@[@]:1}";;
+				tput Co "${@:2}";;
 			cols)
-				tput co "${@[@]:1}";;
+				tput co "${@:2}";;
 			cuf)
-				tput RI "${@[@]:1}";;
+				tput RI "${@:2}";;
 			cub)
-				tput LE "${@[@]:1}";;
+				tput LE "${@:2}";;
 			cuu)
-				tput UP "${@[@]:1}";;
+				tput UP "${@:2}";;
 			cud)
-				tput DO "${@[@]:1}";;
+				tput DO "${@:2}";;
 			# For unhandled capabilities just pass them through. This is fine
 			# for those capabilites which have the same names in both databses
 			# (os, sc, rc).
