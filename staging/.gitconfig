@@ -30,3 +30,5 @@
 	cip = commit --patch
 [push]
 	default = current
+[pull]
+	ff = only
