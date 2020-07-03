@@ -64,6 +64,7 @@ process_source_files(){
 
 link_dotfiles(){
 	local STAGING="${DOTFILES}/staging"
+	local REL_STAGING="${STAGING#${HOME}/}"
 	# Save the special IFS value
 	local OLDIFS="$IFS"
 	IFS=$'\n'
@@ -74,37 +75,53 @@ link_dotfiles(){
 	[ -e "$DIRLOG" ] && mv "$DIRLOG" "${DIRLOG}.old"
 	[ -e "$LINKLOG" ] && mv "$LINKLOG" "${LINKLOG}.old"
 	[ -e "$GIT_POINTER_LOG" ] && mv "$GIT_POINTER_LOG" "${GIT_POINTER_LOG}.old"
+	# Make sure we're in $HOME, as the paths are going to be relative to handle
+	# shared filesystems mounted at different locations.
+	pushd "$HOME" &>/dev/null
 	# Get a list of directories and files to link/create
 	# The lines containing ".git" exclude git directories fomr being linked
-	local DIRS="$(find "$STAGING" \
+	#local DIRS="$(find "$STAGING" \
+	local DIRS="$(find "$REL_STAGING" \
 		-type d \
-		-not -path "$STAGING" \
+		-not -path "$REL_STAGING" \
 		-not -name ".git" \
 		-o -type d -name ".git" -not -prune)"
 	# Generate a list of files to link
-	local FILES="$(find "$STAGING" \
+	local FILES="$(find "$REL_STAGING" \
 		-type f \
 		-not -name "*.sw?" \
 		-not -name ".git" \
-		-not -path "$STAGING")"
-	local GIT_FILES="$(find "$STAGING" \
+		-not -path "$REL_STAGING")"
+	local GIT_FILES="$(find "$REL_STAGING" \
 		-type f \
 		-name ".git")"
 	# Create directories
 	for D in $DIRS; do
-		local TARGET_DIR="${D/\/.dotfiles\/staging}"
+		local TARGET_DIR="${D/.dotfiles\/staging\/}"
 		if mkdir -p "$TARGET_DIR" &>/dev/null; then
 			echo "$TARGET_DIR" >> "$DIRLOG"
 		fi
 	done
 	# Link files
 	for LINK_TARGET in $FILES; do
-		local LINK="${LINK_TARGET/\/.dotfiles\/staging}"
+		local LINK="${LINK_TARGET/.dotfiles\/staging\/}"
+		# For relative links, we need to add an appropriate number of '../' to
+		# get back to the home directory.
+		local COUNT_DIR="${LINK//[^\/]}"
+		for (( i=0; i<${#COUNT_DIR}; i++ )); do
+			LINK_TARGET="../${LINK_TARGET}"
+		done
+		# Only create links if the file either doesn't exist, or is already a
+		# symbolic link (in other words, don't overwrite existing files.
 		if [ ! -e "$LINK" -o -L "$LINK" ]; then
-			if [ ! "$LINK" -ef "$LINK_TARGET" ]; then
+			# Only create/update the link if it's not pointing to the right
+			# location.
+			if [ "$(readlink "$LINK")" != "$LINK_TARGET" ]; then
 				ln -sf "$LINK_TARGET" "$LINK"
 			fi
 			echo "$LINK" >> "$LINKLOG"
+		else
+			printf "Skipping existing file: %s\n" "$LINK"
 		fi
 	done
 	# Fix up permissions of SSH config files (OpenBSD doesn't allow group
@@ -116,10 +133,20 @@ link_dotfiles(){
 		# The file has the format:
 		# gitfile: ./relative/path/to/git/directory
 		local RELATIVE_GIT_DIR="$(< "${GIT_POINTER}")"
-		local GIT_FILE_TARGET="${GIT_POINTER/\/.dotfiles\/staging}"
+		local GIT_FILE_TARGET="${GIT_POINTER/.dotfiles\/staging\/}"
+		# Skipping the first 8 characters to drop "gitdir: "
 		pushd "$(dirname "${GIT_POINTER}")/${RELATIVE_GIT_DIR:8}" &>/dev/null
-		printf "gitdir: %s" "$(pwd -P)" > "${GIT_FILE_TARGET}"
+		local GITDIR_PATH="$(pwd -P)"
 		popd &>/dev/null
+		# Remove $HOME so we can make it relative
+		GITDIR_PATH="${GITDIR_PATH/${HOME}\//}"
+		# Like with the file links, we need to prepend enough "../" to make
+		# things relative.
+		local COUNT_DIR="${GIT_FILE_TARGET//[^\/]}"
+		for (( i=0; i<${#COUNT_DIR}; i++ )); do
+			GITDIR_PATH="../${GITDIR_PATH}"
+		done
+		printf "gitdir: %s" "${GITDIR_PATH}" > "${GIT_FILE_TARGET}"
 		echo "${GIT_FILE_TARGET}" >> "$GIT_POINTER_LOG"
 	done
 	# Cleanup pointer git files
@@ -133,7 +160,7 @@ link_dotfiles(){
 	# Cleanup links
 	if [ -e "${LINKLOG}.old" ]; then
 		for OLDLINK in $(< "${LINKLOG}.old"); do
-			if [ -L "$OLDLINK" -a ! -e "$OLDLINK" ]; then
+			if [ -L "$OLDLINK" -a ! stat -L "$OLDLINK" &>/dev/null ]; then
 				unlink "$OLDLINK"
 			fi
 		done
@@ -154,6 +181,7 @@ link_dotfiles(){
 		done
 		rm "${DIRLOG}.old"
 	fi
+	popd &>/dev/null
 	# Put IFS back
 	IFS="$OLDIFS"
 }
