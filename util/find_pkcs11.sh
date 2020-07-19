@@ -1,10 +1,13 @@
 # Putting this in a separate file as it's used by common.sh as well.
+DOTFILES="${HOME}/.dotfiles"
+source "${DOTFILES}/util/hosts.sh"
 
 find_pkcs11() {
 	# Try to find a PKCS11 Provider
 	local PKCS11_PROVIDER=""
 	local -a PKCS11_LIB_DIRS
 	local -a PKCS11_PROVIDERS
+	local SYSTYPE="$(get_systype)"
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		PKCS11_PROVIDERS+=("libykcs11.dylib")
 		PKCS11_LIB_DIRS+=("/Library/OpenSC/lib")
