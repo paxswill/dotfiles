@@ -508,6 +508,37 @@ _configure_virtualenv_wrapper() {
 	fi
 }
 
+_configure_windows_ssh_agent() {
+	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
+	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK if
+	# already defined
+	if [[ $(uname -r) =~ ^.*[Mm]icrosoft.*$ ]] && [ -n "${SSH_AUTH_SOCK}" ]; then
+		return
+	fi
+	local MISSING_PROG=0
+	for PROG in ss socat setsid npiperelay.exe; do
+		if ! _prog_exists $PROG; then
+			printf "Unable to connect to Windows SSH Agent, missing %s\n" \
+				"$PROG"
+			MISSING_PROG=1
+		fi
+	done
+	# Bail out if we're missing any of the required utilities
+	[ $MISSING_PROG = 1 ] && return
+	SSH_AUTH_SOCK="${TMPDIR:-/tmp}/ssh_agent.sock"
+	# If there isn't already a socket set up for us, make one
+	if ! [[ "$(ss -a)" =~ "${SSH_AUTH_SOCK}" ]]; then
+		rm -f "${SSH_AUTH_SOCK}"
+		(
+			setsid \
+			socat \
+			UNIX-LISTEN:${SSH_AUTH_SOCK},fork \
+			EXEC:"$(which npiperelay.exe) -ei -s //./pipe/openssh-ssh-agent",nofork &
+		) &>/dev/null
+	fi
+	export SSH_AUTH_SOCK
+}
+
 configure_apps() {
 	local CONFIG_FUNCTIONS=(
 		"_configure_android"
@@ -536,6 +567,7 @@ configure_apps() {
 		"_configure_videocore"
 		"_configure_vim"
 		"_configure_virtualenv_wrapper"
+		"_configure_windows_ssh_agent"
 	)
 	# AS a debugging facility, set this variable to "y" to print the current
 	# time for each config function to help figure out what is taking so long.
