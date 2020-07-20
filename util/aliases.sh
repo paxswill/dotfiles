@@ -36,7 +36,7 @@ _alias_pasteboard() {
 	# super simple commands, and basically the only flags they have are very
 	# rarely used. The linux alternatives on the other hand are not as simple
 	# to use. These aliases wrap the linux alternatives up so they're as simple
-	#to use as `pbcopy` and `pbpaste`.
+	# to use as `pbcopy` and `pbpaste`.
 	if ! _prog_exists "pbcopy"; then
 		if _prog_exists "xclip"; then
 			alias pbcopy='xclip -i -selection clipboard'
