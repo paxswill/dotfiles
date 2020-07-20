@@ -45,11 +45,22 @@ _alias_pasteboard() {
 	fi
 }
 
+_alias_reset() {
+	# A quick alias to print the control sequence to disable mouse position
+	# reporting. An example of when this is useful is when tmux doesn't disable
+	# it when being closed. If there's a spew of garbage when clicking,
+	# dragging, etc, run this alias to disable it. iTerm2 can disable it with a
+	# menu item, but this is a bit quicker, and also works on things other than
+	# iTerm (for example, Windows Terminal)
+	alias resetmouse='printf "\e[?1000l"'
+}
+
 configure_aliases() {
 	if [ ! -z "$PS1" ]; then
 		_alias_grep
 		_alias_ls
 		_alias_1password
 		_alias_pasteboard
+		_alias_reset
 	fi
 }
