@@ -479,10 +479,8 @@ _configure_virtualenv_wrapper() {
 				mkdir $PROJECT_HOME
 			fi
 		fi
-		# Use Distribute instead of Setuptools by default
-		export VIRTUALENV_DISTRIBUTE=1
 		# Find the python distribution that has virtualenvwrapper installed.
-		# PRefer Py3 over Py2
+		# Prefer Py3 over Py2
 		for PY in python3 python2 python; do
 			if _prog_exists $PY && $PY -c "import virtualenvwrapper" 2>/dev/null; then
 				export VIRTUALENVWRAPPER_PYTHON="$(which $PY)"
