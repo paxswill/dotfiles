@@ -52,55 +52,72 @@ if [ ! -z "$PS1" ]; then
 	MUTED_COLOR="$(_tput bold)$(_tput setaf 2)"
 fi
 
+_get_host_color() {
+	# Figure out how many colors we can use. The hostname to derive a color
+	# from should be given as the first (and only) argument. The hostname
+	# should already be normalized (only lower case and only valid hostname
+	# characters).
+	local -i MAX_COLORS
+	if (( $TERM_COLORS >= 8 && $TERM_COLORS < 16 )); then
+		# For 8-color Solarized, the ANSI colors line up with the reduced
+		# Solarized colors, so we can use all of them (except for the color
+		# used for normal text, so 8 - 1).
+		MAX_COLORS=7
+	elif (( $TERM_COLORS >= 16 )); then
+		# For 16-color solarized, we only have a few more colors available
+		# as Solarized uses most of the extra colors for the extra "base"
+		# colors. The only actual colors are violet (bright magenta in
+		# ANSI), and orange (bright red in ANSI).
+		MAX_COLORS=9
+	fi
+	# Now hash the input name, and add all of the digits together modulo
+	# `2 * MAX_COLORS` (The we can double the number of maximum colors by using
+	# standout mode, which is just reverse and bold modes at the same time).
+	# BSD includes md5, GNU and Solaris include md5sum
+	if _prog_exists md5; then
+		hashed_host=$(printf $name | md5)
+	elif _prog_exists md5sum; then
+		hashed_host=$(printf $name | md5sum)
+	fi
+	# Handle the case where there isn't an MD5 program
+	if [ ! -z "$hashed_host" ]; then
+		# Sum all the digits modulo MAX_COLORS
+		local -i SUM=0
+		for ((i=0; i<32; ++i)); do
+			SUM=$(( $SUM + 0x${hashed_host:$i:1} ))
+		done
+		SUM=$(( $SUM % ($MAX_COLORS * 2) ))
+		local -i COLOR=$(( $SUM % $MAX_COLORS))
+		# If we're in the "extra" colors, enable standout mode
+		if (( $SUM > $MAX_COLORS )); then
+			_tput bold
+			_tput rev
+		fi
+		# The "extra" colors (orange and violet) do not immediately follow the
+		# other colors.
+		case $COLOR in
+			8)
+				# Orange
+				_tput setaf 9;;
+			9)
+				# Violet
+				_tput setaf 13;;
+			*)
+				# Add 1 so that 0 (background in 8-color, highlighted
+				# background in 16-color) is mapped to red, and so on
+				tput setaf $(( $COLOR + 1 ));;
+		esac
+	fi
+	# No need to return anything for the case where there isn't a host color.
+}
+
 _configure_host_color() {
 	# Generate a color that is semi-unique for this host
 	parse_fqdn
 	# Normalize hostnames to only lower-case letters, numbers, and '-',
 	# i.e. proper hostnames
 	local name="$(printf "%s" "${HOST,,}" | tr -d -c "a-z0-9-")"
-	# BSD includes md5, GNU and Solaris include md5sum
-	case "$name" in
-		thor)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 1)";;
-		odin)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 2)";;
-		venus)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 3)";;
-		tyr)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 4)";;
-		heimdall)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 5)";;
-		baldur)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 6)";;
-		freya)
-			HOST_COLOR="$(_tput setab 0)$(_tput setaf 7)";;
-		*)
-			if _prog_exists md5; then
-				hashed_host=$(printf $name | md5)
-			elif _prog_exists md5sum; then
-				hashed_host=$(printf $name | md5sum)
-			fi
-			if [ ! -z "$hashed_host" ]; then
-				# Sum all the digits modulo 9 (ANSI colors 31-37 normal, and 31 and 35
-				# bright. Solarized only has those two bright colors as actual colors)
-				sum=0
-				for ((i=0;i<32;++i)); do
-					sum=$(($sum + 0x${hashed_host:$i:1}))
-				done
-				sum=$((sum % 9))
-				if [ $sum -eq 7 ]; then
-					# Orange in Solarized
-					HOST_COLOR="$(_tput bold)$(_tput setaf 1)"
-				elif [ $sum -eq 8 ]; then
-					HOST_COLOR="$(_tput bold)$(_tput setaf 5)"
-				else
-					HOST_COLOR="$(_tput setaf $((1 + $sum)))"
-				fi
-			else
-				# Default to no color
-				HOST_COLOR=""
-			fi
-	esac
+	HOST_COLOR="$(_get_host_color)"
 }
 
 _configure_less_colors() {
