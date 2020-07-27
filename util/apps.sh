@@ -388,7 +388,7 @@ _configure_windows_ssh_agent() {
 	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
 	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK if
 	# already defined
-	if ! [[ $(uname -r) =~ ^.*[Mm]icrosoft.*$ ]] && [ -n "${SSH_AUTH_SOCK}" ]; then
+	if ! [[ $(uname -r) =~ ^.*[Mm]icrosoft.*$ ]] || [ -n "${SSH_AUTH_SOCK}" ]; then
 		return
 	fi
 	local MISSING_PROG=0
