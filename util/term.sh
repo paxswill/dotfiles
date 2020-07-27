@@ -57,7 +57,7 @@ _configure_host_color() {
 	parse_fqdn
 	# Normalize hostnames to only lower-case letters, numbers, and '-',
 	# i.e. proper hostnames
-	local name="$(printf $HOST | tr [:upper:] [:lower:] | tr -d -c "a-z0-9-")"
+	local name="$(printf "%s" "${HOST,,}" | tr -d -c "a-z0-9-")"
 	# BSD includes md5, GNU and Solaris include md5sum
 	case "$name" in
 		thor)
