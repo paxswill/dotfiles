@@ -27,10 +27,41 @@ _bash_prompt() {
 	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}:\W"
 	OFFSET+=${#HOST_COLOR}
 	OFFSET+=${#COLOR_RESET}
-	# Mute the branch name as well
-	LOCATION+="${MUTED_COLOR}$(__vcs_ps1 ' (%s)')${COLOR_RESET}"
-	OFFSET+=${#MUTED_COLOR}
-	OFFSET+=${#COLOR_RESET}
+	local BRANCH="$(__vcs_ps1 " (%s)")"
+	# For both branches of this if block, the "normal" text is muted
+	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?\)$ ]]; then
+		# If the branch's dirty state is indicated, highlight that.
+		# Add a COLOR_RESET to unset the bold state (which screws up later
+		# colors).
+		LOCATION+=" ${MUTED_COLOR}(${BASH_REMATCH[1]}${COLOR_RESET}"
+		OFFSET+=${#MUTED_COLOR}
+		OFFSET+=${#COLOR_RESET}
+		# Highlight the dirty flag in red
+		if [ -n "${BASH_REMATCH[2]}" ]; then
+			LOCATION+="${RED_COLOR}${BASH_REMATCH[2]}"
+			OFFSET+=${#RED_COLOR}
+			# We can skip an escape sequence if there's a staged indicator
+			# coming up
+			if [ -z "${BASH_REMATCH[3]}" ]; then
+				LOCATION+="${MUTED_COLOR}"
+				OFFSET+=${#MUTED_COLOR}
+			fi
+		fi
+		# And highlight the staged flag in green
+		if [ -n "${BASH_REMATCH[3]}" ]; then
+			LOCATION+="${GREEN_COLOR}${BASH_REMATCH[3]}${MUTED_COLOR}"
+			OFFSET+=${#GREEN_COLOR}
+			OFFSET+=${#MUTED_COLOR}
+		fi
+		# Add the closing parenthesis
+		LOCATION+=")${COLOR_RESET}"
+		OFFSET+=${#COLOR_RESET}
+	else
+		# Mute the branch name as well
+		LOCATION+="${MUTED_COLOR}${BRANCH}${COLOR_RESET}"
+		OFFSET+=${#MUTED_COLOR}
+		OFFSET+=${#COLOR_RESET}
+	fi
 	# Save the cursor position before we go mucking around with it
 	_tput sc
 	# First we write the current time on the right-hand side. We're going back
