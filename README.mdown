@@ -57,23 +57,23 @@ run-time detection isn't really feasible:
 # Supported (heh) Platforms
 
 I use these dotfiles day to day on the following platforms (not that I'm really
-supporting them in a real sense, I just use these platforms).
+supporting them in a real sense, I just use them).
 
 * macOS (x86_64)
 
-* Linux (arm, x86_64)
+* Linux (arm, aarch64, x86_64)
 
-* FreeBSD (arm, x86_64)
+* FreeBSD (x86_64)
 
 * Linux on Windows (x86_64)
 
-In the past I used these files on these platforms, and they should stil work on
+In the past I used these files on these platforms, and they should still work on
 them without much (if any) modification:
 
-* macOS (ppc, ppc64, x86, x86_64)
+* macOS (ppc, ppc64, x86)
 
 * Solaris (sparc)
 
-* Linux (x86, x86_64, ppc, arm)
+* Linux (x86, ppc)
 
-* FreeBSD (x86)
+* FreeBSD (x86, arm)
