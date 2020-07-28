@@ -32,3 +32,9 @@
 	default = current
 [pull]
 	ff = only
+[credential]
+	# There can be multiple helpers defined; git will try each in turn until one
+	# works.
+	helper = osxkeychain
+	helper = libsecret
+	helper = cache --socket /tmp/USER/git-credential-cache-socket

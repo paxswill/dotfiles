@@ -2,12 +2,6 @@
 [user]
 	email = EMAIL
 [credential]
-ifdef(`OSX',
-`	helper = osxkeychain',
-ifdef(`LINUX',
-`	helper = libsecret',
-`	helper = cache --socket /tmp/USER/git-credential-cache-socket'
-))
 ifdef(`MERGETOOL',
 [merge]
 `	tool = MERGETOOL',
