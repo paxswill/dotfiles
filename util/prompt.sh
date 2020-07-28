@@ -96,8 +96,9 @@ _bash_ps0() {
 	_tput cuu $vertical_offset
 	# Moving back 8 characters for the timestamp (HH:MM:SS)
 	_tput cuf $((${COLUMNS} - 8))
-	# I havent' been able to get the bash-specific escape sequences to work, so
-	# shelling out to `date` it is.
+	# I couldn't get the '\t' prompt escape sequence working, so I'm running it
+	# through the bash-specific parameter expansion that expands things like a
+	# prompt would.
 	local timestamp="\t"
 	printf "%s" "${timestamp@P}"
 	# Restore the cursor position
