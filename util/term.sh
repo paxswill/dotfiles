@@ -50,6 +50,9 @@ if [ ! -z "$PS1" ]; then
 	COLOR_RESET="$(_tput sgr0)"
 	# This is the muted color
 	MUTED_COLOR="$(_tput bold)$(_tput setaf 2)"
+	# Red and green used repeatedly in a few place
+	RED_COLOR="$(_tput setaf 1)"
+	GREEN_COLOR="$(_tput setaf 2)"
 fi
 
 _get_host_color() {
