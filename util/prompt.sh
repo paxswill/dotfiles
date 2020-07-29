@@ -2,6 +2,8 @@
 source ~/.dotfiles/util/term.sh
 
 _bash_prompt() {
+	# Save the value of the last exit status to color things later
+	local LAST_STATUS=$?
 	# All shells share a history (append the new history to the HISTFILE).
 	# n.b. the history is *not* reloaded automatically, that requires a manual
 	# invocation of `history -r`.
@@ -76,12 +78,18 @@ _bash_prompt() {
 	else
 		printf '%(%H:%M:%S)T' -1
 	fi
+	# Color the last prompt character red if the last exit status was non-0
+	local PROMPT_CHAR='\\$'
+	if [ $LAST_STATUS != 0 ]; then
+		PROMPT_CHAR="${RED_COLOR}${PROMPT_CHAR}${COLOR_RESET}"
+	fi
 	# Now bounce back for our regularly scheduled prompt writing
 	_tput rc
 	PS1="$(printf \
-		"%s[\\\\u@%s]\n\\$ " \
+		"%s[\\\\u@%s]\n%s " \
 		"${ENVIRONMENT}" \
 		"${LOCATION}" \
+		"${PROMPT_CHAR}" \
 	)"
 }
 
