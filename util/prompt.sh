@@ -31,7 +31,7 @@ _bash_prompt() {
 	OFFSET+=${#COLOR_RESET}
 	local BRANCH="$(__vcs_ps1 " (%s)")"
 	# For both branches of this if block, the "normal" text is muted
-	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?\)$ ]]; then
+	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?([<>=]?\))?$ ]]; then
 		# If the branch's dirty state is indicated, highlight that.
 		# Add a COLOR_RESET to unset the bold state (which screws up later
 		# colors).
@@ -56,7 +56,7 @@ _bash_prompt() {
 			OFFSET+=${#MUTED_COLOR}
 		fi
 		# Add the closing parenthesis
-		LOCATION+=")${COLOR_RESET}"
+		LOCATION+="${BASH_REMATCH[4]}${COLOR_RESET}"
 		OFFSET+=${#COLOR_RESET}
 	else
 		# Mute the branch name as well
