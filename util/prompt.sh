@@ -1,5 +1,40 @@
-
 source ~/.dotfiles/util/term.sh
+source ~/.dotfiles/util/k8s.sh
+
+_prompt_environment() {
+	# Build up an associative array with the current active environments
+	# The array is returned as a string, that when evaluated will create the
+	# array with the given variable name (given as the first argument). If no
+	# name is given, the name 'ENVIRONMENTS' will be used.
+	# Multiple environments may be active at a time.
+	VAR_NAME="${1:-ENVIRONMENTS}"
+	local -A "${VAR_NAME}"
+	# This is a nameref so that the rest of the function can just use
+	# `$ENVS` and it will work as expected. We can't reuse ENVIRONMENTS, as that
+	# would be a circular reference (and bash complains)
+	local -n ENVS="${VAR_NAME}"
+	# Python
+	if [ ! -z "$VIRTUAL_ENV" ]; then
+		ENVS[py]="$(basename ${VIRTUAL_ENV})"
+	fi
+	# Ruby
+	if [ ! -z "$rvm_bin_path" ]; then
+		ENVS[rb]="$(rvm_bin_path)/rvm-prompt"
+	fi
+	# Kubernetes is gated behind an env var to keep it from constantly shelling
+	# out.
+	if [ ${SHOW_KUBERNETES_ENV:-0} = 1 ]; then
+		update_k8s_env
+		ENVS["k8s"]="${PROMPT_K8S_CONTEXT}:${PROMPT_K8S_NAMESPACE}"
+	fi
+	# This mess of characters expands the `ENVIRONMENTS` parameter (subscripted
+	# by `@`, so it applies to all items in the array) and transforms it to a
+	# string that can be evaluated. That string will declare a variable and set
+	# the value to the same value of ENVIRONMENTS in this function.
+	# Because `$ENVIRONMENTS` is a nameref, the name of the new variable is
+	# actually going to be the parameter passed in to this function.
+	echo "${ENVS[@]@A}"
+}
 
 _bash_prompt() {
 	# Save the value of the last exit status to color things later
@@ -11,17 +46,32 @@ _bash_prompt() {
 	# This variable will keep track of the correction to apply for non-printed
 	# characters (like color control codes)
 	local -i OFFSET=0
-	# Figure out if we're in a Python virtualenv or a Ruby env
-	local ENVIRONMENT=""
-	if [ ! -z "$VIRTUAL_ENV" ]; then
-		ENVIRONMENT="$(basename ${VIRTUAL_ENV})"
-	elif [ ! -z "$rvm_bin_path" ]; then
-		ENVIRONMENT="$(rvm_bin_path)/rvm-prompt"
-	fi
-	# Display the environment in muted colors
-	if [ ! -z "$ENVIRONMENT" ]; then
-		ENVIRONMENT="$(printf "%s(%s)%s" "$MUTED_COLOR" "$ENVIRONMENT" "$COLOR_RESET")"
+	# Default the environment string to be empty
+	local ENVIRONMENT
+	# Figure out if we're in any special environments
+	eval $(_prompt_environment ENVIRONMENTS)
+	if [ ${#ENVIRONMENTS[@]} != 0 ]; then
+	# The surrounding parentheses are muted, and the environment types are as
+	# well, but the environment identifiers are printed normally.
+		ENVIRONMENT="${MUTED_COLOR}("
 		OFFSET+=${#MUTED_COLOR}
+		# Sort the env types (the array keys)
+		local KEYS="$(sort <<<$(IFS=$'\n'; printf "%s" "${!ENVIRONMENTS[*]}"))"
+		for KEY in $KEYS; do
+			# Force the environment type to lowercase, add a colon, and reset
+			# the text color
+			ENVIRONMENT+="${KEY,,}:${COLOR_RESET}"
+			OFFSET+=${#COLOR_RESET}
+			# Append the environment name, then set the color back to muted
+			ENVIRONMENT+="${ENVIRONMENTS[${KEY}]}${MUTED_COLOR}"
+			OFFSET+=${#MUTED_COLOR}
+			# Add a separator
+			ENVIRONMENT+=" "
+		done
+		# Remove the trailing space
+		ENVIRONMENT="${ENVIRONMENT:0: -1}"
+		# Close the parentheses, and reset the text color
+		ENVIRONMENT+=")${COLOR_RESET}"
 		OFFSET+=${#COLOR_RESET}
 	fi
 	# The 'context' is a combination of hostname, current directory and VCS
