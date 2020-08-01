@@ -25,8 +25,6 @@ toggle_k8s_env() {
 	fi
 }
 
-# Wrapper functions to substitute for kubens and kubectx
-
 # Detect if there's the shell or Go versions of kubectx/kubens. If they're the
 # bash versions, just use kubectl. The _USE_KUBENS and _USE_KUBECTX global env
 # vars will be set by _detect_k8s_util_versions to either 0 or 1 for if those
@@ -41,15 +39,6 @@ _detect_k8s_util_versions() {
 	done
 }
 _detect_k8s_util_versions
-
-# This gnarly regex matches the columns in the output from
-# `kubectl config get-contexts`. The printf subshell is to repeat the
-# "one or more whitespace, followed by a capture group of one or more
-# non-whitespace" (the '[[:space:]]+([^[:space:]]+)' string). See
-# https://stackoverflow.com/a/5349842 for an example. The current context is
-# denoted in the output by a '*' in the first column.
-# The columns are "current context", "name", "cluster", "user", "namespace"
-_k8s_context_regex="^\(*?)$(printf '[[:space:]]+([^[:space:]]+)%.0s' {1..4})$"
 
 declare PROMPT_K8S_CONTEXT
 declare PROMPT_K8S_NAMESPACE
