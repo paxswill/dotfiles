@@ -36,6 +36,13 @@ _prompt_environment() {
 	echo "${ENVS[@]@A}"
 }
 
+# Caching so we don't keep rebuilding strings and calculating offsets
+# Common offsets from control characters
+declare -gi _CACHED_RESET_OFFSET=${#COLOR_RESET}
+declare -gi _CACHED_MUTED_RESET_OFFSET=$(( ${#MUTED_COLOR} + ${_CACHED_RESET_OFFSET} ))
+# The escape sequence for a failed command
+declare -g  _PROMPT_FAIL_CHARACTER="${RED_COLOR}\\\$${COLOR_RESET}"
+
 _bash_prompt() {
 	# Save the value of the last exit status to color things later
 	local LAST_STATUS=$?
@@ -54,17 +61,17 @@ _bash_prompt() {
 	# The surrounding parentheses are muted, and the environment types are as
 	# well, but the environment identifiers are printed normally.
 		ENVIRONMENT="${MUTED_COLOR}("
-		OFFSET+=${#MUTED_COLOR}
+		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
 		# Sort the env types (the array keys)
 		local KEYS="$(sort <<<$(IFS=$'\n'; printf "%s" "${!ENVIRONMENTS[*]}"))"
+		# Do all the offset calculations at once
+		OFFSET+=$(( $OFFSET + ${_CACHED_MUTED_RESET_OFFSET} * ${#KEYS[*]} ))
 		for KEY in $KEYS; do
 			# Force the environment type to lowercase, add a colon, and reset
 			# the text color
 			ENVIRONMENT+="${KEY,,}:${COLOR_RESET}"
-			OFFSET+=${#COLOR_RESET}
 			# Append the environment name, then set the color back to muted
 			ENVIRONMENT+="${ENVIRONMENTS[${KEY}]}${MUTED_COLOR}"
-			OFFSET+=${#MUTED_COLOR}
 			# Add a separator
 			ENVIRONMENT+=" "
 		done
@@ -72,13 +79,11 @@ _bash_prompt() {
 		ENVIRONMENT="${ENVIRONMENT:0: -1}"
 		# Close the parentheses, and reset the text color
 		ENVIRONMENT+=")${COLOR_RESET}"
-		OFFSET+=${#COLOR_RESET}
 	fi
 	# The 'context' is a combination of hostname, current directory and VCS
 	# branch name
 	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}:\W"
-	OFFSET+=${#HOST_COLOR}
-	OFFSET+=${#COLOR_RESET}
+	OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
 	local BRANCH="$(__vcs_ps1 " (%s)")"
 	# For both branches of this if block, the "normal" text is muted
 	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?([<>=]?\))?$ ]]; then
@@ -86,8 +91,7 @@ _bash_prompt() {
 		# Add a COLOR_RESET to unset the bold state (which screws up later
 		# colors).
 		LOCATION+=" ${MUTED_COLOR}(${BASH_REMATCH[1]}${COLOR_RESET}"
-		OFFSET+=${#MUTED_COLOR}
-		OFFSET+=${#COLOR_RESET}
+		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
 		# Highlight the dirty flag in red
 		if [ -n "${BASH_REMATCH[2]}" ]; then
 			LOCATION+="${RED_COLOR}${BASH_REMATCH[2]}"
@@ -107,12 +111,11 @@ _bash_prompt() {
 		fi
 		# Add the closing parenthesis
 		LOCATION+="${BASH_REMATCH[4]}${COLOR_RESET}"
-		OFFSET+=${#COLOR_RESET}
+		OFFSET+=${_CACHED_RESET_OFFSET}
 	else
 		# Mute the branch name as well
 		LOCATION+="${MUTED_COLOR}${BRANCH}${COLOR_RESET}"
-		OFFSET+=${#MUTED_COLOR}
-		OFFSET+=${#COLOR_RESET}
+		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
 	fi
 	# Save the cursor position before we go mucking around with it
 	_tput sc
@@ -131,7 +134,7 @@ _bash_prompt() {
 	# Color the last prompt character red if the last exit status was non-0
 	local PROMPT_CHAR='\\$'
 	if [ $LAST_STATUS != 0 ]; then
-		PROMPT_CHAR="${RED_COLOR}${PROMPT_CHAR}${COLOR_RESET}"
+		PROMPT_CHAR="${_PROMPT_FAIL_CHARACTER}"
 	fi
 	# Now bounce back for our regularly scheduled prompt writing
 	_tput rc
