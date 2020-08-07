@@ -61,7 +61,8 @@ update_k8s_env() {
 			# The columns are current, name, cluster, user, namespace
 			# The current context has a '*' in the "current" column, otherwise
 			# that column is empty.
-			[ ${#FIELDS[@]} != 5 ] && continue
+			# The namespace column *might* be empty
+			[ "${FIELDS[0]}" != '*' ] && continue
 			# From here forward we know that CONTEXT_LINE is the current context
 			PROMPT_K8S_CONTEXT="${FIELDS[1]}"
 			PROMPT_K8S_NAMESPACE="${FIELDS[4]}"
