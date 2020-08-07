@@ -94,7 +94,7 @@ _configure_bash_completion() {
 	if ! shopt -oq posix; then
 		# Enable programmable shell completion features
 		local COMPLETION_FILES=(
-			# Standard-ish locations form Linux
+			# Standard-ish locations from Linux
 			[1]="/usr/share/bash-completion/bash_completion"
 			[2]="/etc/bash_completion"
 			[3]="/usr/local/etc/bash_completion"
@@ -119,8 +119,10 @@ _configure_bash_completion() {
 			fi
 		done
 		# These programs all operate the same way for generating completion
+		# If their completion functions aren't already loaded, generate them
+		# and load them dynamically
 		for COMPLETION_CMD in kubectl minikube helm; do
-			if _prog_exists "$COMPLETION_CMD"; then
+			if _prog_exists "$COMPLETION_CMD" && ! _completion_loaded "${COMPLETION_CMD}"; then
 				eval "$("${COMPLETION_CMD}" completion bash)"
 			fi
 		done
@@ -207,8 +209,9 @@ _configure_npm() {
 			append_to_path "$(npm bin -g 2>/dev/null)"
 		fi
 		# This isn't really portable
-		if [ -e "$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh" ]; then
-			. "$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
+		local COMPLETION_PATH="$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
+		if ! _completion_loaded npm && [ -e "$COMPLETION_PATH" ]; then
+			. "${COMPLETION_PATH}"
 		fi
 	fi
 }
@@ -260,7 +263,9 @@ _configure_pip() {
 				# version of pip with whatever version of pip is being
 				# processed right now.
 				for PIP_NAME in ${PIP_VERSIONS[@]:1}; do
-					eval "${PIP_COMPLETE/%${FIRST_PIP}/${PIP_NAME}}"
+					if ! _completion_loaded "$PIP_NAME"; then
+						eval "${PIP_COMPLETE/%${FIRST_PIP}/${PIP_NAME}}"
+					fi
 				done
 			fi
 		fi

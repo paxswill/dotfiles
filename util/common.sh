@@ -106,3 +106,6 @@ _prog_exists () {
 	fi
 }
 
+_completion_loaded () {
+	 complete -p "$1" &>/dev/null
+}
