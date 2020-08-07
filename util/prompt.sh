@@ -25,7 +25,9 @@ _prompt_environment() {
 	# out.
 	if [ ${SHOW_KUBERNETES_ENV:-0} = 1 ]; then
 		update_k8s_env
-		ENVS["k8s"]="${PROMPT_K8S_CONTEXT}:${PROMPT_K8S_NAMESPACE}"
+		# The Namespace might be empty, so only show the colon if there's a
+		# namespace
+		ENVS["k8s"]="${PROMPT_K8S_CONTEXT}${PROMPT_K8S_NAMESPACE:+:}${PROMPT_K8S_NAMESPACE}"
 	fi
 	# This mess of characters expands the `ENVIRONMENTS` parameter (subscripted
 	# by `@`, so it applies to all items in the array) and transforms it to a
