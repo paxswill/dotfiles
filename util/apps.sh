@@ -17,9 +17,9 @@ _list_installed_python() {
 	fi
 	# Generate a list of suffixes for the minor python versions
 	local PY_SUFFIXES=()
-	PY_SUFFIXES+=($(seq -f '%1.1f' 2.6 0.1 2.7))
-	# When we start going past Python 3.9 I'll update this :)
-	PY_SUFFIXES+=($(seq -f '%1.1f' 3.0 0.1 4))
+	PY_SUFFIXES=(2.6 2.7)
+	# Update this in a few years when Python 3.15 is in development
+	PY_SUFFIXES=(3.{0..15})
 	# Add just major version suffixes
 	PY_SUFFIXES+=(2)
 	PY_SUFFIXES+=(3)
