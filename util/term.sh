@@ -8,9 +8,12 @@ source ~/.dotfiles/util/hosts.sh
 # These functions will call tput with the appropriate name for the appropriate
 # platform when called using the capability name (i.e. like ncurses tput).
 
+# SYSTYPE is used in every call to _tput, so call it once and get it over with
+get_systype
+
 _tput() {
 	# Ensure SYSTYPE is set
-	if [ $(get_systype) = "FreeBSD" ]; then
+	if [ $SYSTYPE = "FreeBSD" ]; then
 		case $1 in
 			setab)
 				tput AB "${@:2}";;

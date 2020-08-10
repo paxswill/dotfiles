@@ -9,7 +9,7 @@ create_m4_macros(){
 	if ! type get_systype &>/dev/null; then
 		source "${DOTFILES}/util/hosts.sh"
 	fi
-	local SYSTYPE=$(get_systype)
+	get_systype
 	# Make sure _prog_exists is present
 	if ! type _prog_exists &>/dev/null; then
 		source "${DOTFILES}/util/common.sh"

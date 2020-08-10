@@ -7,7 +7,7 @@ find_pkcs11() {
 	local PKCS11_PROVIDER=""
 	local -a PKCS11_LIB_DIRS
 	local -a PKCS11_PROVIDERS
-	local SYSTYPE="$(get_systype)"
+	get_systype
 	if [ "$SYSTYPE" = "Darwin" ]; then
 		PKCS11_PROVIDERS+=("libykcs11.dylib")
 		PKCS11_LIB_DIRS+=("/Library/OpenSC/lib")

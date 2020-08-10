@@ -8,9 +8,8 @@ get_systype() {
 	# SunOS.
 	if ! [ -v SYSTYPE ]; then
 		# Export SYSTYPE and declare it as readonly
-		declare -rx SYSTYPE="$(uname -s)"
+		declare -grx SYSTYPE="$(uname -s)"
 	fi
-	printf "%s" "$SYSTYPE"
 }
 
 parse_fqdn() {
@@ -18,7 +17,7 @@ parse_fqdn() {
 	# (FQDN) of the current system. These are then exported as the HOST and
 	# DOMAIN variables. The hostname is *not* exported as HOSTNAME as that
 	# variable is set by bash, and is usually just the output of `hostname`.
-	local SYSTYPE=$(get_systype)
+	get_systype
 	if [ -z $HOST ] && [ -z $DOMAIN ]; then
 		# Get some information to base later decisions on
 		# Obtain and normalize the host name and domain name
