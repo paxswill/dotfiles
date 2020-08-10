@@ -107,6 +107,14 @@ _configure_bash_completion() {
 		)
 		if [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew; then
 			COMPLETION_FILES[0]="$(brew --prefix)/etc/profile.d/bash_completion.sh"
+			# Newer versions of bash-completion will load completion files on
+			# demand, which is nice as it makes start up faster. Old-style
+			# completion files are also supported, but Homebrew's version of
+			# the newer bash-completion (the @2 version, the default is the old
+			# version) doesn't look for the old directory, so we have to point
+			# it to the old path ourselves.
+			# tl;dr https://discourse.brew.sh/t/bash-completion-2-vs-brews-auto-installed-bash-completions/2391/2
+			export BASH_COMPLETION_COMPAT_DIR="$(brew --prefix)/etc/bash_completion.d"
 		fi
 		for COMPLETE_PATH in ${COMPLETION_FILES[@]}; do
 			if [ -f "$COMPLETE_PATH" ]; then
