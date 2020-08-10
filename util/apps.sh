@@ -106,11 +106,7 @@ _configure_bash_completion() {
 			[6]="/usr/local/share/bash-completion/bash-completion.sh"
 		)
 		if [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew; then
-			if (( ${BASH_VERSINFO[0]} >= 4 )); then
-				COMPLETION_FILES[0]="$(brew --prefix)/share/bash-completion/bash_completion"
-			else
-				COMPLETION_FILES[0]="$(brew --prefix)/etc/bash_completion"
-			fi
+			COMPLETION_FILES[0]="$(brew --prefix)/etc/profile.d/bash_completion.sh"
 		fi
 		for COMPLETE_PATH in ${COMPLETION_FILES[@]}; do
 			if [ -f "$COMPLETE_PATH" ]; then
