@@ -123,6 +123,7 @@ _configure_bash_completion() {
 		# and load them dynamically
 		for COMPLETION_CMD in kubectl minikube helm k3d; do
 			if _prog_exists "$COMPLETION_CMD" && ! _completion_loaded "${COMPLETION_CMD}"; then
+				echo "Loading dynamic completion for ${COMPLETION_CMD}"
 				eval "$("${COMPLETION_CMD}" completion bash)"
 			fi
 		done
