@@ -116,6 +116,13 @@ _configure_bash_completion() {
 			# tl;dr https://discourse.brew.sh/t/bash-completion-2-vs-brews-auto-installed-bash-completions/2391/2
 			export BASH_COMPLETION_COMPAT_DIR="$(brew --prefix)/etc/bash_completion.d"
 		fi
+		# Extra bash-completion configuration
+		# Add hosts from avahi if avahi-browse is avaiable
+		export COMP_KNOWON_HOSTS_WITH_AVAHI=y
+		# If a completion is normally file-extension based, but no files with
+		# that extension are found, list all files
+		export COMP_FILEDIR_FALLBACK=y
+		# Find a bash-completion script and source it
 		for COMPLETE_PATH in ${COMPLETION_FILES[@]}; do
 			if [ -f "$COMPLETE_PATH" ]; then
 				source "$COMPLETE_PATH"
