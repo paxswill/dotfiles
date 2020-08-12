@@ -132,7 +132,8 @@ _configure_bash_completion() {
 		# These programs all operate the same way for generating completion
 		# If their completion functions aren't already loaded, generate them
 		# and load them dynamically
-		for COMPLETION_CMD in kubectl minikube helm k3d; do
+		GO_COMPLETION_COMMANDS=( kubectl minikube helm k3d )
+		for COMPLETION_CMD in "${GO_COMPLETION_COMMANDS[@]}"; do
 			if _prog_exists "$COMPLETION_CMD" && ! _completion_loaded "${COMPLETION_CMD}"; then
 				echo "Loading dynamic completion for ${COMPLETION_CMD}"
 				eval "$("${COMPLETION_CMD}" completion bash)"
