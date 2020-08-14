@@ -38,3 +38,5 @@
 	helper = osxkeychain
 	helper = libsecret
 	helper = cache --socket /tmp/USER/git-credential-cache-socket
+[checkout]
+	defaultRemote = origin
