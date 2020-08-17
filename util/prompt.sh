@@ -134,7 +134,7 @@ _bash_prompt() {
 		printf '%(%H:%M:%S)T' -1
 	fi
 	# Color the last prompt character red if the last exit status was non-0
-	local PROMPT_CHAR='\\$'
+	local PROMPT_CHAR="\\\$"
 	if [ $LAST_STATUS != 0 ]; then
 		PROMPT_CHAR="${_PROMPT_FAIL_CHARACTER}"
 	fi
