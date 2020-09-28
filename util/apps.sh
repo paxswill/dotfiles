@@ -104,6 +104,7 @@ _configure_bash_completion() {
 			[5]="/opt/local/etc/bash_completion"
 			# FreeBSD Ports
 			[6]="/usr/local/share/bash-completion/bash-completion.sh"
+			[7]="/usr/local/share/bash-completion/bash_completion.sh"
 		)
 		if [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew; then
 			COMPLETION_FILES[0]="$(brew --prefix)/etc/profile.d/bash_completion.sh"
