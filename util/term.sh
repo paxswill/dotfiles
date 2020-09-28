@@ -81,9 +81,9 @@ _get_host_color() {
 	# standout mode, which is just reverse and bold modes at the same time).
 	# BSD includes md5, GNU and Solaris include md5sum
 	if _prog_exists md5; then
-		hashed_host=$(printf $name | md5)
+		hashed_host=$(printf "%s" "$1" | md5)
 	elif _prog_exists md5sum; then
-		hashed_host=$(printf $name | md5sum)
+		hashed_host=$(printf "%s" "$1" | md5sum)
 	fi
 	# Handle the case where there isn't an MD5 program
 	if [ ! -z "$hashed_host" ]; then
@@ -123,7 +123,7 @@ _configure_host_color() {
 	# Normalize hostnames to only lower-case letters, numbers, and '-',
 	# i.e. proper hostnames
 	local name="$(printf "%s" "${HOST,,}" | tr -d -c "a-z0-9-")"
-	HOST_COLOR="$(_get_host_color)"
+	HOST_COLOR="$(_get_host_color "$name")"
 }
 
 _configure_less_colors() {
