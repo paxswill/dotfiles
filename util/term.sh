@@ -111,7 +111,7 @@ _get_host_color() {
 			*)
 				# Add 1 so that 0 (background in 8-color, highlighted
 				# background in 16-color) is mapped to red, and so on
-				tput setaf $(( $COLOR + 1 ));;
+				_tput setaf $(( $COLOR + 1 ));;
 		esac
 	fi
 	# No need to return anything for the case where there isn't a host color.
