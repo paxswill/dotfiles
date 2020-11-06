@@ -217,5 +217,21 @@ if has("gui_running")
 	endif
 endif
 
+""" Set cursor type for different modes (needed for CLI vim in Windows Terminal
+""" with WSL).
+if exists("$WT_SESSION")
+	" Blinking vertical bar in insert mode
+	let &t_SI .= "\<Esc>[5 q"
+	" Solid block in other modes
+	let &t_EI .= "\<Esc>[2 q"
+	" 1 or 0 -> blinking block
+	" 3 -> blinking underscore
+	" Recent versions of xterm (282 or above) also support
+	" 5 -> blinking vertical bar
+	" 6 -> solid vertical bar
+	" Reset cursor when vim exits
+	autocmd VimLeave * silent !echo -ne "\033]112\007"
+endif
+
 " Reenable filetype stuff that Vundle needed turned off
 filetype plugin indent on
