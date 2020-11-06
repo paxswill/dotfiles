@@ -60,13 +60,16 @@ _configure_linux() {
 	if _prog_exists lsb_release; then
 		DISTRO=$(lsb_release -i)
 		DISTRO=${DISTRO##*:?}
+		declare -grx DISTRO
+	elif [ -f /etc/issue ]; then
+		declare -grx DISTRO="$(grep -o '^\w\+' /etc/issue)"
 	fi
-	export DISTRO
-	if [ "$DISTRO" = "Debian" ]; then
-		_configure_debian
-	elif [ "$DISTRO" = "Ubuntu" ]; then
-		_configure_ubuntu
-	fi
+	case "$DISTRO" in
+		Debian|Raspbian)
+			_configure_debian;;
+		Ubuntu)
+			_configure_ubuntu;;
+	esac
 	# Add function for locking the screen
 	if [ ! -z "$PS1" ]; then
 		if xscreensaver-command -version &>/dev/null; then
@@ -90,7 +93,8 @@ _configure_ubuntu() {
 }
 
 configure_os() {
-	case $(get_systype) in
+	get_systype
+	case $SYSTYPE in
 		Darwin)
 			_configure_darwin;;
 		Linux)
