@@ -5,6 +5,8 @@ _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
 	if _prog_exists brew; then
 		# Homebrew setup
+		# Only auto-update every 6 hours
+		export HOMEBREW_AUTO_UPDATE_SECS=21600
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
 		prepend_to_path "${BREW_PREFIX}/sbin"
