@@ -1,21 +1,3 @@
-[include]
-	path = .gitconfig_local
-[rerere]
-	enabled = 1
-[merge]
-	defaultToUpstream = true
-	log = 20
-[user]
-	name = Will Ross
-	signingkey = 54D4E94D
-[core]
-	excludesfile = ~/.cvsignore
-[color]
-	ui = auto
-[diff]
-	renames = copies
-[github]
-	user = paxswill
 [alias]
 	br = branch
 	ci = commit
@@ -28,15 +10,33 @@
 	st = status
 	ap = add --patch
 	cip = commit --patch
-[push]
-	default = current
-[pull]
-	ff = only
+[checkout]
+	defaultRemote = origin
+[color]
+	ui = auto
+[core]
+	excludesfile = ~/.cvsignore
 [credential]
 	# There can be multiple helpers defined; git will try each in turn until one
 	# works.
 	helper = osxkeychain
 	helper = libsecret
 	helper = cache --socket /tmp/USER/git-credential-cache-socket
-[checkout]
-	defaultRemote = origin
+[diff]
+	renames = copies
+[github]
+	user = paxswill
+[include]
+	path = .gitconfig_local
+[merge]
+	defaultToUpstream = true
+	log = 20
+[push]
+	default = current
+[pull]
+	ff = only
+[rerere]
+	enabled = 1
+[user]
+	name = Will Ross
+	signingkey = 54D4E94D
