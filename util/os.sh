@@ -5,10 +5,18 @@ _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
 	if _prog_exists brew; then
 		# Homebrew setup
+		# Only auto-update every 6 hours
+		export HOMEBREW_AUTO_UPDATE_SECS=21600
 		# Move homebrew to the front of the path if we have it
 		local BREW_PREFIX=$(brew --prefix)
 		prepend_to_path "${BREW_PREFIX}/sbin"
 		prepend_to_path "${BREW_PREFIX}/bin"
+		# If there are additional versions of Python, add them to the end of
+		# PATH
+		for VERSION in 3.{6..15}; do
+			# prepend_to_path checks for existence
+			append_to_path "${BREW_PREFIX}/opt/python@${VERSION}/bin"
+		done
 	elif [ -d /opt ]; then
 		# MacPorts
 		append_to_path "/opt/local/bin"
