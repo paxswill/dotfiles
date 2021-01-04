@@ -28,6 +28,8 @@
 	user = paxswill
 [include]
 	path = .gitconfig_local
+[init]
+	defaultBranch = main
 [merge]
 	defaultToUpstream = true
 	log = 20
