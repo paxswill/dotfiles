@@ -2,6 +2,7 @@
 source ~/.dotfiles/util/term.sh
 source ~/.dotfiles/util/find_pkcs11.sh
 source ~/.dotfiles/util/prompt.sh
+source ~/.dotfiles/util/completion.sh
 
 _list_installed_python() {
 	# Unlike all of the other functions in this file, this function does *not*
@@ -71,10 +72,6 @@ _configure_bash() {
 	shopt -s dotglob
 	# The rest of this is only applicable to interactive shells
 	if [ ! -z "$PS1" ]; then
-		# Ignore Vim swap files when completing
-		FIGNORE=".swp:.swo"
-		# ...but if they're the only completion, allow them
-		shopt -u force_fignore
 		# check the window size after each command and, if necessary,
 		# update the values of LINES and COLUMNS.
 		shopt -s checkwinsize
@@ -85,62 +82,6 @@ _configure_bash() {
 	fi
 	# Configure the prompt from here
 	_configure_prompt
-}
-
-_configure_bash_completion() {
-	[ -z "$PS1" ] && return
-	# Autocomplete for hostnames
-	shopt -s hostcomplete
-	if ! shopt -oq posix; then
-		# Enable programmable shell completion features
-		local COMPLETION_FILES=(
-			# Standard-ish locations from Linux
-			[1]="/usr/share/bash-completion/bash_completion"
-			[2]="/etc/bash_completion"
-			[3]="/usr/local/etc/bash_completion"
-			# ODU Solaris Machines
-			[4]="${HOME}/local/common/share/bash-completion/bash_completion"
-			# MacPorts
-			[5]="/opt/local/etc/bash_completion"
-			# FreeBSD Ports
-			[6]="/usr/local/share/bash-completion/bash-completion.sh"
-			[7]="/usr/local/share/bash-completion/bash_completion.sh"
-		)
-		if [ "$SYSTYPE" == "Darwin" ] && _prog_exists brew; then
-			COMPLETION_FILES[0]="$(brew --prefix)/etc/profile.d/bash_completion.sh"
-			# Newer versions of bash-completion will load completion files on
-			# demand, which is nice as it makes start up faster. Old-style
-			# completion files are also supported, but Homebrew's version of
-			# the newer bash-completion (the @2 version, the default is the old
-			# version) doesn't look for the old directory, so we have to point
-			# it to the old path ourselves.
-			# tl;dr https://discourse.brew.sh/t/bash-completion-2-vs-brews-auto-installed-bash-completions/2391/2
-			export BASH_COMPLETION_COMPAT_DIR="$(brew --prefix)/etc/bash_completion.d"
-		fi
-		# Extra bash-completion configuration
-		# Add hosts from avahi if avahi-browse is avaiable
-		export COMP_KNOWON_HOSTS_WITH_AVAHI=y
-		# If a completion is normally file-extension based, but no files with
-		# that extension are found, list all files
-		export COMP_FILEDIR_FALLBACK=y
-		# Find a bash-completion script and source it
-		for COMPLETE_PATH in ${COMPLETION_FILES[@]}; do
-			if [ -f "$COMPLETE_PATH" ]; then
-				source "$COMPLETE_PATH"
-				break
-			fi
-		done
-		# These programs all operate the same way for generating completion
-		# If their completion functions aren't already loaded, generate them
-		# and load them dynamically
-		GO_COMPLETION_COMMANDS=( kubectl minikube helm k3d )
-		for COMPLETION_CMD in "${GO_COMPLETION_COMMANDS[@]}"; do
-			if _prog_exists "$COMPLETION_CMD" && ! _completion_loaded "${COMPLETION_CMD}"; then
-				echo "Loading dynamic completion for ${COMPLETION_CMD}"
-				eval "$("${COMPLETION_CMD}" completion bash)"
-			fi
-		done
-	fi
 }
 
 _configure_cabal() {
