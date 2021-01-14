@@ -16,9 +16,11 @@ _dotfile_completion_lazy() {
 	local LAZY_FUNC_NAME="$1"
 	shift
 	eval "$LAZY_FUNC_NAME () {
-		unset -f \"$LAZY_FUNC_NAME\"
+		local OLD_COMPLETION=\"\$(complete -p \${1})\"
 		eval \"${@}\"
-		NEW_COMPLETION=\"\$(complete -p \${1})\"
+		local NEW_COMPLETION=\"\$(complete -p \${1})\"
+		[[ \$OLD_COMPLETION = \$NEW_COMPLETION ]] && return
+		unset -f \"$LAZY_FUNC_NAME\"
 		local FUNCTION_PATTERN='-F \w+'
 		if [[ \"\$NEW_COMPLETION\" =~ \$FUNCTION_PATTERN ]]; then
 			\"\${BASH_REMATCH[0]:3}\" \"\$1\" \"\$2\" \"\$3\"
@@ -64,6 +66,20 @@ _dotfile_completion_loaded () {
 	return 1
 }
 
+_dotfile_completion_lazy_generator() {
+	# Args: command name, generator command
+	local LAZY_FUNC_NAME="_dotfile_completion_lazy_${1}"
+	_dotfile_completion_lazy "$LAZY_FUNC_NAME" "\$(${2})"
+	complete -F "$LAZY_FUNC_NAME" ${COMPLETION_CMD}
+}
+
+_dotfile_completion_lazy_source() {
+	# Args: command name, file path
+	local LAZY_FUNC_NAME="_dotfile_completion_lazy_${1}"
+	_dotfile_completion_lazy "$LAZY_FUNC_NAME" "source \"${2}\""
+	complete -F "$LAZY_FUNC_NAME" ${COMPLETION_CMD}
+}
+
 _dotfile_completion_go_cmds() {
 	# These programs all operate the same way for generating completion
 	# If their completion functions aren't already loaded, generate them
@@ -72,9 +88,9 @@ _dotfile_completion_go_cmds() {
 	local COMPLETION_CMD
 	for COMPLETION_CMD in "${GO_COMPLETION_COMMANDS[@]}"; do
 		if _prog_exists "$COMPLETION_CMD" && ! _dotfile_completion_loaded "${COMPLETION_CMD}"; then
-			local LAZY_FUNC_NAME="_dotfile_completion_lazy_${COMPLETION_CMD}"
-			_dotfile_completion_lazy "$LAZY_FUNC_NAME" "\$(${COMPLETION_CMD} completion bash)"
-			complete -F "$LAZY_FUNC_NAME" ${COMPLETION_CMD}
+			_dotfile_completion_lazy_generator \
+				"${COMPLETION_CMD}" \
+				"${COMPLETION_CMD} completion bash"
 		fi
 	done
 }

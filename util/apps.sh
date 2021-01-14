@@ -114,7 +114,10 @@ _configure_docker() {
 	local DOCKER_APP="/Applications/Docker.app/Contents/Resources/etc"
 	if [ -d "${DOCKER_APP}" ]; then
 		for F in ${DOCKER_APP}/*.bash-completion; do
-			[ -f "$F" ] && . $F
+			local CMD_NAME="$(basename "$F" .bash-completion)"
+			if ! _dotfile_completion_loaded "$CMD_NAME"; then
+				_dotfile_completion_lazy_source "$CMD_NAME" "$F"
+			fi
 		done
 	fi
 }
@@ -166,7 +169,7 @@ _configure_npm() {
 		# This isn't really portable
 		local COMPLETION_PATH="$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
 		if ! _completion_loaded npm && [ -e "$COMPLETION_PATH" ]; then
-			. "${COMPLETION_PATH}"
+			_dotfile_completion_lazy_source npm "$COMPLETION_PATH"
 		fi
 	fi
 }
@@ -263,7 +266,9 @@ _configure_travis() {
 
 _configure_vagrant() {
 	if _prog_exists vagrant && [ ! -z "$PS1" ]; then
-		complete -W "$(echo `vagrant --help | awk '/^     /{print $1}'`;)" vagrant
+		_dotfile_completion_lazy_generator \
+			vagrant
+			"complete -W \$(vagrant --help | awk '/^     /{print $1}') vagrant"
 	fi
 }
 
