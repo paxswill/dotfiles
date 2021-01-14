@@ -35,6 +35,7 @@ _list_installed_python() {
 		PY_SUFFIXES+=("_pypy")
 		PY_SUFFIXES+=("_pypy3")
 	fi
+	local PY_SUFFIX
 	for PY_SUFFIX in ${PY_SUFFIXES[@]}; do
 		NAMES_TO_CHECK+=("${PROG_NAME}${PY_SUFFIX}")
 	done
@@ -306,7 +307,7 @@ _configure_vim() {
 _configure_virtualenv_wrapper() {
 	# Pull in virtualenvwrapper
 	local wrapper_source=$(type -p virtualenvwrapper.sh)
-	# Debian and Ubuntu package virtualenvwrapper to it's own directory outside
+	# Debian and Ubuntu package virtualenvwrapper to its own directory outside
 	# of $PATH.
 	local debian_source="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
 	if [ -z $wrapper_source ] && [ -f $debian_source ]; then
@@ -324,6 +325,7 @@ _configure_virtualenv_wrapper() {
 		fi
 		# Find the python distribution that has virtualenvwrapper installed.
 		# Prefer Py3 over Py2
+		local PY
 		for PY in python3 python2 python; do
 			if _prog_exists $PY && $PY -c "import virtualenvwrapper" 2>/dev/null; then
 				export VIRTUALENVWRAPPER_PYTHON="$(which $PY)"
@@ -335,6 +337,7 @@ _configure_virtualenv_wrapper() {
 		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
 		export PIP_RESPECT_VIRTUALENV=true
 		# Provide an alias for creating Python3 and Python2 virtualenvs
+		local PYVER VENV_CMD
 		for PYVER in 2 3; do
 			for VENV_CMD in "mkvirtualenv" "mkproject" "mktmpenv"; do
 				local PYOPT="-p $(type -p python${PYVER})"
@@ -357,6 +360,7 @@ _configure_windows_ssh_agent() {
 		return
 	fi
 	local MISSING_PROG=0
+	local PROG
 	for PROG in ss socat setsid npiperelay.exe; do
 		if ! _prog_exists $PROG; then
 			printf "Unable to connect to Windows SSH Agent, missing %s\n" \
@@ -410,6 +414,7 @@ configure_apps() {
 	# AS a debugging facility, set this variable to "y" to print the current
 	# time for each config function to help figure out what is taking so long.
 	local PRINT_TIMES="n"
+	local CONFIG_FUNCTION
 	for CONFIG_FUNCTION in ${CONFIG_FUNCTIONS[@]}; do
 		if [ $PRINT_TIMES = "y" ]; then
 			printf '%s: %(%H:%M:%S)T\n' "$CONFIG_FUNCTION" '-1'

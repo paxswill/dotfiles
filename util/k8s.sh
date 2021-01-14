@@ -30,6 +30,7 @@ toggle_k8s_env() {
 # vars will be set by _detect_k8s_util_versions to either 0 or 1 for if those
 # commands should be used.
 _detect_k8s_util_versions() {
+	local UTIL
 	for UTIL in kubectx kubens; do
 		if ! _prog_exists $UTIL || [ "$(head -c2 $(type -p ${UTIL}))" = "#!" ]; then
 			declare -gi _USE_${UTIL^^}=0
