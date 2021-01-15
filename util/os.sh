@@ -8,7 +8,7 @@ _configure_darwin() {
 		# Only auto-update every 6 hours
 		export HOMEBREW_AUTO_UPDATE_SECS=21600
 		# Move homebrew to the front of the path if we have it
-		local BREW_PREFIX=$(brew --prefix)
+		_brew_prefix >/dev/null
 		prepend_to_path "${BREW_PREFIX}/sbin"
 		prepend_to_path "${BREW_PREFIX}/bin"
 		# If there are additional versions of Python, add them to the end of

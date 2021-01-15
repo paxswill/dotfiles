@@ -66,7 +66,7 @@ append_to_pkgconfpath() {
 	_common_append PKG_CONFIG_PATH "$1"
 }
 
-_prog_exists () {
+_prog_exists() {
 	# Shadow global $PATH as there might be changes made within this function
 	local PATH="$PATH"
 	# On WSL, only search paths on /mnt/[a-z] iff the command being searched for
@@ -79,6 +79,30 @@ _prog_exists () {
 		return 0
 	else
 		return 1
+	fi
+}
+
+_brew_prefix() {
+	# A wrapper around 'brew --prefix' that tries to be faster for some common
+	# operations during shell setup
+	# The check in BASH_CMDS is a proxy for checking if the command is in the
+	# command hash table. The table is cleared whenever $PATH is changed. When
+	# $PATH changes, the used Homebrew might be in a new place, so recalculate
+	# the prefix.
+	if [ ! "${BASH_CMDS[brew]}" ] || [[ ! -v BREW_PREFIX ]]; then
+		declare -g BREW_PREFIX="$(brew --prefix)"
+	fi
+	if (( $# == 0 )); then
+		# The first operation is just finding out what Homebrew's prefix is.
+		echo "$BREW_PREFIX"
+	else
+		# The second is finding an installed Cellar prefix
+		if [[ -d ${BREW_PREFIX}/opt/${1} ]]; then
+			echo "${BREW_PREFIX}/opt/${1}"
+		else
+			# Fall back to running brew if we can't find it
+			brew --prefix $1
+		fi
 	fi
 }
 

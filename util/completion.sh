@@ -116,7 +116,9 @@ _dotfile_completion_find_completion() {
 		"/usr/local/share/bash-completion/bash_completion.sh"
 	)
 	if _prog_exists brew; then
-		COMPLETION_FILES+=("$(brew --prefix)/etc/profile.d/bash_completion.sh")
+		# Call _brew_prefix to make sure $BREW_PREFIX is set in this shell
+		_brew_prefix >/dev/null
+		COMPLETION_FILES+=("${BREW_PREFIX}/etc/profile.d/bash_completion.sh")
 		# Newer versions of bash-completion will load completion files on
 		# demand, which is nice as it makes start up faster. Old-style
 		# completion files are also supported, but Homebrew's version of
@@ -124,7 +126,7 @@ _dotfile_completion_find_completion() {
 		# version) doesn't look for the old directory, so we have to point
 		# it to the old path ourselves.
 		# tl;dr https://discourse.brew.sh/t/bash-completion-2-vs-brews-auto-installed-bash-completions/2391/2
-		export BASH_COMPLETION_COMPAT_DIR="$(brew --prefix)/etc/bash_completion.d"
+		export BASH_COMPLETION_COMPAT_DIR="${BREW_PREFIX}/etc/bash_completion.d"
 	fi
 	# Find a bash-completion script and source it
 	local COMPLETE_PATH

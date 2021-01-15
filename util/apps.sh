@@ -130,7 +130,7 @@ _configure_ec2() {
 		# EC2_HOME needs the jars directory. Right now I'm just using Homebrew, so
 		# I'll need to add special handling if I use other platforms in the future.
 		if _prog_exists brew; then
-			export EC2_HOME="$(brew --prefix ec2-api-tools)/jars"
+			export EC2_HOME="$(_brew_prefix ec2-api-tools)/jars"
 		else
 			echo "WARNING: ec2-cmd detected but no Homebrew."
 		fi
