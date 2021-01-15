@@ -70,14 +70,14 @@ _dotfile_completion_lazy_generator() {
 	# Args: command name, generator command
 	local LAZY_FUNC_NAME="_dotfile_completion_lazy_${1}"
 	_dotfile_completion_lazy "$LAZY_FUNC_NAME" "\$(${2})"
-	complete -F "$LAZY_FUNC_NAME" ${COMPLETION_CMD}
+	complete -F "$LAZY_FUNC_NAME" $1
 }
 
 _dotfile_completion_lazy_source() {
 	# Args: command name, file path
 	local LAZY_FUNC_NAME="_dotfile_completion_lazy_${1}"
 	_dotfile_completion_lazy "$LAZY_FUNC_NAME" "source \"${2}\""
-	complete -F "$LAZY_FUNC_NAME" ${COMPLETION_CMD}
+	complete -F "$LAZY_FUNC_NAME" $1
 }
 
 _dotfile_completion_go_cmds() {

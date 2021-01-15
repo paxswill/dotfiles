@@ -170,7 +170,7 @@ _configure_npm() {
 		fi
 		# This isn't really portable
 		local COMPLETION_PATH="$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
-		if ! _completion_loaded npm && [ -e "$COMPLETION_PATH" ]; then
+		if ! _dotfile_completion_loaded npm && [ -e "$COMPLETION_PATH" ]; then
 			_dotfile_completion_lazy_source npm "$COMPLETION_PATH"
 		fi
 	fi
@@ -223,7 +223,7 @@ _configure_pip() {
 				# version of pip with whatever version of pip is being
 				# processed right now.
 				for PIP_NAME in ${PIP_VERSIONS[@]:1}; do
-					if ! _completion_loaded "$PIP_NAME"; then
+					if ! _dotfile_completion_loaded "$PIP_NAME"; then
 						eval "${PIP_COMPLETE/%${FIRST_PIP}/${PIP_NAME}}"
 					fi
 				done
