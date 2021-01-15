@@ -411,16 +411,28 @@ configure_apps() {
 		"_configure_virtualenv_wrapper"
 		"_configure_windows_ssh_agent"
 	)
-	# AS a debugging facility, set this variable to "y" to print the current
-	# time for each config function to help figure out what is taking so long.
-	local PRINT_TIMES="n"
 	local CONFIG_FUNCTION
+	# We can't use the time builtin here, I think because it's already within a
+	# function (that might be timing itself already).
+	local -A REALTIMES=( [0]=$EPOCHREALTIME )
 	for CONFIG_FUNCTION in ${CONFIG_FUNCTIONS[@]}; do
-		if [ $PRINT_TIMES = "y" ]; then
-			printf '%s: %(%H:%M:%S)T\n' "$CONFIG_FUNCTION" '-1'
+		$CONFIG_FUNCTION
+		if [[ ${_dotfile_log_times:-0} != 0 ]]; then
+			REALTIMES["$CONFIG_FUNCTION"]=$EPOCHREALTIME
 		fi
-		eval $CONFIG_FUNCTION
 	done
+	if [[ ${_dotfile_log_times:-0} != 0 ]]; then
+		local CURRENT_TIME LAST_TIME=${REALTIMES[0]}
+		for CONFIG_FUNCTION in ${CONFIG_FUNCTIONS[@]}; do
+			CURRENT_TIME=${REALTIMES[$CONFIG_FUNCTION]}
+			printf \
+				"%s: %0.3f\n" \
+				"$CONFIG_FUNCTION" \
+				$(echo $CURRENT_TIME - $LAST_TIME | bc)
+			LAST_TIME=$CURRENT_TIME
+		done
+	fi
+
 	# And now for tiny enironmental configurtion that doesn't fit elsewhere
 	# AKA, Misc.
 	export BLOCKSIZE=K

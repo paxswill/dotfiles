@@ -5,24 +5,33 @@
 # Use UTF8 for everything
 export LANG=en_US.UTF-8
 
+_dotfile_log_times=0
+
 load_bashrc() {
-	source $HOME/.dotfiles/util/common.sh
-	source $HOME/.dotfiles/util/apps.sh
-	source $HOME/.dotfiles/util/hosts.sh
-	source $HOME/.dotfiles/util/os.sh
-	source $HOME/.dotfiles/util/term.sh
-	source $HOME/.dotfiles/util/aliases.sh
-	source $HOME/.dotfiles/util/vcs.sh
+	local UTIL_FILE
+	for UTIL_FILE in common apps hosts os term aliases vcs; do
+		if [[ ${_dotfile_log_times:-0} != 0 ]]; then
+			TIMEFORMAT="${UTIL_FILE}.sh: %R"
+			time source "${HOME}/.dotfiles/util/${UTIL_FILE}.sh"
+		else
+			source "${HOME}/.dotfiles/util/${UTIL_FILE}.sh"
+		fi
+	done
 	# Set up personal paths
 	if [ -d "$HOME/local/bin" ]; then
 		append_to_path "$HOME/local/bin"
 	fi
 	# Configure everything
-	configure_os
-	configure_hosts
-	configure_aliases
-	configure_colors
-	configure_apps
+	local CONFIG_CMD
+	for CONFIG_CMD in os hosts aliases colors apps; do
+		if [[ ${_dotfile_log_times:-0} != 0 ]]; then
+			TIMEFORMAT="configure_${CONFIG_CMD}: %R"
+			time configure_${CONFIG_CMD}
+		else
+			configure_${CONFIG_CMD}
+		fi
+	done
+	unset TIMEFORMAT
 }
 load_bashrc
 
