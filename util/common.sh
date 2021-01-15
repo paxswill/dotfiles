@@ -82,8 +82,3 @@ _prog_exists () {
 	fi
 }
 
-# Cache for checking if commands have lazy-loaded completions available
-# Associative arrays were added in bash 4
-if (( ${BASH_VERSINFO[0]} >= 4 )); then
-	declare -gA _CACHED_LAZY_COMPLETIONS
-fi

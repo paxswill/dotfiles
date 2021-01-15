@@ -1,35 +1,5 @@
 source ~/.dotfiles/util/common.sh
 
-_dotfile_completion_lazy() {
-	# Usage:
-	# _complete_lazy "function name" "source_command"
-	# After this function is called, a function with the provided name will be
-	# defined which will load in the real completion when called. For example:
-	#
-	# _dotfile_completion_lazy "_foo" "source foo.sh"
-	# complete -F _foo foo
-	#
-	# 'source foo.sh' should be a string containing the command that would
-	# normally be evaluated to define the completion.
-	# Inspired by:
-	# https://dev.to/zanehannanau/bash-lazy-completion-evaluation-2a2d
-	local LAZY_FUNC_NAME="$1"
-	shift
-	eval "$LAZY_FUNC_NAME () {
-		local OLD_COMPLETION=\"\$(complete -p \${1})\"
-		eval \"${@}\"
-		local NEW_COMPLETION=\"\$(complete -p \${1})\"
-		[[ \$OLD_COMPLETION = \$NEW_COMPLETION ]] && return
-		unset -f \"$LAZY_FUNC_NAME\"
-		local FUNCTION_PATTERN='-F \w+'
-		if [[ \"\$NEW_COMPLETION\" =~ \$FUNCTION_PATTERN ]]; then
-			\"\${BASH_REMATCH[0]:3}\" \"\$1\" \"\$2\" \"\$3\"
-		else
-			compgen \${NEW_COMPLETION:9} \"\$1\"
-		fi
-	}"
-}
-
 _dotfile_completion_loaded () {
 	if complete -p "$1" &>/dev/null; then
 		# Check if the completion is already loaded
@@ -64,6 +34,42 @@ _dotfile_completion_loaded () {
 		done
 	fi
 	return 1
+}
+
+# Cache for checking if commands have lazy-loaded completions available
+# Associative arrays were added in bash 4
+if (( ${BASH_VERSINFO[0]} >= 4 )); then
+	declare -gA _CACHED_LAZY_COMPLETIONS
+fi
+
+_dotfile_completion_lazy() {
+	# Usage:
+	# _complete_lazy "function name" "source_command"
+	# After this function is called, a function with the provided name will be
+	# defined which will load in the real completion when called. For example:
+	#
+	# _dotfile_completion_lazy "_foo" "source foo.sh"
+	# complete -F _foo foo
+	#
+	# 'source foo.sh' should be a string containing the command that would
+	# normally be evaluated to define the completion.
+	# Inspired by:
+	# https://dev.to/zanehannanau/bash-lazy-completion-evaluation-2a2d
+	local LAZY_FUNC_NAME="$1"
+	shift
+	eval "$LAZY_FUNC_NAME () {
+		local OLD_COMPLETION=\"\$(complete -p \${1})\"
+		eval \"${@}\"
+		local NEW_COMPLETION=\"\$(complete -p \${1})\"
+		[[ \$OLD_COMPLETION = \$NEW_COMPLETION ]] && return
+		unset -f \"$LAZY_FUNC_NAME\"
+		local FUNCTION_PATTERN='-F \w+'
+		if [[ \"\$NEW_COMPLETION\" =~ \$FUNCTION_PATTERN ]]; then
+			\"\${BASH_REMATCH[0]:3}\" \"\$1\" \"\$2\" \"\$3\"
+		else
+			compgen \${NEW_COMPLETION:9} \"\$1\"
+		fi
+	}"
 }
 
 _dotfile_completion_lazy_generator() {
