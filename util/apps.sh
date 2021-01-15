@@ -247,25 +247,14 @@ _configure_pip() {
 	if [ ! -z "$PS1" ]; then
 		# Get the list of all versions of pip
 		local PIP_VERSIONS=($(_list_installed_python pip))
-		if (( ${#PIP_VERSIONS[@]} > 0 )); then
-			# Enable completion for the first version of pip
-			local FIRST_PIP="${PIP_VERSIONS[0]}"
-			eval "$(${FIRST_PIP} completion --bash 2>/dev/null)"
-			# Get a shorthand bash completion string for the first version of
-			# pip
-			local PIP_COMPLETE="$(complete -p ${FIRST_PIP})"
-			if (( ${#PIP_VERSIONS[@]} > 1 )); then
-				# For every version of pip besides the first, add completion
-				# for the new version by replacing the name of the first
-				# version of pip with whatever version of pip is being
-				# processed right now.
-				for PIP_NAME in ${PIP_VERSIONS[@]:1}; do
-					if ! _dotfile_completion_loaded "$PIP_NAME"; then
-						eval "${PIP_COMPLETE/%${FIRST_PIP}/${PIP_NAME}}"
-					fi
-				done
-			fi
-		fi
+		local PIP
+		# No longer doing the "shared completions for all versions" because
+		# different versions may have different options.
+		for PIP in ${PIP_VERSIONS[@]}; do
+			_dotfile_completion_lazy_generator \
+				"$PIP" \
+				"\"$PIP\" completion --bash 2>/dev/null"
+		done
 	fi
 }
 
