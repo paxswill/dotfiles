@@ -163,16 +163,10 @@ _configure_lesspipe() {
 }
 
 _configure_npm() {
-	if _prog_exists npm; then
-		# Don't add an extra path (or move the position of an existing path)
-		if [[ ! $PATH =~ (:/usr/local/bin:|^/usr/local/bin:|:/usr/local/bin$) ]]; then
-			append_to_path "$(npm bin -g 2>/dev/null)"
-		fi
-		# This isn't really portable
-		local COMPLETION_PATH="$(npm prefix -g)/lib/node_modules/npm/lib/utils/completion.sh"
-		if ! _dotfile_completion_loaded npm && [ -e "$COMPLETION_PATH" ]; then
-			_dotfile_completion_lazy_source npm "$COMPLETION_PATH"
-		fi
+	if _prog_exists npm && ! _dotfile_completion_loaded npm; then
+		# Try to find the NPM prefix without calling npm (because npm takes a
+		# while to start up)
+		_dotfile_completion_lazy_generator npm "npm completion"
 	fi
 }
 
