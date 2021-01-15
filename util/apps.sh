@@ -174,18 +174,61 @@ _configure_nvm() {
 	local nvm_dir_path=""
 	local nvm_path
 	if _prog_exists brew; then
-		nvm_dir_path="$(brew --prefix nvm)"
-	elif [ ! -z "$XDG_CONFIG_HOME" ]; then
-		nvm_dir_path="${XDG_CONFIG_HOME}/nvm"
-	else
-		nvm_dir_path="${HOME}/.nvm"
+		# This is such a hack
+		shopt -s lastpipe
+		# brew --prefix is very slow, so we try to avoid using it
+		_brew_prefix nvm | read nvm_dir_path
+		shopt -u lastpipe
+	fi
+	if [ ! "$nvm_dir_path" ]; then
+		if [ "$XDG_CONFIG_HOME" ]; then
+			nvm_dir_path="${XDG_CONFIG_HOME}/nvm"
+		else
+			nvm_dir_path="${HOME}/.nvm"
+		fi
 	fi
 	nvm_path="${nvm_dir_path}/nvm.sh"
-	if [ ! -z "$nvm_dir_path" ] && [ -r "$nvm_path" ] && [ ! -d "$nvm_path" ]; then
+	if [ "$nvm_dir_path" ] && [ -r "$nvm_path" ] && [ ! -d "$nvm_path" ]; then
+		# Adapted from https://blog.yo1.dog/better-nvm-lazy-loading/
 		export NVM_DIR="${HOME}/.nvm"
 		mkdir -p "$NVM_DIR"
-		. "$nvm_path"
-
+		# Find and lazy load nvm's completion script
+		if ! _dotfile_completion_loaded nvm; then
+			local nvm_completions=(
+				"${nvm_dir_path}/bash_completion"
+				"${nvm_dir_path}/etc/bash_completion.d/nvm"
+			)
+			local nvm_completion
+			for nvm_completion in "${nvm_completions[@]}"; do
+				if [[ -s $nvm_completion ]]; then
+					_dotfile_completion_lazy_source nvm "$nvm_completion"
+					break
+				fi
+			done
+		fi
+		# Redefine the nvm function to lazy load the rest of nvm
+		# Using eval to expand the value of $nvm_path within the function
+		eval "nvm() { unset -f nvm; source \"$nvm_path\" --no-use; }"
+		# Add the default node version to PATH so we can run globally installed
+		# commands normally
+		local default_node_ver=""
+		if [[ -s ${HOME}/.nvmrc ]]; then
+			default_node_ver="$(<${HOME}/.nvmrc)"
+		else
+			default_node_ver="$(<${NVM_DIR}/alias/default)"
+		fi
+		while [[ -s ${NVM_DIR}/alias/${default_node_ver} ]] && [ "$default_node_ver" ]; do
+			default_node_ver="$(<"${NVM_DIR}/alias/${default_node_ver}")"
+		done
+		if [ "$default_node_ver" ]; then
+			if [ ! -d "$NVM_DIR/versions/node/v${default_node_ver#v}/bin" ];
+			then
+				# If the version doesn't exist, try adding ".0" to the
+				# end (ex: v12.10 -> v12.10.0)
+				default_node_ver+=".0"
+			fi
+			prepend_to_path "$NVM_DIR/versions/node/v${default_node_ver#v}/bin"
+		fi
 	fi
 }
 
@@ -391,8 +434,9 @@ configure_apps() {
 		"_configure_git_hub"
 		"_configure_golang"
 		"_configure_lesspipe"
-		"_configure_npm"
+		# Configure nvm *before* npm, so that the right npm is in $PATH
 		"_configure_nvm"
+		"_configure_npm"
 		"_configure_perlbrew"
 		"_configure_pip"
 		"_configure_pkcs11"
