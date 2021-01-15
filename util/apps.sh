@@ -1,4 +1,5 @@
 # Application or program specific configuration
+source ~/.dotfiles/util/common.sh
 source ~/.dotfiles/util/term.sh
 source ~/.dotfiles/util/find_pkcs11.sh
 source ~/.dotfiles/util/prompt.sh

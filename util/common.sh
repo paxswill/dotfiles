@@ -67,6 +67,14 @@ append_to_pkgconfpath() {
 }
 
 _prog_exists () {
+	# Shadow global $PATH as there might be changes made within this function
+	local PATH="$PATH"
+	# On WSL, only search paths on /mnt/[a-z] iff the command being searched for
+	# ends in .exe. This avoid the very expensive access to the windows FS for
+	# missing commands.
+	if [ -d /mnt/c ] && [[ $1 != *.exe ]]; then
+		PATH="$(echo $PATH | sed -e s,':/mnt/[a-z]/[^:]\+','',g)"
+	fi
 	if type -p "$1" &>/dev/null; then
 		return 0
 	else
