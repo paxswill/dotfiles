@@ -160,7 +160,7 @@ link_dotfiles(){
 	# Cleanup links
 	if [ -e "${LINKLOG}.old" ]; then
 		for OLDLINK in $(< "${LINKLOG}.old"); do
-			if [ -L "$OLDLINK" -a ! stat -L "$OLDLINK" &>/dev/null ]; then
+			if [[ -L $OLDLINK ]] && ! stat -L "$OLDLINK" &>/dev/null; then
 				unlink "$OLDLINK"
 			fi
 		done
