@@ -65,12 +65,14 @@ _configure_debian() {
 }
 
 _configure_linux() {
-	if _prog_exists lsb_release; then
-		DISTRO=$(lsb_release -i)
-		DISTRO=${DISTRO##*:?}
-		declare -grx DISTRO
-	elif [ -f /etc/issue ]; then
-		declare -grx DISTRO="$(grep -o '^\w\+' /etc/issue)"
+	if [[ ! -v DISTRO ]]; then
+		if _prog_exists lsb_release; then
+			DISTRO=$(lsb_release -i)
+			DISTRO=${DISTRO##*:?}
+			declare -grx DISTRO
+		elif [ -f /etc/issue ]; then
+			declare -grx DISTRO="$(grep -o '^\w\+' /etc/issue)"
+		fi
 	fi
 	case "$DISTRO" in
 		Debian|Raspbian)
