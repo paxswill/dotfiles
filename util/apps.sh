@@ -42,6 +42,7 @@ _list_installed_python() {
 	done
 	# Check everything
 	local FOUND=()
+	local NAME
 	for NAME in ${NAMES_TO_CHECK[@]}; do
 		if _prog_exists "$NAME"; then
 			echo "$NAME"

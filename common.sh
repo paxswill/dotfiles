@@ -53,6 +53,7 @@ process_source_files(){
 	pushd "${DOTFILES}/src" &>/dev/null
 	local M4FILES=$(find . -type f ! -name '*.sw*')
 	pushd "${DOTFILES}" &>/dev/null
+	local F
 	for F in $M4FILES; do
 		mkdir -p "${DOTFILES}/staging/$(dirname $F)"
 		m4 $M4_DEFS "${DOTFILES}/src/${F}" > "${DOTFILES}/staging/${F}"
@@ -63,6 +64,8 @@ process_source_files(){
 }
 
 link_dotfiles(){
+	# Declare "i" as local, as it's used in a couple of loops
+	local i
 	local STAGING="${DOTFILES}/staging"
 	local REL_STAGING="${STAGING#${HOME}/}"
 	# Save the special IFS value
@@ -96,6 +99,7 @@ link_dotfiles(){
 		-type f \
 		-name ".git")"
 	# Create directories
+	local D
 	for D in $DIRS; do
 		local TARGET_DIR="${D/.dotfiles\/staging\/}"
 		if mkdir -p "$TARGET_DIR" &>/dev/null; then
@@ -103,6 +107,7 @@ link_dotfiles(){
 		fi
 	done
 	# Link files
+	local LINK_TARGET
 	for LINK_TARGET in $FILES; do
 		local LINK="${LINK_TARGET/.dotfiles\/staging\/}"
 		# For relative links, we need to add an appropriate number of '../' to
@@ -128,6 +133,7 @@ link_dotfiles(){
 	# writeable config files, but most Linux distributions patch this).
 	chmod -R g-w "${STAGING}/.ssh"
 	# Create "pointer" git files
+	local GIT_POINTER
 	for GIT_POINTER in $GIT_FILES; do
 		# Read in the original git file and get the path it specifies
 		# The file has the format:
@@ -152,6 +158,7 @@ link_dotfiles(){
 	# Cleanup pointer git files
 	if [ -e "${GIT_POINTER_LOG}.old" ]; then
 		local OLD_POINTERS=$(comm -13 "$GIT_POINTER_LOG" "$GIT_POINTER_LOG".old)
+		local OLD_POINTER
 		for OLD_POINTER in ${OLD_POINTERS}; do
 			rm "$OLD_POINTER"
 		done
@@ -159,6 +166,7 @@ link_dotfiles(){
 	fi
 	# Cleanup links
 	if [ -e "${LINKLOG}.old" ]; then
+		local OLDLINK
 		for OLDLINK in $(< "${LINKLOG}.old"); do
 			if [[ -L $OLDLINK ]] && ! stat -L "$OLDLINK" &>/dev/null; then
 				unlink "$OLDLINK"
