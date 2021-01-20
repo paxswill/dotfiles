@@ -462,8 +462,9 @@ configure_apps() {
 		done
 	fi
 
-	# And now for tiny enironmental configurtion that doesn't fit elsewhere
+	# And now for tiny environmental configuration that doesn't fit elsewhere
 	# AKA, Misc.
 	export BLOCKSIZE=K
+	[[ -e ${HOME}/.identity ]] && source "${HOME}/.identity"
 }
 
