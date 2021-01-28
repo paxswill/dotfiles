@@ -233,6 +233,40 @@ _configure_nvm() {
 	fi
 }
 
+_configure_opt() {
+	# Adds sub-trees of within /opt the PATH and LD_LIBRARY_PATH.
+	# This is a common pattern for installing things outside of a system's
+	# package manager.
+	# This `find` command finds all 'sbin', 'bin', 'lib' and 'lib64' directories
+	# within all subdirectories of /opt, except for /opt/local and /opt/homebrew
+	# (as those are used by MacPorts and Homebrew-on-ARM respectively). It's
+	# sorted to keep everything in a consistent order.
+	# NOTE: When editing this command, check *both* FreeBSD and GNU find
+	# manpages, as they differ in some areas. Also note that GNU find complains
+	# if `-type` is before the depth primaries.
+	local OPT_DIRS="$(
+	find /opt \
+		-maxdepth 2 \
+		-mindepth 2 \
+		-type d \
+		\( -name bin -or -name sbin -or -name lib -or -name lib64 \) \
+		-not \( -path '*/local/*' -or -path '*/homebrew/*' \) \
+		-print \
+	| sort
+	)"
+	local OLD_IFS="$IFS"
+	IFS=$'\n'
+	local OPT_DIR
+	for OPT_DIR in $OPT_DIRS; do
+		if [[ $OPT_DIR =~ .*/lib(64)?$ ]]; then
+			append_to_libpath "$OPT_DIR"
+		else
+			append_to_path "$OPT_DIR"
+		fi
+	done
+	IFS="$OLD_IFS"
+}
+
 _configure_perlbrew() {
 	if [ -s $HOME/perl5/perlbrew/etc/bashrc ]; then
 		. $HOME/perl5/perlbrew/etc/bashrc
@@ -299,13 +333,6 @@ _configure_vagrant() {
 			vagrant
 			"complete -W \$(vagrant --help | awk '/^     /{print $1}') vagrant"
 	fi
-}
-
-_configure_videocore() {
-	# Configure Broadcom Videocore files
-	append_to_path /opt/vc/sbin
-	append_to_path /opt/vc/bin
-	append_to_libpath /opt/vc/lib
 }
 
 _configure_vim() {
@@ -414,6 +441,9 @@ _configure_windows_ssh_agent() {
 
 configure_apps() {
 	local CONFIG_FUNCTIONS=(
+		# Add any /opt/ paths first to ensure any locally installed commands are
+		# available.
+		"_configure_opt"
 		"_configure_android"
 		"_configure_bash"
 		"_configure_cabal"
@@ -435,7 +465,6 @@ configure_apps() {
 		"_configure_rbenv"
 		"_configure_travis"
 		"_configure_vagrant"
-		"_configure_videocore"
 		"_configure_vim"
 		"_configure_virtualenv_wrapper"
 		"_configure_windows_ssh_agent"
