@@ -143,6 +143,7 @@ _configure_ec2() {
 _configure_golang() {
 	if _prog_exists go; then
 		export GOROOT="$(go env GOROOT)"
+		append_to_path "$(go env GOPATH)/bin"
 	fi
 }
 
