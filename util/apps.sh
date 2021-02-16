@@ -82,9 +82,9 @@ _configure_bash() {
 		shopt -s cdspell dirspell
 		# Bash-related configuration
 		_configure_bash_completion
+		# Configure the prompt from here
+		_configure_prompt
 	fi
-	# Configure the prompt from here
-	_configure_prompt
 }
 
 _configure_cabal() {
@@ -165,7 +165,7 @@ _configure_lesspipe() {
 }
 
 _configure_npm() {
-	if _prog_exists npm && ! _dotfile_completion_loaded npm; then
+	if _prog_exists npm && [ -z "$PS1" ] && ! _dotfile_completion_loaded npm; then
 		# Try to find the NPM prefix without calling npm (because npm takes a
 		# while to start up)
 		_dotfile_completion_lazy_generator npm "npm completion"
@@ -410,7 +410,7 @@ _configure_virtualenv_wrapper() {
 
 _configure_windows_ssh_agent() {
 	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
-	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK if
+	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK is
 	# already defined
 	if ! [[ $(uname -r) =~ ^.*[Mm]icrosoft.*$ ]] || [ -n "${SSH_AUTH_SOCK}" ]; then
 		return
