@@ -1,5 +1,11 @@
 This is a collection of non-dotfile configuration files.
 
+## canonicalize-subdomains.conf
+
+Modify as needed with your local subdomains and put in
+`/etc/ssh/ssh_config.d/` (at least on Debian-based systemd) so that `ssh` will
+normalize hostnames for `known_hosts`.
+
 ## firefox-hide-tabs-userChrome.css
 
 For use with Tree Style Tabs. Copy this file to
