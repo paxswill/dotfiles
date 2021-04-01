@@ -40,9 +40,10 @@ if [ -d $HOME/.dotfiles ]; then
 	source $HOME/.dotfiles/common.sh
 fi
 
-# If this is the base shell over SSH, and there's a tmux session available,
-# attach to it.
-if [ -n "$SSH_CONNECTION" ] && (( $SHLVL == 1 )); then
+
+# If this is the base shell over SSH, it's interactive, and there's a tmux
+# session available, attach to it.
+if [ -n "$SSH_CONNECTION" ] && [ -n "$SSH_TTY" ] && (( $SHLVL == 1 )); then
 	if _prog_exists tmux && [ -z "$TMUX" ] && tmux has-session 2>/dev/null; then
 		tmux attach
 	fi
