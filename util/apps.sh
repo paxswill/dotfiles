@@ -325,6 +325,15 @@ _configure_rbenv() {
 	fi
 }
 
+_configure_rust() {
+	# This should be run *after* _configure_cargo has run, as rustup puts
+	# everything within .cargo/bin
+	if _prog_exists rustup; then
+		_dotfile_completion_lazy_generator "rustup" "rustup completions bash"
+		_dotfile_completion_lazy_generator "cargo" "rustup completions bash cargo"
+	fi
+}
+
 _configure_travis() {
 	# Config info for Travis-CI command line tool
 	if [ -d "${HOME}/.travis/travis.sh" ]; then
@@ -468,6 +477,7 @@ configure_apps() {
 		"_configure_python"
 		"_configure_postgres_app"
 		"_configure_rbenv"
+		"_configure_rust"
 		"_configure_travis"
 		"_configure_vagrant"
 		"_configure_vim"
