@@ -245,6 +245,9 @@ _configure_opt() {
 	# NOTE: When editing this command, check *both* FreeBSD and GNU find
 	# manpages, as they differ in some areas. Also note that GNU find complains
 	# if `-type` is before the depth primaries.
+	# stderr is piped to null to silence permission warnings (i.e from
+	# /opt/containerd). If there's permission errors, those directories are
+	# being skipped anyways.
 	local OPT_DIRS="$(
 	find /opt \
 		-maxdepth 2 \
@@ -253,6 +256,7 @@ _configure_opt() {
 		\( -name bin -or -name sbin -or -name lib -or -name lib64 \) \
 		-not \( -path '*/local/*' -or -path '*/homebrew/*' \) \
 		-print \
+	2>/dev/null \
 	| sort
 	)"
 	local OLD_IFS="$IFS"
