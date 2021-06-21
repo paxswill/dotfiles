@@ -45,6 +45,9 @@ _prompt_environment() {
 # here).
 declare -g  _PROMPT_FAIL_CHARACTER="\[${RED_COLOR}\]\\\$\[${COLOR_RESET}\]"
 
+# Track what the last command executed was.
+trap 'LAST_COMMAND="$CURRENT_COMMAND"; CURRENT_COMMAND="$BASH_COMMAND"' DEBUG
+
 _bash_prompt() {
 	# Save the value of the last exit status to color things later
 	local LAST_STATUS=$?
@@ -133,6 +136,17 @@ _bash_prompt() {
 		"${LOCATION}" \
 		"${PROMPT_CHAR}" \
 	)"
+	# If the last command was an ssh command, and the exit status is 255,
+	# disable mouse reporting by prepending that control sequence to PS1
+	# My default tmux config enabled mouse reporting, and my shell will
+	# automatically connect to a tmux session upon logging in over ssh. If the
+	# ssh connection terminates unexpectedly (ex: the client machine goes to
+	# sleep), mouse reporting doesn't get turned off, which is annoying once I
+	# try using it again.
+	local SSH_REGEX='^ssh\s+\S.*'
+	if (( $LAST_STATUS == 255 )) && [[ $LAST_COMMAND =~ $SSH_REGEX ]]; then
+		PS1="\[\e[?1000l\]${PS1}"
+	fi
 }
 
 _bash_ps0() {
