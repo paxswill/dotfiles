@@ -38,12 +38,12 @@ _prompt_environment() {
 	echo "${ENVS[@]@A}"
 }
 
-# Caching so we don't keep rebuilding strings and calculating offsets
-# Common offsets from control characters
-declare -gi _CACHED_RESET_OFFSET=${#COLOR_RESET}
-declare -gi _CACHED_MUTED_RESET_OFFSET=$(( ${#MUTED_COLOR} + ${_CACHED_RESET_OFFSET} ))
-# The escape sequence for a failed command
-declare -g  _PROMPT_FAIL_CHARACTER="${RED_COLOR}\\\$${COLOR_RESET}"
+# The escape sequence for a failed command. The backslash and dollar sign mess
+# towards the end is to ensure `\$` makes it out to PS1, so that the correct
+# character is shown for root vs non-root users. Extra escaping is needed as
+# double quoted strings are being used (as there are variables being expanded in
+# here).
+declare -g  _PROMPT_FAIL_CHARACTER="\[${RED_COLOR}\]\\\$\[${COLOR_RESET}\]"
 
 _bash_prompt() {
 	# Save the value of the last exit status to color things later
@@ -52,9 +52,6 @@ _bash_prompt() {
 	# n.b. the history is *not* reloaded automatically, that requires a manual
 	# invocation of `history -r`.
 	history -a
-	# This variable will keep track of the correction to apply for non-printed
-	# characters (like color control codes)
-	local -i OFFSET=0
 	# Default the environment string to be empty
 	local ENVIRONMENT
 	# Figure out if we're in any special environments
@@ -62,62 +59,52 @@ _bash_prompt() {
 	if [ ${#ENVIRONMENTS[@]} != 0 ]; then
 	# The surrounding parentheses are muted, and the environment types are as
 	# well, but the environment identifiers are printed normally.
-		ENVIRONMENT="${MUTED_COLOR}("
-		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
+		ENVIRONMENT="\[${MUTED_COLOR}\]("
 		# Sort the env types (the array keys)
 		local KEYS="$(sort <<<$(IFS=$'\n'; printf "%s" "${!ENVIRONMENTS[*]}"))"
 		# Do all the offset calculations at once
-		OFFSET+=$(( $OFFSET + ${_CACHED_MUTED_RESET_OFFSET} * ${#KEYS[*]} ))
 		for KEY in $KEYS; do
 			# Force the environment type to lowercase, add a colon, and reset
 			# the text color
-			ENVIRONMENT+="${KEY,,}:${COLOR_RESET}"
+			ENVIRONMENT+="${KEY,,}:\[${COLOR_RESET}\]"
 			# Append the environment name, then set the color back to muted
-			ENVIRONMENT+="${ENVIRONMENTS[${KEY}]}${MUTED_COLOR}"
+			ENVIRONMENT+="${ENVIRONMENTS[${KEY}]}\[${MUTED_COLOR}\]"
 			# Add a separator
 			ENVIRONMENT+=" "
 		done
 		# Remove the trailing space
 		ENVIRONMENT="${ENVIRONMENT:0: -1}"
 		# Close the parentheses, and reset the text color
-		ENVIRONMENT+=")${COLOR_RESET}"
+		ENVIRONMENT+=")\[${COLOR_RESET}\]"
 	fi
 	# The 'context' is a combination of hostname, current directory and VCS
 	# branch name
-	local LOCATION="${HOST_COLOR}\h${COLOR_RESET}:\W"
-	OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
+	local LOCATION="\[${HOST_COLOR}\]\h\[${COLOR_RESET}\]:\W"
 	local BRANCH="$(__vcs_ps1 " (%s)")"
 	# For both branches of this if block, the "normal" text is muted
 	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?([<>=]?\))?$ ]]; then
 		# If the branch's dirty state is indicated, highlight that.
 		# Add a COLOR_RESET to unset the bold state (which screws up later
 		# colors).
-		LOCATION+=" ${MUTED_COLOR}(${BASH_REMATCH[1]}${COLOR_RESET}"
-		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
+		LOCATION+=" \[${MUTED_COLOR}\](${BASH_REMATCH[1]}\[${COLOR_RESET}\]"
 		# Highlight the dirty flag in red
 		if [ -n "${BASH_REMATCH[2]}" ]; then
-			LOCATION+="${RED_COLOR}${BASH_REMATCH[2]}"
-			OFFSET+=${#RED_COLOR}
+			LOCATION+="\[${RED_COLOR}\]${BASH_REMATCH[2]}"
 			# We can skip an escape sequence if there's a staged indicator
 			# coming up
 			if [ -z "${BASH_REMATCH[3]}" ]; then
-				LOCATION+="${MUTED_COLOR}"
-				OFFSET+=${#MUTED_COLOR}
+				LOCATION+="\[${MUTED_COLOR}\]"
 			fi
 		fi
 		# And highlight the staged flag in green
 		if [ -n "${BASH_REMATCH[3]}" ]; then
-			LOCATION+="${GREEN_COLOR}${BASH_REMATCH[3]}${MUTED_COLOR}"
-			OFFSET+=${#GREEN_COLOR}
-			OFFSET+=${#MUTED_COLOR}
+			LOCATION+="\[${GREEN_COLOR}\]${BASH_REMATCH[3]}\[${MUTED_COLOR}\]"
 		fi
 		# Add the closing parenthesis
-		LOCATION+="${BASH_REMATCH[4]}${COLOR_RESET}"
-		OFFSET+=${_CACHED_RESET_OFFSET}
+		LOCATION+="${BASH_REMATCH[4]}\[${COLOR_RESET}\]"
 	else
 		# Mute the branch name as well
-		LOCATION+="${MUTED_COLOR}${BRANCH}${COLOR_RESET}"
-		OFFSET+=${_CACHED_MUTED_RESET_OFFSET}
+		LOCATION+="\[${MUTED_COLOR}\]${BRANCH}\[${COLOR_RESET}\]"
 	fi
 	# Save the cursor position before we go mucking around with it
 	_tput sc
