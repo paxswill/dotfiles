@@ -1,13 +1,12 @@
 {
+    "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
     "theme": "system",
-    "alwaysShowTabs": true,
     "showTabsInTitlebar": true,
     "showTerminalTitleInTitlebar": true,
-    "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
     "initialCols": 120,
     "initialRows": 30,
-    "keybindings": [
+    "actions": [
         {
             "command": "closePane",
             "keys": [
@@ -111,52 +110,74 @@
             ]
         }
     ],
-    "profiles": [
-        {
-            "closeOnExit": "always",
-            "cursorShape": "filledBox",
-            "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
-            "hidden": false,
-            "name": "Ubuntu-20.04",
-            "source": "Windows.Terminal.Wsl",
-            "commandline": "wsl.exe ~ -d Ubuntu-20.04",
-            //"startingDirectory": "//wsl$/Ubuntu-20.04/home/",
-            "colorScheme": "Solarized Dark",
+    "disabledProfileSources": [
+        "Windows.Terminal.Azure"
+    ],
+    "profiles": {
+        "defaults": {
+            // Define both font object (for >=1.10) and legacy settings
+            "font": {
+                "face": "Source Code Pro",
+                "size": 10
+            },
             "fontFace": "Source Code Pro Regular",
             "fontSize": 10,
-            "historySize": 10000
-        },
-        {
-            "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-            "name": "Windows PowerShell",
-            "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-            "icon": "ms-appx:///ProfileIcons/{61c54bbd-c2c6-5271-96e7-009a87ff44bf}.png",
-            "colorScheme": "Campbell Powershell",
-            "fontFace": "Source Code Pro Regular",
-            "fontSize": 10,
-            "hidden": false,
             "historySize": 10000,
-            "snapOnInput": true,
-            "startingDirectory": "%USERPROFILE%"
+            "antialiasingMode": "cleartype"
         },
-        {
-            "closeOnExit": true,
-            "colorScheme": "Campbell",
-            "commandline": "cmd.exe",
-            "fontSize": 10,
-            "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-            "historySize": 10000,
-            "icon": "ms-appx:///ProfileIcons/{0caa0dad-35be-5f56-a8ff-afceeeaa6101}.png",
-            "name": "cmd",
-            "padding": "0, 0, 0, 0",
-            "snapOnInput": true,
-            "startingDirectory": "%USERPROFILE%"
-        },
-        {
-            "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
-            "hidden": true,
-            "name": "Azure Cloud Shell",
-            "source": "Windows.Terminal.Azure"
-        }
-    ]
+        "list": [
+            {
+                "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+                "hidden": false,
+                "name": "Ubuntu-20.04",
+                "closeOnExit": "always",
+                "cursorShape": "filledBox",
+                "commandline": "wsl.exe ~ -d Ubuntu-20.04",
+                "colorScheme": "Solarized Dark",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "closeOnExit": "always",
+                "cursorShape": "filledBox",
+                "commandline": "wsl.exe ~ -d Ubuntu",
+                "colorScheme": "Solarized Dark",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "colorScheme": "Campbell Powershell",
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "colorScheme": "Campbell",
+                "name": "Command Prompt"
+            },
+            {
+                "guid": "{1bdae7ec-8ca6-5caa-8453-8b6fe78b2748}",
+                "hidden": true,
+                "name": "rancher-desktop-data",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{1cd79813-5972-56cb-badb-ba5ee12693c5}",
+                "hidden": true,
+                "name": "rancher-desktop",
+                "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": true,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            }
+        ]
+    }
 }

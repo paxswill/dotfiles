@@ -18,11 +18,10 @@ You will also need to open `about:config` and set
 
 ## windows-terminal-settings.json
 
-This is the settings file for the new [Windows Terminal][win-terminal].
-Settings syunc was disabled as the settings are still pretty host-specific.
-Copy the settings file to
-`%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_[random ID]\LocalState\settings.json`
-(do Win-R, then copy paste up through `Packages` in the above path).
+This is the settings file for  [Windows Terminal][win-terminal].
+Settings sync was disabled as the settings are still pretty host-specific.
+The easy way to access this file is to open Windows Terminal, open the settings,
+then click the gear to open `settings.json` in the default editor.
 
 [win-terminal]: https://github.com/microsoft/terminal
 
