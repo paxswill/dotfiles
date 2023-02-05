@@ -90,7 +90,14 @@ _dotfile_completion_go_cmds() {
 	# These programs all operate the same way for generating completion
 	# If their completion functions aren't already loaded, generate them
 	# and load them dynamically
-	local GO_COMPLETION_COMMANDS=( kubectl minikube helm k3d k0s k0sctl )
+	local GO_COMPLETION_COMMANDS=(
+		helm
+		k0s
+		k0sctl
+		k3d
+		kubectl
+		minikube
+	)
 	local COMPLETION_CMD
 	for COMPLETION_CMD in "${GO_COMPLETION_COMMANDS[@]}"; do
 		if _prog_exists "$COMPLETION_CMD" && ! _dotfile_completion_loaded "${COMPLETION_CMD}"; then
