@@ -153,6 +153,13 @@ _configure_git_hub(){
 	fi
 }
 
+_configure_krew() {
+	local KREW_ROOT="${KREW_ROOT:-$HOME/.krew}"
+	if _prog_exists kubectl && [ -d ${KREW_ROOT} ]; then
+		append_to_path "${KREW_ROOT}/bin"
+	fi
+}
+
 _configure_lesspipe() {
 	# Only for interactive sessions
 	[ -z "$PS1" ] && return
@@ -467,6 +474,7 @@ configure_apps() {
 		"_configure_ec2"
 		"_configure_git_hub"
 		"_configure_golang"
+		"_configure_krew"
 		"_configure_lesspipe"
 		# Configure nvm *before* npm, so that the right npm is in $PATH
 		"_configure_nvm"
