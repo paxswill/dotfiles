@@ -21,3 +21,28 @@ __vcs_ps1() {
 	fi
 	printf "$branch"
 }
+
+# Flag controlling whether or not to show the VCS branch. Default to on, but can
+# be disabled because ~Windows~
+declare -gi SHOW_VCS_BRANCH=1
+
+show_vcs_env() {
+	if ! _prog_exists kubectl; then
+		echo "Missing kubectl"
+		return 1
+	else
+		SHOW_VCS_BRANCH=1
+	fi
+}
+
+hide_vcs_env() {
+	SHOW_VCS_BRANCH=0
+}
+
+toggle_vcs_env() {
+	if [ ${SHOW_VCS_BRANCH} = 0 ]; then
+		show_vcs_env
+	else
+		hide_vcs_env
+	fi
+}

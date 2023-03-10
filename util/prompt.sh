@@ -83,7 +83,10 @@ _bash_prompt() {
 	# The 'context' is a combination of hostname, current directory and VCS
 	# branch name
 	local LOCATION="\[${HOST_COLOR}\]\h\[${COLOR_RESET}\]:\W"
-	local BRANCH="$(__vcs_ps1 " (%s)")"
+	local BRANCH
+	if [[ ${SHOW_VCS_BRANCH:-1} = 1 ]]; then
+		BRANCH="$(__vcs_ps1 " (%s)")"
+	fi
 	# For both branches of this if block, the "normal" text is muted
 	if [[ "${BRANCH}" =~ ^\ \((.*\ )(\*)?(\+)?([<>=]?\))?$ ]]; then
 		# If the branch's dirty state is indicated, highlight that.
