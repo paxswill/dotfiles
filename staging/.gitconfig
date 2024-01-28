@@ -6,6 +6,7 @@
 	df = diff
 	dh = diff HEAD
 	ff = merge --ff-only
+	la = log --graph --decorate --oneline --all
 	lg = log --graph --decorate --oneline
 	st = status
 	ap = add --patch
