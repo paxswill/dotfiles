@@ -96,6 +96,7 @@ _dotfile_completion_go_cmds() {
 		k0sctl
 		k3d
 		kubectl
+		kubectl-krew
 		minikube
 	)
 	local COMPLETION_CMD
