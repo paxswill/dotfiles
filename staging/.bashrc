@@ -12,9 +12,9 @@ load_bashrc() {
 	for UTIL_FILE in common apps hosts os term aliases vcs; do
 		if [[ ${_dotfile_log_times:-0} != 0 ]]; then
 			TIMEFORMAT="${UTIL_FILE}.sh: %R"
-			time source "${HOME}/.dotfiles/util/${UTIL_FILE}.sh"
+			time source "${HOME}/.dotfiles/util/bash/${UTIL_FILE}.sh"
 		else
-			source "${HOME}/.dotfiles/util/${UTIL_FILE}.sh"
+			source "${HOME}/.dotfiles/util/bash/${UTIL_FILE}.sh"
 		fi
 	done
 	# Set up personal paths
@@ -37,7 +37,7 @@ load_bashrc
 
 # Pull in dotfiles management functions
 if [ -d $HOME/.dotfiles ]; then
-	source $HOME/.dotfiles/common.sh
+	source $HOME/.dotfiles/common.bash
 fi
 
 

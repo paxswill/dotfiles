@@ -1,5 +1,5 @@
-source ~/.dotfiles/util/term.sh
-source ~/.dotfiles/util/k8s.sh
+source ~/.dotfiles/util/bash/term.sh
+source ~/.dotfiles/util/bash/k8s.sh
 
 _prompt_environment() {
 	# Build up an associative array with the current active environments
@@ -209,7 +209,7 @@ _configure_iterm2_integration(){
 		[ "$SYSTYPE" = "FreeBSD" ] && return
 		[[ "$(uname -r)" =~ .*[Mm]icrosoft.* ]] && return
 	fi
-	source "${HOME}/.dotfiles/util/iterm_integration.sh"
+	source "${HOME}/.dotfiles/util/bash/iterm_integration.sh"
 }
 
 _configure_prompt() {

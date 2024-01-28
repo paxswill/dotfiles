@@ -1,18 +1,18 @@
 DOTFILES="${HOME}/.dotfiles"
 
-source "${DOTFILES}/util/find_pkcs11.sh"
+source "${DOTFILES}/util/bash/find_pkcs11.sh"
 
 create_m4_macros(){
 	# Create the command-line aruments that define the M4 macros used to
 	# process the template configuration files.
 	# Set the type of system we're working on.
 	if ! type get_systype &>/dev/null; then
-		source "${DOTFILES}/util/hosts.sh"
+		source "${DOTFILES}/util/bash/hosts.sh"
 	fi
 	get_systype
 	# Make sure _prog_exists is present
 	if ! type _prog_exists &>/dev/null; then
-		source "${DOTFILES}/util/common.sh"
+		source "${DOTFILES}/util/bash/common.sh"
 	fi
 	# Set up M4 macro definitions
 	local M4_DEFS="-DUSER=$USER"

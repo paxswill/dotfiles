@@ -1,5 +1,5 @@
 # Common terminal functions
-source ~/.dotfiles/util/hosts.sh
+source ~/.dotfiles/util/bash/hosts.sh
 
 # FreeBSD's tput uses termcap names and not the basic capability names that
 # ncurses tput (which is used by seemingly everyone else). This might be

@@ -1,6 +1,6 @@
 # Putting this in a separate file as it's used by common.sh as well.
 DOTFILES="${HOME}/.dotfiles"
-source "${DOTFILES}/util/hosts.sh"
+source "${DOTFILES}/util/bash/hosts.sh"
 
 find_pkcs11() {
 	# Try to find a PKCS11 Provider

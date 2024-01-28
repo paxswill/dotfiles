@@ -1,4 +1,4 @@
-source ~/.dotfiles/util/common.sh
+source ~/.dotfiles/util/bash/common.sh
 
 _dotfile_completion_loaded () {
 	if complete -p "$1" &>/dev/null; then

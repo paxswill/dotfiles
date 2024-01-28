@@ -1,9 +1,9 @@
 # Application or program specific configuration
-source ~/.dotfiles/util/common.sh
-source ~/.dotfiles/util/term.sh
-source ~/.dotfiles/util/find_pkcs11.sh
-source ~/.dotfiles/util/prompt.sh
-source ~/.dotfiles/util/completion.sh
+source ~/.dotfiles/util/bash/common.sh
+source ~/.dotfiles/util/bash/term.sh
+source ~/.dotfiles/util/bash/find_pkcs11.sh
+source ~/.dotfiles/util/bash/prompt.sh
+source ~/.dotfiles/util/bash/completion.sh
 
 _list_installed_python() {
 	# Unlike all of the other functions in this file, this function does *not*

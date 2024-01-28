@@ -1,5 +1,5 @@
 # Host specific customizations
-source ~/.dotfiles/util/common.sh
+source ~/.dotfiles/util/bash/common.sh
 
 get_systype() {
 	# Set an exported SYSTYPE variable for configuring a the environment based

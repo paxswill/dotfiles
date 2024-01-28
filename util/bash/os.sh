@@ -1,5 +1,5 @@
 # OS based configuration
-source ~/.dotfiles/util/hosts.sh
+source ~/.dotfiles/util/bash/hosts.sh
 
 _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
