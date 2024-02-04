@@ -1,0 +1,35 @@
+function prompt_paxswill-dark_precmd () {
+    autoload set-prompt-corners
+
+ 	vcs_info
+	set-prompt-corners $HOST_COLOR
+}
+
+function prompt_paxswill-dark_setup() {
+    autoload -Uz add-zsh-hook colors vcs_info
+	autoload -z paxswill-dark-precmd
+	autoload -z get-host-color
+
+	# Need to run colors at least once to get the global definitions
+	colors
+	# Set the host color globally
+	typeset -g HOST_COLOR=$(get-host-color)
+
+	# Disable less common VCS systems
+	zstyle ':vcs_info:*' enable git hg svn
+	# Pile of line noise...
+
+	# Solarized dark uses 
+	zstyle ':vcs_info:*' formats " %F{green}%B(%b%%b%f%u%c%F{green}%B)%%b%f"
+	zstyle ':vcs_info:*' stagedstr " %F{green}+%f"
+	zstyle ':vcs_info:*' unstagedstr " %F{red}*%f"
+	zstyle ':vcs_info:*' check-for-changes true
+	zstyle ':vcs_info:*' check-for-staged-changes true
+
+
+	add-zsh-hook precmd prompt_paxswill-dark_precmd
+	# Run the precmd once to have PS1 set to the correct value
+	prompt_paxswill-dark_precmd
+}
+
+prompt_paxswill-dark_setup "$@"

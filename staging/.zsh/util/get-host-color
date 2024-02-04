@@ -1,0 +1,26 @@
+function get-host-color() {
+	autoload -z hashed-host-modulo
+    # Just assume there are 16 colors, and we're using Solarized
+	typeset -al available_colors
+	# Skipped colors are noted as their Solarized equivalents
+	available_colors=(
+		# black is base02
+		red
+		green
+		yellow
+		blue
+		magenta
+		cyan
+		# white is base2
+		91 # orange in Solarized
+		# bright-green is base2
+		# bright-yellow is base00
+		# bright-blue is base0
+		95 # violet in Solarized
+		# bright-cyan is base1
+	)
+	local color_index=$(hashed-host-modulo ${#available_colors})
+	if [[ -n $color_index ]]; then
+		echo $available_colors[$color_index]
+	fi
+}

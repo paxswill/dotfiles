@@ -1,5 +1,3 @@
-
-
 function prompt-length() {
 	emulate -L zsh
 	local -i x y=${#1} m
@@ -24,21 +22,15 @@ function fill-line() {
 	echo ${1}${pad}${2}
 }
 
-function set-prompt() {
+function set-prompt-corners() {
+	# Arguments:
+	# 1. host color
 	# Put a basic prompt with username, hostname (first component) and the
-	# current directory name. The prompt character will be printed in a precmd,
-	# to handle resizing nicely. Source:
-	# https://superuser.com/a/395784
+	# current directory name.
 	# Put the current timestamp at the right side.
-	local top_left='[%n@%m:%1~]'
+	local top_left="[%n@%F{${1}}%m%f:%1~${vcs_info_msg_0_}]"
 	local top_right='%*'
-	local bottom_left='%# '
+	local bottom_left='%(?..%F{red})%#'"%(?..$reset_color) "
 	# Skipping bottom_right; I don't use it
-	PROMPT="$(fill-line "$top_left" "$top_right")"$'\n'$bottom_left
-}
-
-function _configure_prompt() {
-	autoload -Uz add-zsh-hook
-	add-zsh-hook -D precmd set-prompt
-	add-zsh-hook precmd set-prompt
+	PS1="$(fill-line "$top_left" "$top_right")"$'\n'$bottom_left
 }
