@@ -1,0 +1,3 @@
+function get-environment-rbenv() {
+    [[ -n $rvm_bin_path ]] && "${rvm_bin_path}/rvm-prompt"
+}

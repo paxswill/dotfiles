@@ -1,0 +1,3 @@
+function get-environment-virtualenv() {
+    [[ -n $VIRTUAL_ENV ]] && echo $(basename ${VIRTUAL_ENV})
+}

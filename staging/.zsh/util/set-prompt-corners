@@ -28,7 +28,8 @@ function set-prompt-corners() {
 	# Put a basic prompt with username, hostname (first component) and the
 	# current directory name.
 	# Put the current timestamp at the right side.
-	local top_left="[%n@%F{${1}}%m%f:%1~${vcs_info_msg_0_}]"
+	autoload -z get-active-envs
+	local top_left="$(get-active-envs)""[%n@%F{${1}}%m%f:%1~${vcs_info_msg_0_}]"
 	local top_right='%*'
 	local bottom_left='%(?..%F{red})%#'"%(?..$reset_color) "
 	# Skipping bottom_right; I don't use it

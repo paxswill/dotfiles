@@ -1,0 +1,22 @@
+# Initialize the environment helpers with Python and Ruby
+if [[ ! -v PAXSWILL_PROMPT_ENVS ]]; then
+	typeset -Ag PAXSWILL_PROMPT_ENVS
+	autoload -z get-environment-virtualenv get-environment-rvm
+	PAXSWILL_PROMPT_ENVS[py]=get-environment-virtualenv
+	PAXSWILL_PROMPT_ENVS[rb]=get-environment-rvm
+fi
+
+function get-active-envs() {
+	typeset -al environment_identifiers=()
+	# Sort the environment keys
+	for key in ${(Oak)PAXSWILL_PROMPT_ENVS}; do
+		# Mute the key names and the colon, then disable muting and add the environment name
+		env_value=$(${PAXSWILL_PROMPT_ENVS[$key]})
+		if [[ -n $env_value ]]; then
+			environment_identifiers+=%B${key}:%b${env_value}
+		fi
+	done
+	if [[ -n $environment_identifiers ]]; then
+		echo "%B(%b${(j. .)environment_identifiers}%B)%b"
+	fi
+}
