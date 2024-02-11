@@ -23,13 +23,17 @@ function fill-line() {
 }
 
 function set-prompt-corners() {
-	# Arguments:
-	# 1. host color
+	# Arguments (all are as prompt escape strings)
+	# 1. Start host color
+	# 3. Start Background/muted color
 	# Put a basic prompt with username, hostname (first component) and the
 	# current directory name.
 	# Put the current timestamp at the right side.
-	autoload -z get-active-envs
-	local top_left="$(get-active-envs)""[%n@%F{${1}}%m%f:%1~${vcs_info_msg_0_}]"
+	autoload -z get-active-envs end-prompt-colors
+	host_color_start=$1
+	host_color_end=$(end-prompt-colors $1)
+	mute=$2
+	local top_left="$(get-active-envs $mute)""[%n@${host_color_start}%m${host_color_end}:%1~${vcs_info_msg_0_}]"
 	local top_right='%*'
 	local bottom_left='%(?..%F{red})%#'"%(?..$reset_color) "
 	# Skipping bottom_right; I don't use it

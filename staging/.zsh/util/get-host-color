@@ -2,25 +2,36 @@ function get-host-color() {
 	autoload -z hashed-host-modulo
     # Just assume there are 16 colors, and we're using Solarized
 	typeset -al available_colors
-	# Skipped colors are noted as their Solarized equivalents
+	# Skipped Colors: black, bright-green, bright-yellow, bright-blue, bright-cyan
+	# bright-red is orange, and bright-magenta is violet in Solarized.
 	available_colors=(
-		# black is base02
 		red
 		green
 		yellow
 		blue
 		magenta
 		cyan
-		# white is base2
-		91 # orange in Solarized
-		# bright-green is base2
-		# bright-yellow is base00
-		# bright-blue is base0
-		95 # violet in Solarized
-		# bright-cyan is base1
+		white
+		bright-red
+		bright-magenta
 	)
-	local color_index=$(hashed-host-modulo ${#available_colors})
+	# zsh is kinda 1-indexed, so we need to add one
+	local color_index=$(( $(hashed-host-modulo ${#available_colors}) + 1 ))
+	# Determine if we're using standout mode, which doubles the amount of possible color schemes
+	# Standout mode flips the background and foreground colors
+	local standout=$(hashed-host-modulo 2)
 	if [[ -n $color_index ]]; then
-		echo $available_colors[$color_index]
+		host_color=$available_colors[$color_index]
+		maybe_standout=
+		if [[ $standout == 1 ]]; then
+			maybe_standout=%S
+		fi
+		# Only the most recent versions of zsh have the bright-colors defined, so work around them by defining them
+		# manually.
+		if [[ $host_color =~ bright-(.+) ]]; then
+			echo %B%F{${match[1]}}${maybe_standout}
+		else
+			echo %F{$host_color}${maybe_standout}
+		fi
 	fi
 }

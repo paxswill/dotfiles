@@ -1,0 +1,10 @@
+function end-prompt-colors() {
+	# Args:
+	# 1. The opening of a prompt visual effect string
+	# This is not the prettiest way to do it, but I was having trouble writing a nice regex for this
+	end_string=
+	for V in B U S F K; do
+		[[ $1 =~ %${V}([{].+[}])? ]] && end_string+=%${(L)V}
+	done
+	echo $end_string
+}
