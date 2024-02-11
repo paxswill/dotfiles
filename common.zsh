@@ -148,9 +148,11 @@ function link_dotfiles() {
 		if [ -e "${GIT_POINTER_LOG}.old" ]; then
 			local OLD_POINTERS=$(comm -13 "$GIT_POINTER_LOG" "$GIT_POINTER_LOG".old)
 			local OLD_POINTER
-			for OLD_POINTER in "${(f)OLD_POINTERS}"; do
-				rm "$OLD_POINTER"
-			done
+			if [[ -n $OLD_POINTERS ]]; then
+				for OLD_POINTER in "${(f)OLD_POINTERS}"; do
+					rm "$OLD_POINTER"
+				done
+			fi
 			rm "${GIT_POINTER_LOG}.old"
 		fi
 		# Cleanup links
