@@ -4,11 +4,13 @@ function hashed-host-modulo() {
 	# If there's a missing md5 program, no output is returned
 	autoload -z prog-exists
 	local hashed_host
+	# Use a normalized hostname: only lower-case letters, numbers, and '-'
+	local normalized_host="${${(L)HOST}//[^-a-z0-9]}"
 	# BSD includes md5, GNU and Solaris include md5sum
 	if prog-exists md5; then
-		hashed_host=$(printf "%s" "$HOST" | md5)
+		hashed_host=$(printf "%s" "$normalized_host" | md5)
 	elif prog-exists md5sum; then
-		hashed_host=$(printf "%s" "$HOST" | md5sum)
+		hashed_host=$(printf "%s" "$normalized_host" | md5sum)
 	fi
 	# Now hash the input name, and add all of the digits together modulo
 	# `len(available_colors)`. 
