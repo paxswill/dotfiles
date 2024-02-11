@@ -1,0 +1,37 @@
+function prompt_paxswill-light_precmd () {
+    autoload set-prompt-corners
+
+ 	vcs_info
+	set-prompt-corners $HOST_COLOR
+	set-prompt-corners ${prompt_paxswill_light_host_color} %B%F{cyan}
+}
+
+function prompt_paxswill-light_setup() {
+    autoload -Uz add-zsh-hook colors vcs_info
+	autoload -z paxswill-light-precmd
+	autoload -z get-host-color
+
+	# Need to run colors at least once to get the global definitions
+	colors
+	# Set the host color globally
+	# get-host-color skips black but uses white. That won't look great for a light color scheme, so swap it
+	typeset -g prompt_paxswill_light_host_color=${$(get-host-color)/white/black}
+
+	# Disable less common VCS systems
+	zstyle ':vcs_info:*' enable git hg svn
+	# Pile of line noise...
+
+	# Solarized light uses bright-cyan (bold cyan) for muted colors
+	zstyle ':vcs_info:*' formats " %F{cyan}%B(%b%%b%f%u%c%F{cyan}%B)%%b%f"
+	zstyle ':vcs_info:*' stagedstr " %F{green}+%f"
+	zstyle ':vcs_info:*' unstagedstr " %F{red}*%f"
+	zstyle ':vcs_info:*' check-for-changes true
+	zstyle ':vcs_info:*' check-for-staged-changes true
+
+
+	add-zsh-hook precmd prompt_paxswill-light_precmd
+	# Run the precmd once to have PS1 set to the correct value
+	prompt_paxswill-light_precmd
+}
+
+prompt_paxswill-light_setup "$@"
