@@ -1,0 +1,118 @@
+function paxswill-set-darwin-config() {
+	autoload -z prog-exists path-prepend path-append
+	# Check for Homebrew, then fall back to MacPorts
+	if prog-exists brew; then
+		# Homebrew setup
+		# Only auto-update every 6 hours
+		export HOMEBREW_AUTO_UPDATE_SECS=21600
+		# Move homebrew to the front of the path if we have it
+		local BREW_PREFIX="$(brew --prefix)"
+		path-prepend "${BREW_PREFIX}/sbin"
+		path-prepend "${BREW_PREFIX}/bin"
+		# If there are additional versions of Python, add them to the end of
+		# PATH
+		for VERSION in 3.{6..15}; do
+			# path-prepend checks for existence
+			path-append "${BREW_PREFIX}/opt/python@${VERSION}/bin"
+		done
+	elif [ -d /opt ]; then
+		# MacPorts
+		path-append "/opt/local/bin"
+		path-append "/opt/local/sbin"
+	fi
+	# Add the OpenCL offline compiler if available
+	if [ -e /System/Library/Frameworks/OpenCL.framework/Libraries/openclc ]; then
+		path-append "/System/Library/Frameworks/OpenCL.framework/Libraries"
+	fi
+	# Add the "hidden" airport command
+	if [ -e '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport' ]; then
+		path-append "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources"
+	fi
+	if [[ -o interactive ]]; then
+		# Add function for locking the screen
+		lock () {
+			/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
+		}
+	fi
+	# Increase the maximum number of open file descriptors
+	# This is primarily for the Android build process
+	if [ $(ulimit -n) -lt 1024 ]; then
+		ulimit -S -n 1024
+	fi
+	# Define JAVA_HOME on OS X
+	if [ -x /usr/libexec/java_home ]; then
+		if /usr/libexec/java_home &>/dev/null; then
+			export JAVA_HOME=$(/usr/libexec/java_home)
+		fi
+	fi
+
+}
+
+function paxswill-set-debian-config() {
+	autoload -z path-prepend path-append
+	# Set PATH to include system directories
+	path-prepend /usr/local/sbin
+	path-prepend /usr/local/bin
+	path-prepend /usr/sbin
+	path-prepend /usr/bin
+	path-prepend /sbin
+	path-prepend /bin
+	path-append /usr/local/games
+	path-append /usr/games
+	export JAVA_HOME=/usr/lib/jvm/default_java
+	# Debian/Ubuntu install virtualenvwrapper off on it's own
+	alias "virtualenvwrapper.sh"="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+}
+
+
+function paxswill-set-ubuntu-config() {
+	export JAVA_HOME=/usr/lib/jvm/default_java
+	# Debian/Ubuntu install virtualenvwrapper off on it's own
+	alias "virtualenvwrapper.sh"="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+}
+
+function paxswill-set-linux-config() {
+	autoload -z prog-exists path-prepend path-append
+	local DISTRO
+	if prog-exists lsb_release; then
+		DISTRO=$(lsb_release -i)
+		DISTRO=${DISTRO##*:?}
+	elif [ -f /etc/issue ]; then
+		DISTRO="$(grep -o '^\w\+' /etc/issue)"
+	fi
+	case "$DISTRO" in
+		Debian|Raspbian)
+			paxswill-set-debian-config
+			;;
+		Ubuntu)
+			paxswill-set-ubuntu-config
+			;;
+	esac
+	# Add function for locking the screen
+	if [[ -o interactive ]]; then
+		if xscreensaver-command -version &>/dev/null; then
+			lock () {
+				xscreensaver-command -lock
+			}
+		elif xfce4-screensaver-command --query &>/dev/null; then
+			lock () {
+				xfce4-screensaver-command --lock
+			}
+		fi
+	fi
+	# Append Snap bin directory to PATH (basically just Ubuntu)
+	path-append /snap/bin
+}
+
+paxswill-set-os-config() {
+	case "$OSTYPE" in
+	darwin*)
+		paxswill-set-darwin-config
+		;;
+	linux*)
+		paxswill-set-linux-config
+		;;
+	esac
+}
+
+paxswill-set-os-config "$@"

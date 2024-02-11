@@ -1,0 +1,9 @@
+function path-prepend() {
+	[[ ! -d $1 ]] && return 1
+	# Resolve the directory
+	local realpath="$(cd $1 && pwd -P)"
+	# Remove any existing references
+	path[(r)${realpata}]=()
+	# Prepend
+	path[1]=($1 $path[1])
+}

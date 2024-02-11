@@ -10,5 +10,7 @@ else
 	prompt paxswill-light
 fi
 
-autoload -z paxswill-set-aliases
+
+autoload -z paxswill-set-aliases paxswill-set-os-config
 paxswill-set-aliases
+paxswill-set-os-config
