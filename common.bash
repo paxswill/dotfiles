@@ -82,8 +82,7 @@ link_dotfiles(){
 	# shared filesystems mounted at different locations.
 	pushd "$HOME" &>/dev/null
 	# Get a list of directories and files to link/create
-	# The lines containing ".git" exclude git directories fomr being linked
-	#local DIRS="$(find "$STAGING" \
+	# The lines containing ".git" exclude git directories from being linked
 	local DIRS="$(find "$REL_STAGING" \
 		-type d \
 		-not -path "$REL_STAGING" \
