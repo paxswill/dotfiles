@@ -10,6 +10,7 @@ else
 	prompt paxswill-light
 fi
 
+source "${HOME}/.dotfiles/common.zsh"
 
 autoload -z paxswill-set-aliases paxswill-set-os-config
 paxswill-set-aliases
