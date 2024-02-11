@@ -21,8 +21,8 @@ function get-host-color() {
 	# Standout mode flips the background and foreground colors
 	local standout=$(hashed-host-modulo 2)
 	if [[ -n $color_index ]]; then
-		host_color=$available_colors[$color_index]
-		maybe_standout=
+		local host_color=$available_colors[$color_index]
+		local maybe_standout=
 		if [[ $standout == 1 ]]; then
 			maybe_standout=%S
 		fi

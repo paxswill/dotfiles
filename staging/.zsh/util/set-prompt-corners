@@ -30,9 +30,9 @@ function set-prompt-corners() {
 	# current directory name.
 	# Put the current timestamp at the right side.
 	autoload -z get-active-envs end-prompt-colors
-	host_color_start=$1
-	host_color_end=$(end-prompt-colors $1)
-	mute=$2
+	local host_color_start=$1
+	local host_color_end=$(end-prompt-colors $1)
+	local mute=$2
 	local top_left="$(get-active-envs $mute)""[%n@${host_color_start}%m${host_color_end}:%1~${vcs_info_msg_0_}]"
 	local top_right='%*'
 	local bottom_left='%(?..%F{red})%#'"%(?..$reset_color) "

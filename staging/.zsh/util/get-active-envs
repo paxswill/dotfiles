@@ -10,14 +10,14 @@ function get-active-envs() {
 	# Arguments:
 	# 1: Start deemphasized color string as prompt escape sequence
 	autoload -z end-prompt-colors
-	mute=$1
-	unmute=$(end-prompt-colors $1)
+	local mute=$1
+	local unmute=$(end-prompt-colors $1)
 	typeset -al environment_identifiers=()
 
 	# Sort the environment keys
 	for key in ${(Oak)PAXSWILL_PROMPT_ENVS}; do
 		# Mute the key names and the colon, then disable muting and add the environment name
-		env_value=$(${PAXSWILL_PROMPT_ENVS[$key]})
+		local env_value=$(${PAXSWILL_PROMPT_ENVS[$key]})
 		if [[ -n $env_value ]]; then
 			environment_identifiers+=${mute}${key}:${unmute}${env_value}
 		fi
