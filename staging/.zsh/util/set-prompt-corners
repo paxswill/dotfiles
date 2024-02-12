@@ -35,7 +35,7 @@ function set-prompt-corners() {
 	local mute=$2
 	local top_left="$(get-active-envs $mute)""[%n@${host_color_start}%m${host_color_end}:%1~${vcs_info_msg_0_}]"
 	local top_right='%*'
-	local bottom_left='%(?..%F{red})%#'"%(?..$reset_color) "
+	local bottom_left='%(?..%F{red})%#'"%(?..%f) "
 	# Skipping bottom_right; I don't use it
 	PS1="$(fill-line "$top_left" "$top_right")"$'\n'$bottom_left
 }
