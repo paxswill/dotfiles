@@ -1,0 +1,210 @@
+typeset -Ag paxswill_app_hooks
+
+function paxswill-configure-android() {
+	# Android SDK (non-OS X)
+	if [[ -d /opt/android-sdk ]]; then
+		export ANDROID_SDK_ROOT="/opt/android-sdk"
+		path-append "${ANDROID_SDK_ROOT}/tools"
+		path-append "${ANDROID_SDK_ROOT}/platform-tools"
+	fi
+}
+paxswill_app_hooks[android]=paxswill-configure-android
+
+function paxswill-configure-cabal() {
+	# Add cabal (Haskell package manager) executables to PATH
+	path-append "${HOME}/.cabal/bin"
+}
+paxswill_app_hooks[cabal]=paxswill-configure-cabal
+
+function paxswill-configure-cargo() {
+	# Add cargo (Rust package manager) executables to PATH
+	path-append "${HOME}/.cargo/bin"
+}
+paxswill_app_hooks[cargo]=paxswill-configure-cargo
+
+
+function paxswill-configure-docker() {
+	# Only for interactive sessions
+	[[ ! -o interactive ]] && return
+
+	local DOCKER_APP="/Applications/Docker.app/Contents/Resources/etc"
+	if [[ -d "${DOCKER_APP}" ]]; then
+		for F in ${DOCKER_APP}/*.zsh-completion; do
+			# Add 1 to the offset to account for the '/'. Subtract 15 for the '.zsh-completion'
+			local CMD_NAME="${F:$(( ${#DOCKER_APP} + 1 )):$(( ${#F} - ${#DOCKER_APP} - 15 ))}"
+			local ZSH_CMD_TARGET="~/.zsh/local/_${CMD_NAME}"
+			if [[ ! -h $ZSH_CMD_TARGET ]] || [[ -h $ZSH_CMD_TARGET && ! $F -ef $ZSH_CMD_TARGET ]]; then
+				ln -sf $F $ZSH_CMD_TARGET
+			fi
+		done
+	fi
+}
+paxswill_app_hooks[docker]=paxswill-configure-docker
+
+function paxswill-configure-golang() {
+	if prog-exists go; then
+		export GOROOT="$(go env GOROOT)"
+		path-append "$(go env GOPATH)/bin"
+	fi
+}
+paxswill_app_hooks[golang]=paxswill-configure-golang
+
+function paxswill-configure-github(){
+	if prog-exists hub; then
+		alias git="hub"
+	fi
+}
+paxswill_app_hooks[github]=paxswill-configure-github
+
+function paxswill-configure-krew() {
+	local KREW_ROOT="${KREW_ROOT:-$HOME/.krew}"
+	if prog-exists kubectl && [ -d ${KREW_ROOT} ]; then
+		path-append "${KREW_ROOT}/bin"
+	fi
+}
+paxswill_app_hooks[krew]=paxswill-configure-krew
+
+function paxswill-configure-lesspipe() {
+	# Only for interactive sessions
+	[[ ! -o interactive ]] && return
+	# Setup lesspipe
+	if prog-exists lesspipe; then
+		export LESSOPEN="|lesspipe %s"
+	elif prog-exists lesspipe.sh; then
+		export LESSOPEN="|lesspipe.sh %s"
+	fi
+}
+paxswill_app_hooks[lesspipe]=paxswill-configure-lesspipe
+
+
+function paxswill-configure-npm() {
+	if [[ -o interactive ]] && prog-exists npm && ! whence _npm >/dev/null && [[ ! -f ~/.zsh/local/_npm ]]; then
+		npm completion > ~/.zsh/local/_npm
+		compinit
+	fi
+}
+paxswill_app_hooks[npm]=paxswill-configure-npm
+
+# TODO: port over nvm setup
+
+function paxswill-configure-opt() {
+	# Adds sub-trees of within /opt the PATH and LD_LIBRARY_PATH.
+	# This is a common pattern for installing things outside of a system's
+	# package manager.
+	# This `find` command finds all 'sbin', 'bin', 'lib' and 'lib64' directories
+	# within all subdirectories of /opt, except for /opt/local and /opt/homebrew
+	# (as those are used by MacPorts and Homebrew-on-ARM respectively). It's
+	# sorted to keep everything in a consistent order.
+	# NOTE: When editing this command, check *both* FreeBSD and GNU find
+	# manpages, as they differ in some areas. Also note that GNU find complains
+	# if `-type` is before the depth primaries.
+	# stderr is piped to null to silence permission warnings (i.e from
+	# /opt/containerd). If there's permission errors, those directories are
+	# being skipped anyways.
+	local OPT_DIRS="$(
+	find /opt \
+		-maxdepth 2 \
+		-mindepth 2 \
+		-type d \
+		\( -name bin -or -name sbin -or -name lib -or -name lib64 \) \
+		-not \( -path '*/local/*' -or -path '*/homebrew/*' \) \
+		-print \
+	2>/dev/null \
+	| sort
+	)"
+	local OLD_IFS="$IFS"
+	IFS=$'\n'
+	local OPT_DIR
+	for OPT_DIR in $OPT_DIRS; do
+		if [[ $OPT_DIR =~ .*/lib(64)?$ ]]; then
+			append_to_libpath "$OPT_DIR"
+		else
+			path-append "$OPT_DIR"
+		fi
+	done
+	IFS="$OLD_IFS"
+}
+paxswill_app_hooks[opt]=paxswill-configure-opt
+
+function paxswill-configure-rust() {
+	# Ensure cargo is available
+	paxswill-configure-cargo
+	if [[ -o interactive ]] && prog-exists rustup; then
+		if ! whence _rustup >/dev/null && [[ ! -f ~/.zsh/local/_rustup ]]; then
+			rustup completions zsh > ~/.zsh/local/_rustup
+			compinit
+		fi
+		if ! whence _cargo >/dev/null && [[ ! -f ~/.zsh/local/_cargo ]]; then
+			rustup completions zsh cargo > ~/.zsh/local/_cargo
+			compinit
+		fi
+	fi
+}
+paxswill_app_hooks[rust]=paxswill-configure-rust
+
+
+function paxswill-configure-vim() {
+	# Only for interactive sessions
+	[[ ! -o interactive ]] && return
+	# Set Vim as $EDITOR if it's available
+	if prog-exists mvim; then
+		 GUI_VIM=mvim
+	elif prog-exists gvim; then
+		 GUI_VIM=gvim
+	fi
+	if prog-exists vim; then
+		VI=vim
+	elif prog-exists vi; then
+		VI=vi
+	fi
+	if [ ! -z $GUI_VIM ]; then
+		export EDITOR=$GUI_VIM
+		if [ ! -z $VI ]; then
+			export GIT_EDITOR=$VI
+		fi
+	elif [ ! -z $VI ]; then
+		export EDITOR=$VI
+	fi
+}
+paxswill_app_hooks[vim]=paxswill-configure-vim
+
+function paxswill-configure-windows-ssh-agent() {
+	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
+	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK is
+	# already defined
+	if ! [[ $(uname -r) =~ ^.*[Mm]icrosoft.*$ ]] || [ -n "${SSH_AUTH_SOCK}" ]; then
+		return
+	fi
+	local MISSING_PROG=0
+	local PROG
+	for PROG in ss socat setsid npiperelay.exe; do
+		if ! prog-exists $PROG; then
+			printf "Unable to connect to Windows SSH Agent, missing %s\n" \
+				"$PROG"
+			MISSING_PROG=1
+		fi
+	done
+	# Bail out if we're missing any of the required utilities
+	[ $MISSING_PROG = 1 ] && return
+	SSH_AUTH_SOCK="${TMPDIR:-/tmp}/ssh_agent.sock"
+	# If there isn't already a socket set up for us, make one
+	if ! [[ "$(ss -a)" =~ "${SSH_AUTH_SOCK}" ]]; then
+		rm -f "${SSH_AUTH_SOCK}"
+		(
+			setsid \
+			socat \
+			UNIX-LISTEN:${SSH_AUTH_SOCK},fork \
+			EXEC:"$(which npiperelay.exe) -ei -s //./pipe/openssh-ssh-agent",nofork &
+		) &>/dev/null
+	fi
+	export SSH_AUTH_SOCK
+}
+paxswill_app_hooks[windows-ssh-agent]=paxswill-configure-windows-ssh-agent
+
+function paxswill-configure-apps() {
+	for func in ${(v)paxswill_app_hooks}; do
+		$func
+	done
+}
+
+paxswill-configure-apps "$@"

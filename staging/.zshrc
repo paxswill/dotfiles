@@ -43,6 +43,8 @@ setopt HIST_REDUCE_BLANKS
 
 
 ### Other general config ###
-autoload -z paxswill-set-aliases paxswill-set-os-config
+autoload -z paxswill-set-aliases paxswill-set-os-config paxswill-configure-apps
 paxswill-set-aliases
 paxswill-set-os-config
+paxswill-configure-apps
+[[ -e ~/.identity ]] && . ~/.identity

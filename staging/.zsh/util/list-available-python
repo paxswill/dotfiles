@@ -1,0 +1,43 @@
+function list-available-python() {
+	# Unlike all of the other functions in this file, this function does *not*
+	# configure an application. Instead it's used to find out which versions of
+	# Python are installed.
+
+	# If an argument is given, that string is used as the base for testing the
+	# existance of things (ex: given the name "pip", this function checks for
+	# versions of pip).
+	local PROG_NAME="python"
+	if [ ! -z "$1" ]; then
+		PROG_NAME="$1"
+	fi
+	# Generate a list of suffixes for the minor python versions
+	local PY_SUFFIXES=()
+	PY_SUFFIXES=(2.6 2.7)
+	# Update this in a few years when Python 3.15 is in development
+	PY_SUFFIXES+=(3.{0..15})
+	# Add just major version suffixes
+	PY_SUFFIXES+=(2)
+	PY_SUFFIXES+=(3)
+	# If we're checking for actual python interpreters, the PyPy variants are
+	# just 'pypy' and 'pypy3', but if we're checking for something like pip,
+	# it's 'pip_pypy' and 'pip_pypy3'
+	local NAMES_TO_CHECK=("$PROG_NAME")
+	if [ "$PROG_NAME" = "python" ]; then
+		NAMES_TO_CHECK+=("pypy")
+		NAMES_TO_CHECK+=("pypy3")
+	else
+		PY_SUFFIXES+=("_pypy")
+		PY_SUFFIXES+=("_pypy3")
+	fi
+	local PY_SUFFIX
+	for PY_SUFFIX in ${PY_SUFFIXES[@]}; do
+		NAMES_TO_CHECK+=("${PROG_NAME}${PY_SUFFIX}")
+	done
+	# Check everything
+	local NAME
+	for NAME in ${NAMES_TO_CHECK[@]}; do
+		if prog-exists "$NAME"; then
+			echo "$NAME"
+		fi
+	done
+}
