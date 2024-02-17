@@ -12,6 +12,14 @@ fi
 
 source "${HOME}/.dotfiles/common.zsh"
 
+### Completion Config ###
+compinit
+# Mixed size columns
+setopt LIST_PACKED
+# Don't beep on ambiguous completions
+unsetopt LIST_BEEP
+
+
 ### History Config ###
 HISTFILE=${HOME}/.zsh_history
 # Keeping HISTSIZE larger than SAVEHIST gives a cushion for saving dupes
