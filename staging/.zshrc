@@ -1,5 +1,5 @@
 
-fpath=(~/.zsh/util ~/.zsh/themes $fpath)
+fpath=(~/.zsh/util ~/.zsh/local ~/.zsh/themes $fpath)
 
 autoload -U promptinit
 promptinit
