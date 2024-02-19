@@ -3,6 +3,8 @@ source ~/.dotfiles/util/bash/hosts.sh
 
 _configure_darwin() {
 	# Check for Homebrew, then fall back to MacPorts
+	prepend_to_path "/opt/homebrew/bin"
+	prepend_to_path "/opt/homebrew/sbin"
 	if _prog_exists brew; then
 		# Homebrew setup
 		# Only auto-update every 6 hours

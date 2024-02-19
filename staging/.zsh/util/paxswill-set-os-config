@@ -1,6 +1,9 @@
 function paxswill-set-darwin-config() {
 	autoload -z prog-exists path-prepend path-append
 	# Check for Homebrew, then fall back to MacPorts
+	# Homebrew on Apple Silicon installs to /opt/homebrew
+	path-prepend "/opt/homebrew/bin"
+	path-prepend "/opt/homebrew/sbin"
 	if prog-exists brew; then
 		# Homebrew setup
 		# Only auto-update every 6 hours
