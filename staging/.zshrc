@@ -13,6 +13,7 @@ fi
 source "${HOME}/.dotfiles/common.zsh"
 
 ### Completion Config ###
+autoload -U compinit
 compinit
 # Mixed size columns
 setopt LIST_PACKED
