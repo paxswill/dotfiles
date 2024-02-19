@@ -27,14 +27,14 @@ HISTFILE=${HOME}/.zsh_history
 SAVEHIST=10000
 HISTSIZE=$(( $SAVEHIST + 200 ))
 # Have all shells append to the history
-setopt APPEND_HIST
+setopt APPEND_HISTORY
 # Incrementally append to the history instead of waiting for the shell to exit
 # The command still needs to return so that the elapsed time is recorded
 setopt INC_APPEND_HISTORY_TIME
 # Collapse dupes
 setopt HIST_EXPIRE_DUPS_FIRST
 # The platforms I'm using are recent enough to have working fnctl
-setopt HIST_FNCTL_LOCK
+setopt HIST_FCNTL_LOCK
 # Skip repeated commands
 setopt HIST_IGNORE_DUPS
 # Ignore commands prefixed with a space
