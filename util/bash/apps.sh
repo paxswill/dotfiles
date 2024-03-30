@@ -408,23 +408,18 @@ _configure_virtualenv_wrapper() {
 				break
 			fi
 		done
+		export WORKON_HOME="${HOME}/.virtualenv"
+		# Configure usernames for Bitbucket and GitHub extensions (but only when
+		# the current user name matches to avoid issues with professional/work
+		# accounts).
+		if [[ "$USER" = "paxswill" ]]; then
+			export VIRTUALENVWRAPPER_BITBUCKET_USER="paxswill"
+			export VIRTUALENVWRAPPER_GITHUB_USER="paxswill"
+		fi
 		source $wrapper_source
 		# Have pip play nice with virtualenv
 		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
 		export PIP_RESPECT_VIRTUALENV=true
-		# Provide an alias for creating Python3 and Python2 virtualenvs
-		local PYVER VENV_CMD
-		for PYVER in 2 3; do
-			for VENV_CMD in "mkvirtualenv" "mkproject" "mktmpenv"; do
-				local PYOPT="-p $(type -p python${PYVER})"
-				alias "${VENV_CMD}${PYVER}"="\
-					VIRTUALENVWRAPPER_VIRTUALENV_ARGS=\"${PYOPT}\"\
-					${VENV_CMD}"
-			done
-		done
-		# Configure usernames for Bitbucket and GitHub extensions
-		export VIRTUALENVWRAPPER_BITBUCKET_USER="paxswill"
-		export VIRTUALENVWRAPPER_GITHUB_USER="paxswill"
 	fi
 }
 

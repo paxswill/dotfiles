@@ -168,6 +168,55 @@ function paxswill-configure-vim() {
 }
 paxswill_app_hooks[vim]=paxswill-configure-vim
 
+function paxswill-configure-virtualenvwrapper() {
+	# Debian and Ubuntu put virtualenvwrapper.sh in /usr/share, while Homebrew
+	# puts it in $PATH
+	local path_source=$(whence -p virtualenvwrapper.sh)
+	local debian_source="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+	local wrapper_source
+	if [[ -z $path_source ]] && [[ -f $debian_source ]]; then
+		wrapper_source=$debian_source
+	else
+		wrapper_source=$path_source
+	fi
+	if [[ -n $wrapper_source && -r $wrapper_source && -s $wrapper_source ]]; then
+		# virtualenvwrapper config has to be done before sourcing the script
+		# Set up the project directory
+		if [ -d "$HOME/Development/Python" ]; then
+			export PROJECT_HOME="$HOME/Development/Python"
+		else
+			export PROJECT_HOME="$HOME/Development"
+			if ! [ -d $PROJECT_HOME ]; then
+				mkdir $PROJECT_HOME
+			fi
+		fi
+		# Find the python distribution that has virtualenvwrapper installed.
+		# Prefer Py3 over Py2
+		local PY
+		for PY in python3 python2 python; do
+			if prog-exists $PY && $PY -c "import virtualenvwrapper" 2>/dev/null; then
+				export VIRTUALENVWRAPPER_PYTHON="$(which $PY)"
+				break
+			fi
+		done
+		# Setting the value of WORKON_HOME explicitly (even though it's the same
+		# as the default))
+		export WORKON_HOME="${HOME}/.virtualenv"
+		# Configure usernames for Bitbucket and GitHub extensions (but only when
+		# the current user name matches to avoid issues with professional/work
+		# accounts).
+		if [[ $USER = paxswill ]]; then
+			export VIRTUALENVWRAPPER_BITBUCKET_USER="paxswill"
+			export VIRTUALENVWRAPPER_GITHUB_USER="paxswill"
+		fi
+		source $wrapper_source
+		# Have pip play nice with virtualenv
+		export PIP_VIRTUALENV_BASE="${WORKON_HOME}"
+		export PIP_RESPECT_VIRTUALENV=true
+	fi
+}
+paxswill_app_hooks[virtualenvwrapper]=paxswill-configure-virtualenvwrapper
+
 function paxswill-configure-windows-ssh-agent() {
 	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
 	# This is only applicable on WSL, and let's skip it if SSH_AUTH_SOCK is
