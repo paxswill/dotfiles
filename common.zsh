@@ -17,6 +17,8 @@ function create_m4_macros() {
 	case "$OSTYPE" in
 	darwin*)
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DOSX"
+		[ -d "/Applications/Secretive.app" ] && M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DSECRETIVE"
+
 		;;
 	linux*)
 		M4_DEFS="${M4_DEFS}${M4_DEFS:+ }-DLINUX"
