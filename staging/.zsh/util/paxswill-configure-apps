@@ -41,6 +41,13 @@ function paxswill-configure-docker() {
 }
 paxswill_app_hooks[docker]=paxswill-configure-docker
 
+function paxswill-configure-fzf() {
+	if prog-exists fzf; then
+		source <(fzf --zsh)
+	fi
+}
+paxswill_app_hooks[fzf]=paxswill-configure-fzf
+
 function paxswill-configure-golang() {
 	if prog-exists go; then
 		export GOROOT="$(go env GOROOT)"
