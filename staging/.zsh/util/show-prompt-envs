@@ -1,0 +1,9 @@
+# Helper to show active prompt environments
+function show-prompt-envs() {
+	autoload -z paxswill-define-prompt-envs
+	paxswill-define-prompt-envs
+	echo "Active environments:"
+	for key in ${(Oa)PAXSWILL_PROMPT_ACTIVE_ENVS}; do
+	printf "\t%s\n" "$key"
+	done
+}

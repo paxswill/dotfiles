@@ -1,0 +1,15 @@
+function paxswill-define-prompt-envs() {
+	# Set the known list of possible environment types
+	if [[ ! -v PAXSWILL_PROMPT_AVAILABLE_ENVS ]]; then
+		typeset -Ag PAXSWILL_PROMPT_AVAILABLE_ENVS
+		autoload -z get-environment-virtualenv get-environment-rvm get-environment-kubectx
+		PAXSWILL_PROMPT_AVAILABLE_ENVS[py]=get-environment-virtualenv
+		PAXSWILL_PROMPT_AVAILABLE_ENVS[rb]=get-environment-rvm
+		PAXSWILL_PROMPT_AVAILABLE_ENVS[k8s]=get-environment-kubectx
+	fi
+
+	# Initialize the list of active environments with just Python and Ruby (k8s is a lot of shelling out)
+	if [[ ! -v PAXSWILL_PROMPT_ACTIVE_ENVS ]]; then
+		typeset -ag PAXSWILL_PROMPT_ACTIVE_ENVS=(py rb)
+	fi
+}

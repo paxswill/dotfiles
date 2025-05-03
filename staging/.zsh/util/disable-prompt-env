@@ -1,0 +1,13 @@
+function disable-prompt-env() {
+	autoload -z paxswill-define-prompt-envs
+	paxswill-define-prompt-envs
+	if [[ -z $1 ]]; then
+		printf "Usage: enable-env <%s>\n" "${(Oak)PAXSWILL_PROMPT_AVAILABLE_ENVS}"
+	elif [[ -n ${PAXSWILL_PROMPT_AVAILABLE_ENVS[$1]} ]]; then
+	 	# This is barely a step up from Perl line-noise. Explanation:
+		# Expand the array (PAXSWILL_PROMPT_ACTIVE_ENVS) with all variables (`@``) quoted (the quotes). Then filter it
+		# (`:`), excluding (`#`) the given argument (`${1}`). The results of that expansion are then used as a new
+		# array, and assigned to the original parameter name (`=(...)`)
+		PAXSWILL_PROMPT_ACTIVE_ENVS=("${(@)PAXSWILL_PROMPT_ACTIVE_ENVS:#${1}}")
+	fi
+}

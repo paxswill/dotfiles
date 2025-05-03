@@ -1,23 +1,16 @@
-# Initialize the environment helpers with Python and Ruby
-if [[ ! -v PAXSWILL_PROMPT_ENVS ]]; then
-	typeset -Ag PAXSWILL_PROMPT_ENVS
-	autoload -z get-environment-virtualenv get-environment-rvm
-	PAXSWILL_PROMPT_ENVS[py]=get-environment-virtualenv
-	PAXSWILL_PROMPT_ENVS[rb]=get-environment-rvm
-fi
-
 function get-active-envs() {
 	# Arguments:
 	# 1: Start deemphasized color string as prompt escape sequence
-	autoload -z end-prompt-colors
+	autoload -z end-prompt-colors paxswill-define-prompt-envs
+	paxswill-define-prompt-envs
 	local mute=$1
 	local unmute=$(end-prompt-colors $1)
 	typeset -al environment_identifiers=()
 
 	# Sort the environment keys
-	for key in ${(Oak)PAXSWILL_PROMPT_ENVS}; do
+	for key in ${(Oa)PAXSWILL_PROMPT_ACTIVE_ENVS}; do
 		# Mute the key names and the colon, then disable muting and add the environment name
-		local env_value=$(${PAXSWILL_PROMPT_ENVS[$key]})
+		local env_value=$(${PAXSWILL_PROMPT_AVAILABLE_ENVS[$key]})
 		if [[ -n $env_value ]]; then
 			environment_identifiers+=${mute}${key}:${unmute}${env_value}
 		fi
@@ -27,4 +20,3 @@ function get-active-envs() {
 	fi
 }
 
-get-active-envs $@

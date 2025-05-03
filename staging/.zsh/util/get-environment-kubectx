@@ -1,0 +1,8 @@
+function get-environment-kubectx() {
+	autoload -z prog-exists
+	if prog-exists kubectx; then
+		kubectx --current
+	else
+		kubectl config current-context
+	fi
+}

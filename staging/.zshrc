@@ -49,3 +49,5 @@ paxswill-set-aliases
 paxswill-set-os-config
 paxswill-configure-apps
 [[ -e ~/.identity ]] && . ~/.identity
+# Make prompt helpers available
+autoload -z enable-prompt-env disable-prompt-env show-prompt-envs

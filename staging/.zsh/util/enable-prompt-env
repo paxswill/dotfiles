@@ -1,0 +1,9 @@
+function enable-prompt-env() {
+	autoload -z paxswill-define-prompt-envs
+	paxswill-define-prompt-envs
+	if [[ -z $1 ]]; then
+		printf "Usage: enable-env <%s>\n" "${(Oak)PAXSWILL_PROMPT_AVAILABLE_ENVS}"
+	elif [[ -n ${PAXSWILL_PROMPT_AVAILABLE_ENVS[$1]} ]] && [[ -z $PAXSWILL_PROMPT_ACTIVE_ENVS[(r)${1}] ]]; then
+		PAXSWILL_PROMPT_ACTIVE_ENVS+=$1
+	fi
+}
