@@ -149,7 +149,6 @@ function paxswill-configure-rust() {
 }
 paxswill_app_hooks[rust]=paxswill-configure-rust
 
-
 function paxswill-configure-vim() {
 	# Only for interactive sessions
 	[[ ! -o interactive ]] && return
@@ -223,6 +222,13 @@ function paxswill-configure-virtualenvwrapper() {
 	fi
 }
 paxswill_app_hooks[virtualenvwrapper]=paxswill-configure-virtualenvwrapper
+
+function paxswill-configure-visual-studio-code() {
+	# macOS only right now; I'll deal with how to set it up on WLS when I use
+	# that again.
+	path-append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
+}
+paxswill_app_hooks[visual-studio-code]=paxswill-configure-visual-studio-code
 
 function paxswill-configure-windows-ssh-agent() {
 	# Adapted from https://github.com/rupor-github/wsl-ssh-agent
