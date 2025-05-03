@@ -67,6 +67,8 @@ Plugin 'martinda/Jenkinsfile-vim-syntax'
 " This setting must be set before ALE is loaded
 let g:ale_completion_enabled = 1
 Plugin 'w0rp/ale'
+" Cisco (and FastIron) config file syntax highlighting
+Plugin 'momota/cisco.vim'
 call vundle#end()
 
 " Show incomplete commands
