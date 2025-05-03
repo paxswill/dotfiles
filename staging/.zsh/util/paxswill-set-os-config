@@ -12,8 +12,9 @@ function paxswill-set-darwin-config() {
 		local BREW_PREFIX="$(brew --prefix)"
 		path-prepend "${BREW_PREFIX}/sbin"
 		path-prepend "${BREW_PREFIX}/bin"
-		# If there are additional versions of Python, add them to the end of
-		# PATH
+		# Add the Homebrew zsh completion path
+		fpath+="${BREW_PREFIX}/share/zsh/site-functions"
+		# If there are additional versions of Python, add them to the end of PATH
 		for VERSION in 3.{6..15}; do
 			# path-prepend checks for existence
 			path-append "${BREW_PREFIX}/opt/python@${VERSION}/bin"

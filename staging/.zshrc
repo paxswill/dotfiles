@@ -12,15 +12,6 @@ fi
 
 source "${HOME}/.dotfiles/common.zsh"
 
-### Completion Config ###
-autoload -U compinit
-compinit
-# Mixed size columns
-setopt LIST_PACKED
-# Don't beep on ambiguous completions
-unsetopt LIST_BEEP
-
-
 ### History Config ###
 HISTFILE=${HOME}/.zsh_history
 # Keeping HISTSIZE larger than SAVEHIST gives a cushion for saving dupes
@@ -51,3 +42,12 @@ paxswill-configure-apps
 [[ -e ~/.identity ]] && . ~/.identity
 # Make prompt helpers available
 autoload -z enable-prompt-env disable-prompt-env show-prompt-envs
+
+### Completion Config ###
+# Have to do completion config after other setup as there might be other directories added (like Homebrew)
+autoload -U compinit
+compinit
+# Mixed size columns
+setopt LIST_PACKED
+# Don't beep on ambiguous completions
+unsetopt LIST_BEEP
