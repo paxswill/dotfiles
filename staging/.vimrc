@@ -213,7 +213,7 @@ if has("gui_running")
 	set showtabline=2
 	" Set the font
 	if has("mac")
-		set guifont=Source\ Code\ Pro\ Light:h11,Menlo\ Regular:h11
+		set guifont=Source\ Code\ Pro\ Regular:h11,Menlo\ Regular:h11
 	elseif has("gui_gtk2")
 		set guifont=Source\ Code\ Variable\ 10
 	endif
