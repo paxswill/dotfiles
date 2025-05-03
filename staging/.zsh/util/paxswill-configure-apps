@@ -226,7 +226,7 @@ paxswill_app_hooks[virtualenvwrapper]=paxswill-configure-virtualenvwrapper
 function paxswill-configure-visual-studio-code() {
 	# macOS only right now; I'll deal with how to set it up on WLS when I use
 	# that again.
-	path-append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
+	path-append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 }
 paxswill_app_hooks[visual-studio-code]=paxswill-configure-visual-studio-code
 
