@@ -263,6 +263,12 @@ function paxswill-configure-windows-ssh-agent() {
 }
 paxswill_app_hooks[windows-ssh-agent]=paxswill-configure-windows-ssh-agent
 
+function paxswill-configure-xdg-user-bin() {
+	# Ensure the XDG user-specific executable directory is in PATH
+	path-prepend "${HOME}/.local/bin"
+}
+paxswill_app_hooks[xdg-user-bin]=paxswill-configure-xdg-user-bin
+
 function paxswill-configure-apps() {
 	for func in ${(v)paxswill_app_hooks}; do
 		$func

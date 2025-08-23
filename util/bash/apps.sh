@@ -455,6 +455,10 @@ _configure_windows_ssh_agent() {
 	export SSH_AUTH_SOCK
 }
 
+_configure_xdg_user_bin() {
+	prepend_to_path "${HOME}/.local/bin"
+}
+
 configure_apps() {
 	local CONFIG_FUNCTIONS=(
 		# Add any /opt/ paths first to ensure any locally installed commands are
@@ -486,6 +490,7 @@ configure_apps() {
 		"_configure_vim"
 		"_configure_virtualenv_wrapper"
 		"_configure_windows_ssh_agent"
+		"_configure_xdg_user_bin"
 	)
 	local CONFIG_FUNCTION
 	# We can't use the time builtin here, I think because it's already within a
